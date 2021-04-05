@@ -5,6 +5,7 @@
   "main": "./src/index.js",
   "scripts": {
     "start": "node ./src/index.js",
+    "production": "cross-env NODE_ENV=production PORT=3000 node ./src/index.js",
     "test": "jest"
   },
   "author": "",
@@ -17,6 +18,7 @@
     "mongoose": "^5.12.3"
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "jest": "^26.6.3",
     "jest-mock-axios": "^4.3.0",
     "mongodb-memory-server": "^6.9.6",
