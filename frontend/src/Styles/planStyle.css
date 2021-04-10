@@ -1,0 +1,23 @@
+.planName {
+    font-size: large;
+}
+
+.planName:hover {
+    cursor: pointer;
+}
+
+.plusSign {
+    font-size: large;
+}
+
+.plusSign:hover {
+    cursor: pointer;
+}
+
+.threeDots {
+    font-size: large;
+}
+
+.threeDots:hover {
+    cursor: pointer;
+}
