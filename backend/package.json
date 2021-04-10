@@ -5,6 +5,7 @@
   "main": "./src/index.js",
   "scripts": {
     "start": "node ./src/index.js",
+    "live": "nodemon ./src/index.js",
     "production": "cross-env NODE_ENV=production PORT=3000 node ./src/index.js",
     "test": "jest"
   },
