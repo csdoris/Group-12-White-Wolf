@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-import { Plus } from 'react-bootstrap-icons';
+import AddIcon from '@material-ui/icons/Add';
 
 function CreateImportDropdown() {
     const [isOpen, setIsOpen] = useState(false);
@@ -34,7 +34,7 @@ function CreateImportDropdown() {
                 aria-haspopup="true"
                 onClick={openDropdown}
             >
-                <Plus className="plusSign" />
+                <AddIcon className="plusSign" />
             </Button>
             <Menu
                 anchorEl={isOpen}

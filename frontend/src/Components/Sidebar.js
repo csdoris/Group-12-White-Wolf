@@ -5,6 +5,7 @@ import Plan from './Plan.js';
 import CreateImportDropdown from './CreateImportDropdown.js';
 import DeleteDropdown from './deleteDropdown.js';
 import CreateEventDropdown from './CreateEvent.js';
+import '../Styles/SidebarStyles.css';
 
 function SideNav() {
     const [isOpen, setIsOpen] = useState();
