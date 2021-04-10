@@ -1,26 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import {
-    Drawer,
-    Button,
-    List,
-    Divider,
-    ListItem,
-    ListItemIcon,
-    ListItemText,
-} from '@material-ui/core';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
+import { Drawer, Button, List, Divider } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
-import { Plus, ThreeDotsVertical } from 'react-bootstrap-icons';
 import Plan from './Plan.js';
+import CreateImportDropdown from './CreateImportDropdown.js';
+import DeleteDropdown from './deleteDropdown.js';
+import CreateEventDropdown from './CreateEvent.js';
 
 function SideNav() {
     const [isOpen, setIsOpen] = useState();
+
     const [allPlans, setAllPlans] = useState([
-        'Plan1',
-        'Plan2',
-        'Plan3',
-        'Plan4',
+        { name: 'Plan1' },
+        { name: 'Plan2' },
+        { name: 'Plan3' },
+        { name: 'Plan4' },
     ]);
 
     function toggleDrawer() {
@@ -30,19 +23,18 @@ function SideNav() {
     }
 
     const listPlans = () => (
-        <div onClick={toggleDrawer()}>
+        <div>
             <List>
+                <h1>
+                    My plans
+                    <CreateImportDropdown />
+                </h1>
+
                 {allPlans.map((planName) => (
                     <div>
-                        <Button className="planName" href="#text-buttons">
-                            {planName}{' '}
-                        </Button>
-                        <Button>
-                            <Plus className="plusSign" />
-                        </Button>
-                        <Button>
-                            <ThreeDotsVertical className="threeDots" />
-                        </Button>
+                        <Plan name={planName} />
+                        <CreateEventDropdown />
+                        <DeleteDropdown />
                         <Divider />
                     </div>
                 ))}
@@ -57,7 +49,6 @@ function SideNav() {
                     <MenuIcon />
                 </Button>
                 <Drawer anchor="left" open={isOpen} onClose={toggleDrawer()}>
-                    <h1>My plans</h1>
                     {listPlans()}
                 </Drawer>
             </React.Fragment>

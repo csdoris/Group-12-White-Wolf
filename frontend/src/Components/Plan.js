@@ -1,22 +1,27 @@
 import React, { useState, useEffect } from 'react';
-
-import { Plus, ThreeDotsVertical } from 'react-bootstrap-icons';
+import Button from '@material-ui/core/Button';
 
 import '../Styles/planStyle.css';
 
 function Plan(planName) {
-    const [name, setName] = useState(planName);
+    const [name, setName] = useState(planName.name.name);
+    const [link, setLink] = useState();
+
+    const navigateToPlan = (event) => {
+        console.log('Go to plan');
+        console.log(name);
+    };
 
     return (
-        <div>
-            <label className="planName">{name}</label>
-            <label>
-                <Plus className="plusSign" />
-            </label>
-            <label>
-                <ThreeDotsVertical className="threeDots" />
-            </label>
-        </div>
+        <>
+            <Button
+                aria-controls="simple-menu"
+                aria-haspopup="true"
+                onClick={navigateToPlan}
+            >
+                <h3>{name}</h3>
+            </Button>
+        </>
     );
 }
 
