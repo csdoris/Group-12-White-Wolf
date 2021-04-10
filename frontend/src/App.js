@@ -1,5 +1,6 @@
 import React from 'react';
 import './App.css';
+import GoogleMaps from './Components/GoogleMaps';
 import SideNav from './Components/Sidebar';
 const axios = require('axios');
 
@@ -8,6 +9,7 @@ function App() {
         <>
             <SideNav />
             <button onClick={gettee}>click me to get</button>
+            <GoogleMaps />
         </>
     );
 }
