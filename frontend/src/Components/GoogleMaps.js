@@ -8,12 +8,12 @@ import {
 
 const libraries = ['places'];
 const mapContainerStyle = {
-    height: '90vh',
+    height: '100vh',
     width: '100vw',
 };
 const center = {
-    lat: 43.6532,
-    lng: -79.3832,
+    lat: -36.848461,
+    lng: 174.763336,
 };
 const options = {
     disableDefaultUI: true,
@@ -34,7 +34,7 @@ function GoogleMaps() {
             <GoogleMap
                 id="map"
                 mapContainerStyle={mapContainerStyle}
-                zoom={8}
+                zoom={10}
                 center={center}
                 options={options}
             ></GoogleMap>

@@ -108,7 +108,7 @@ function SideNav() {
                     <CreateImportDropdown addPlan={addPlan} />
                 </Grid>
                 {allPlans.map((planName) => (
-                    <div>
+                    <div key={planName.name}>
                         <Grid container justify="space-between">
                             <Plan name={planName} deletePlan={deletePlan} navigateToPlan={navigateToPlan}/>
                         </Grid>
