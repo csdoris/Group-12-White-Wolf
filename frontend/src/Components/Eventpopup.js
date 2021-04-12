@@ -6,13 +6,19 @@ import Box from '@material-ui/core/Box';
 import Modal from '@material-ui/core/Modal';
 import Fade from '@material-ui/core/Fade';
 import TextField from '@material-ui/core/TextField';
+import DatePicker from "react-datepicker";
+import { TimePicker } from '@patternfly/react-core';
+
+import "react-datepicker/dist/react-datepicker.css";
+import "@patternfly/react-core/dist/styles/base.css";
+import styles from './EventPopup.module.css';
 
 const style = {
     position: 'absolute',
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 400,
+    // width: 400,
     bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,
@@ -23,9 +29,9 @@ export default function EventPopup() {
 
     // data needed for creating event 
     const [title, setTitle] = useState(null);
-    const [data, setDate] = useState(null);
-    const [from, setFrom] = useState(null);
-    const [to, setTo] = useState(null);
+    const [date, setDate] = useState(new Date());
+    const [timeFrom, setTimeFrom] = useState(null);
+    const [timeTo, setTimeTo] = useState(null);
     const [location, setLocation] = useState(null);
     const [description, setDescription] = useState(null);
 
@@ -38,6 +44,7 @@ export default function EventPopup() {
     const handleClose = () => {
         setOpen(false);
     };
+
 
     return (
         <div>
@@ -62,8 +69,11 @@ export default function EventPopup() {
                                 onInput={e => {setTitle(e.target.value)}}
                             />
                         </div>
-                        <div>
-                            
+                        <div className={styles.dateBox}>
+                            <DatePicker selected={date} defaultTime="3:35 AM" tonChange={date => setDate(date)} />
+                            <TimePicker value={timeFrom} defaultTime="3:35 AM" onChange={time => setTimeFrom(time)}/> 
+                            to
+                            <TimePicker value={timeTo} onChange={time => setTimeTo(time)}/>
                         </div>
                     </Box>
                 </Fade>
