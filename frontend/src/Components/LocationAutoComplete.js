@@ -6,7 +6,6 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import parse from 'autosuggest-highlight/parse';
-import throttle from 'lodash/throttle';
 
 function loadScript(src, position, id) {
     if (!position) {
@@ -20,8 +19,6 @@ function loadScript(src, position, id) {
     position.appendChild(script);
 }
 
-const autocompleteService = { current: null };
-
 const useStyles = makeStyles((theme) => ({
     icon: {
         color: theme.palette.text.secondary,
@@ -29,11 +26,8 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function LocationAutoComplete() {
+export default function LocationAutoComplete({value, options, handleChange, handleInputChange}) {
     const classes = useStyles();
-    const [value, setValue] = React.useState(null);
-    const [inputValue, setInputValue] = React.useState('');
-    const [options, setOptions] = React.useState([]);
     const loaded = React.useRef(false);
 
     const API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
@@ -51,53 +45,9 @@ export default function LocationAutoComplete() {
         loaded.current = true;
     }
 
-    const fetch = React.useMemo(
-        () =>
-            throttle((request, callback) => {
-                autocompleteService.current.getPlacePredictions(request, callback);
-            }, 200),
-        [],
-    );
-
-    React.useEffect(() => {
-        let active = true;
-
-        if (!autocompleteService.current && window.google) {
-            autocompleteService.current = new window.google.maps.places.AutocompleteService();
-        }
-        if (!autocompleteService.current) {
-            return undefined;
-        }
-
-        if (inputValue === '') {
-            setOptions(value ? [value] : []);
-            return undefined;
-        }
-
-        fetch({ input: inputValue }, (results) => {
-            if (active) {
-                let newOptions = [];
-
-                if (value) {
-                    newOptions = [value];
-                }
-
-                if (results) {
-                    newOptions = [...newOptions, ...results];
-                }
-
-                setOptions(newOptions);
-            }
-        });
-
-        return () => {
-            active = false;
-        };
-    }, [value, inputValue, fetch]);
-
     return (
-        <Autocomplete
-            id="google-map-demo"
+        <Autocomplete 
+            id="google-map"
             style={{ width: 300 }}
             getOptionLabel={(option) => (typeof option === 'string' ? option : option.description)}
             filterOptions={(x) => x}
@@ -106,13 +56,8 @@ export default function LocationAutoComplete() {
             includeInputInList
             filterSelectedOptions
             value={value}
-            onChange={(event, newValue) => {
-                setOptions(newValue ? [newValue, ...options] : options);
-                setValue(newValue);
-            }}
-            onInputChange={(event, newInputValue) => {
-                setInputValue(newInputValue);
-            }}
+            onChange={(event, newValue) => handleChange(event, newValue)}
+            onInputChange={(event, newInputValue) => handleInputChange(event, newInputValue)}
             renderInput={(params) => (
                 <TextField {...params} label="Add a location" variant="outlined" fullWidth />
             )}
