@@ -9,6 +9,8 @@ import TextField from '@material-ui/core/TextField';
 import DatePicker from "react-datepicker";
 import { TimePicker } from '@patternfly/react-core';
 
+import LocationAutoComplete from './LocationAutoComplete';
+
 import "react-datepicker/dist/react-datepicker.css";
 import "@patternfly/react-core/dist/styles/base.css";
 import styles from './EventPopup.module.css';
@@ -28,7 +30,7 @@ const style = {
 export default function EventPopup() {
 
     // data needed for creating event 
-    const [title, setTitle] = useState(null);
+    const [title, setTitle] = useState("");
     const [date, setDate] = useState(new Date());
     const [timeFrom, setTimeFrom] = useState(null);
     const [timeTo, setTimeTo] = useState(null);
@@ -54,7 +56,7 @@ export default function EventPopup() {
                 open={open}
                 onClose={handleClose}
                 closeAfterTransition
-                BackdropComponent={Backdrop}
+                BackdropComponent={Backdrop} 
                 BackdropProps={{
                     timeout: 500,
                 }}
@@ -68,12 +70,15 @@ export default function EventPopup() {
                                 value={title}
                                 onInput={e => {setTitle(e.target.value)}}
                             />
-                        </div>
+                        </div> 
                         <div className={styles.dateBox}>
                             <DatePicker selected={date} defaultTime="3:35 AM" tonChange={date => setDate(date)} />
                             <TimePicker value={timeFrom} defaultTime="3:35 AM" onChange={time => setTimeFrom(time)}/> 
                             to
                             <TimePicker value={timeTo} onChange={time => setTimeTo(time)}/>
+                        </div>
+                        <div>
+                            <LocationAutoComplete />
                         </div>
                     </Box>
                 </Fade>
