@@ -4,7 +4,7 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import AddIcon from '@material-ui/icons/Add';
 
-function CreateImportDropdown() {
+function CreateImportDropdown({ addPlan }) {
     const [isOpen, setIsOpen] = useState(false);
 
     const openDropdown = (event) => {
@@ -16,13 +16,14 @@ function CreateImportDropdown() {
     };
 
     const createPlan = () => {
-        setIsOpen(null);
+        closeDropdown();
         console.log('clicked create');
         console.log('modal opens');
+        addPlan();
     };
 
     const importPlan = () => {
-        setIsOpen(null);
+        closeDropdown();
         console.log('clicked import');
         console.log('modal opens');
     };
