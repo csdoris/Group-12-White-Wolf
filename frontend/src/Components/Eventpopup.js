@@ -8,12 +8,15 @@ import Box from '@material-ui/core/Box';
 import Modal from '@material-ui/core/Modal';
 import Fade from '@material-ui/core/Fade';
 import TextField from '@material-ui/core/TextField';
+import CloseIcon from '@material-ui/icons/Close';
 import DatePicker from "react-datepicker";
 import { TimePicker } from '@patternfly/react-core';
 import LocationAutoComplete from './LocationAutoComplete';
 import throttle from 'lodash/throttle';
 
 import styles from './EventPopup.module.css';
+import "./DatePicker.css"
+import "./TimePicker.css"
 import "react-datepicker/dist/react-datepicker.css";
 import "@patternfly/react-core/dist/styles/base.css";
 
@@ -23,7 +26,7 @@ const style = {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    // width: 400,
+    width: "50%",
     bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,
@@ -36,11 +39,12 @@ export default function EventPopup() {
     const [open, setOpen] = React.useState(true);
 
     // data needed for creating event 
-    const [title, setTitle] = useState("No Title");
-    const [date, setDate] = useState(new Date());
-    const [timeFrom, setTimeFrom] = useState("12:00 PM");
-    const [timeTo, setTimeTo] = useState("12:00 PM");
-    const [description, setDescription] = useState("no description");
+    const [title, setTitle] = useState("");
+    const [dateFrom, setDateFrom] = useState(new Date());
+    const [dateTo, setDateTo] = useState(new Date());
+    const [timeFrom, setTimeFrom] = useState(convert24HourTo12Hour(dateFrom));
+    const [timeTo, setTimeTo] = useState(convert24HourTo12Hour(dateTo));
+    const [description, setDescription] = useState("");
 
     // state for location autocomplete
     const [location, setLocation] = useState(null);
@@ -64,9 +68,95 @@ export default function EventPopup() {
         setOpen(false);
     };
 
+    // used when initialise the timeTo and timeFrom state
+    function convert24HourTo12Hour(date) {
+        var hour = date.getHours();
+        var minute = date.getMinutes();
+        var modifier = "AM";
+
+        if (hour === 0) {
+            hour = parseInt(hour) + 12;
+        }
+        else if ((hour >= 13) && (hour < 24)) {
+            hour = parseInt(hour) - 12;
+            modifier = "PM";
+        }
+
+        const time = hour + ":" + minute + " " + modifier;
+        return time;
+    }
+
+    function convert12HourTo24Hour(time) {
+        // format of time is: 12:00 PM
+        // time: 12:00
+        // modifier: PM/AM
+        var [time, modifier] = time.split(" ");
+        var [hour, minute] = time.split(":");
+       
+        // convert to 24 hours 
+        if ((modifier === "AM") && (hour === "12"))  {
+            hour = 0;
+        }
+        else if ((modifier === "PM") && (hour >= 1) && (hour < 12)) {
+            hour = parseInt(hour) + 12;
+        }
+
+        return [hour, minute];
+    }
+
+    function handleDateChange(isDateFrom, newDate) {
+        var [hour, minute] = ['', ''];
+
+        if (isDateFrom) {
+            [hour, minute] = convert12HourTo24Hour(timeFrom);
+        }
+        else {
+            [hour, minute] = convert12HourTo24Hour(timeTo);
+        }
+
+        newDate.setHours(hour);
+        newDate.setMinutes(minute);
+
+        if (isDateFrom) {
+            // check if DateTo is smaller than date from, if it is, then we update the 
+            // day, month and year in DateTo to be the same as the new Date
+            if (dateTo.getTime() < newDate.getTime()) {
+                var newDateTo = new Date(dateTo.getTime());
+                newDateTo.setDate(newDate.getDate());
+                newDateTo.setMonth(newDate.getMonth());
+                newDateTo.setFullYear(newDate.getFullYear());
+                setDateTo(newDateTo);
+            }
+            setDateFrom(newDate);
+        }
+        else {
+            setDateTo(newDate);
+        }
+    }
+
+    function handleTimeChange(isTimeFrom, newTime) {
+        const [hour, minute] = convert12HourTo24Hour(newTime);
+
+        var newDate = new Date(dateFrom.getTime());
+        newDate.setHours(hour);
+        newDate.setMinutes(minute);
+        
+        if (isTimeFrom) {
+            // update the dateFrom object
+            setTimeFrom(newTime);
+            setDateFrom(newDate);
+        }
+        else {
+            // update the dateTo object
+            setTimeTo(newTime);
+            setDateTo(newDate);
+        }
+    }
+
     function handleSave() {
         console.log(title);
-        console.log(date);
+        console.log(dateFrom);
+        console.log(dateTo);
         console.log(timeFrom);
         console.log(timeTo);
         console.log(location);
@@ -131,19 +221,29 @@ export default function EventPopup() {
                 }}
             >
                 <Fade in={open}>
-                    <Box sx={style}>
+                    <Box sx={style} className={styles.modal}>
+                        <div className={styles.buttonDiv}> 
+                            <CloseIcon 
+                                className={styles.closeIcon}
+                                color="primary"
+                                onClick={handleClose}
+                            />
+                        </div>
                         <div>
                             <Input
+                                fullWidth={true}
                                 placeholder="< Insert title here >"
                                 inputProps={{ 'aria-label': 'description' }}
                                 onInput={e => { setTitle(e.target.value) }}
+                                value={title}
                             />
                         </div>
-                        <div className={styles.dateBox}>
-                            <DatePicker selected={date} onChange={date => setDate(date)} />
-                            <TimePicker value={timeFrom} defaultTime={timeTo} onChange={time => setTimeFrom(time)} />
-                            to
-                            <TimePicker value={timeTo} defaultTime={timeFrom} onChange={time => setTimeTo(time)} />
+                        <div className={styles.timeDiv}>
+                            <DatePicker selected={dateFrom} onChange={date => handleDateChange(true, date)}/>
+                            <TimePicker value={timeFrom} defaultTime={timeFrom} onChange={time => handleTimeChange(true, time)} />
+                            <div className={styles.to}>to</div>
+                            <DatePicker selected={dateTo} onChange={date => handleDateChange(false, date)} />
+                            <TimePicker value={timeTo} defaultTime={timeTo} onChange={time => handleTimeChange(false, time)} />
                         </div>
                         <div>
                             <LocationAutoComplete
@@ -161,11 +261,15 @@ export default function EventPopup() {
                                 rows={4}
                                 variant="outlined"
                                 onChange={e => setDescription(e.target.value)}
+                                value={description}
+                                fullWidth={true}
                             />
                         </div>
-                        <Button variant="contained" color="primary" onClick={handleSave}>
-                            Save
-                        </Button>
+                        <div className={styles.buttonDiv}>
+                            <Button variant="contained" color="primary" onClick={handleSave}>
+                                Save
+                            </Button>
+                        </div>
                     </Box>
                 </Fade>
             </Modal>

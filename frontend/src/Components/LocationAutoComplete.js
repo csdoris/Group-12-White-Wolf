@@ -48,7 +48,7 @@ export default function LocationAutoComplete({value, options, handleChange, hand
     return (
         <Autocomplete 
             id="google-map"
-            style={{ width: 300 }}
+            style={{ width: '100%' }}
             getOptionLabel={(option) => (typeof option === 'string' ? option : option.description)}
             filterOptions={(x) => x}
             options={options}

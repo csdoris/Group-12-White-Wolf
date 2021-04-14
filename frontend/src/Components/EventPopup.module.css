@@ -1,3 +1,22 @@
-.dateBox {
+.modal > div {
     display: flex;
+    margin: 2%;
+}
+
+.buttonDiv {
+    flex-direction: row-reverse;
+}
+
+.closeIcon:hover {
+    cursor: pointer;
+}
+
+.timeDiv {
+    justify-content: left;
+    align-items: center;
+}
+
+.to {
+    margin-left: 3%;
+    margin-right: 3%;
 }

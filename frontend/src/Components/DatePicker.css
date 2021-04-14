@@ -1,0 +1,17 @@
+.react-datepicker-popper {
+    z-index: 10 !important;
+}
+
+.react-datepicker-wrapper {
+    max-width: 10rem;
+}
+
+.react-datepicker__input-container > input {
+    width: 100%;
+    border: 1px solid #949494;
+    border-radius: 5px;
+}
+
+.react-datepicker__input-container > input:focus {
+    outline-color: #4859B8;
+}

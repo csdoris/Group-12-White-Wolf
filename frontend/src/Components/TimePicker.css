@@ -1,0 +1,22 @@
+.pf-c-date-picker {
+    margin-left: 2% !important;
+}
+
+.pf-c-select__menu {
+    background-color: white !important;
+}
+
+.pf-c-select__toggle {
+    width: 7rem;
+}
+
+.pf-c-select__toggle > input {
+    width: 100%;
+    border: 1px solid #949494;
+    border-radius: 5px;
+}
+
+.pf-c-select__toggle > input:focus {
+    outline-color: #4859B8;
+    padding: 0;
+}
