@@ -6,18 +6,26 @@ import {
     Divider,
     Grid,
     TextField,
-    Input,
+    IconButton,
 } from '@material-ui/core';
-import MenuIcon from '@material-ui/icons/Menu';
+import ArrowRightIcon from '@material-ui/icons/ArrowRight';
+import ArrowLeftIcon from '@material-ui/icons/ArrowLeft';
 import Plan from './Plan.js';
 import CreateImportDropdown from './CreateImportDropdown.js';
-import DeleteDropdown from './deleteDropdown.js';
 import { makeStyles } from '@material-ui/core/styles';
 import '../Styles/SidebarStyles.css';
 
 const useStyles = makeStyles(() => ({
     drawer: {
         width: '350px',
+    },
+    openButton: {
+        backgroundColor: 'lightgrey',
+    },
+    closeButton: {
+        position: 'absolute',
+        left: '350px',
+        backgroundColor: 'lightgrey',
     },
 }));
 
@@ -110,12 +118,28 @@ function SideNav() {
     return (
         <div>
             <React.Fragment>
-                <Button onClick={toggleDrawer()}>
-                    <MenuIcon />
+                <Button
+                    onClick={toggleDrawer()}
+                    className={classes.openButton}
+                >
+                    <ArrowRightIcon />
                 </Button>
-                <Drawer anchor="left" open={isOpen} onClose={toggleDrawer()}>
+                <Drawer
+                    anchor="left"
+                    open={isOpen}
+                    onClose={toggleDrawer()}
+                    variant="persistent"
+                >
                     {listPlans()}
                 </Drawer>
+                {isOpen && (
+                    <Button
+                        onClick={toggleDrawer()}
+                        className={classes.closeButton}
+                    >
+                        <ArrowLeftIcon />
+                    </Button>
+                )}
             </React.Fragment>
         </div>
     );
