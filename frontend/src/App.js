@@ -1,6 +1,7 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+const axios = require('axios');
 
 function App() {
   return (
@@ -19,8 +20,22 @@ function App() {
           Learn React
         </a>
       </header>
+      <button onClick={gettee}>click me to get</button>
     </div>
   );
+}
+
+// example post to backend
+const gettee = () => {
+  console.log("clicked");
+  axios.post('/', {
+    firstName: 'Fred',
+    lastName: 'Flintstone'
+  }).then((result) => {
+    console.log(result.data);
+  }).catch((err) => {
+    console.log(err);
+  });
 }
 
 export default App;
