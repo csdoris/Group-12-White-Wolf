@@ -118,10 +118,7 @@ function SideNav() {
     return (
         <div>
             <React.Fragment>
-                <Button
-                    onClick={toggleDrawer()}
-                    className={classes.openButton}
-                >
+                <Button onClick={toggleDrawer()} className={classes.openButton}>
                     <ArrowRightIcon />
                 </Button>
                 <Drawer
