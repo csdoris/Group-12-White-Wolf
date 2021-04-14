@@ -1,14 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { Drawer, Button, List, Divider } from '@material-ui/core';
+import { Drawer, Button, List, Divider, Grid } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import Plan from './Plan.js';
 import CreateImportDropdown from './CreateImportDropdown.js';
 import DeleteDropdown from './deleteDropdown.js';
-import CreateEventDropdown from './CreateEvent.js';
+import { makeStyles } from '@material-ui/core/styles';
 import '../Styles/SidebarStyles.css';
+
+const useStyles = makeStyles((theme) => ({
+    drawer: {
+        width: '350px',
+    },
+}));
 
 function SideNav() {
     const [isOpen, setIsOpen] = useState();
+    const classes = useStyles();
 
     const [allPlans, setAllPlans] = useState([
         { name: 'Plan1' },
@@ -26,16 +33,22 @@ function SideNav() {
     const listPlans = () => (
         <div>
             <List>
-                <h1>
-                    My plans
+                <Grid
+                    container
+                    direction="row"
+                    justify="space-between"
+                    className={classes.drawer}
+                >
+                    <h1>My plans</h1>
                     <CreateImportDropdown />
-                </h1>
-
+                </Grid>
                 {allPlans.map((planName) => (
                     <div>
-                        <Plan name={planName} />
-                        <CreateEventDropdown />
-                        <DeleteDropdown />
+                        <Grid container justify="space-between">
+                            <Plan name={planName} />
+
+                            <DeleteDropdown />
+                        </Grid>
                         <Divider />
                     </div>
                 ))}
