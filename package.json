@@ -4,9 +4,12 @@
 	"description": "",
 	"main": "main.js",
 	"scripts": {
-	  "start": "cd backend && npm i && npm start"
+		"start": "cd backend && npm i && npm start"
 	},
 	"keywords": [],
 	"author": "",
-	"license": "ISC"
+	"license": "ISC",
+	"dependencies": {
+		"bcryptjs": "^2.4.3"
+	}
 }
