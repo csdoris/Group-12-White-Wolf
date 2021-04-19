@@ -16,6 +16,11 @@ const mongoURI = process.env.ATLAS_URI || process.env.MONGODB_URI;
 // Setup body-parser
 app.use(express.json());
 
+// Setup our routes.
+import routes from './routes';
+app.use('/', routes);
+
+
 // Serve up frontend build in production
 if (process.env.NODE_ENV === 'production') {
     console.log('Running in production!');
@@ -29,12 +34,17 @@ if (process.env.NODE_ENV === 'production') {
     });
 }
 
-//example listen to post request
-app.post('/', (req, res) => {
-    const myObj = { message: 'hello world' };
-    res.status(200).send(myObj);
-    console.log('here');
-});
+// Setup our routes.
+import routes from './routes';
+app.use('/', routes);
+
+
+// //example listen to post request
+// app.post('/', (req, res) => {
+//     const myObj = { message: 'hello world' };
+//     res.status(200).send(myObj);
+//     console.log('here');
+// });
 
 // Connect to MongoDb and if successful start server
 Mongoose.connect(mongoURI, {
