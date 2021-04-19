@@ -18,12 +18,13 @@
  
  const router = express.Router();
  
+ router.use(middleware?)
+
  // Create new plan
  router.post('/', async (req, res) => {
      const newPlan = await createPlan({
-         title: req.body.title,
-         image: req.body.image,
-         content: req.body.content
+         name: req.body.name,
+         events: req.body.events,
      });
  
      res.status(HTTP_CREATED)
@@ -32,7 +33,7 @@
  })
  
  // Retrieve all plans
- router.get('/plans', async (req, res) => {
+ router.get('/', async (req, res) => {
  
      // Uncomment the following code to introduce an artificial delay before the response
      // is sent back to the client.

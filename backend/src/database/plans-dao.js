@@ -20,11 +20,9 @@ async function updatePlan(plan) {
 
     const dbPlan = await Plan.findById(plan._id);
     if (dbPlan) {
-
-        dbPlan.title = plan.title;
-        dbPlan.date = dayjs(plan.date).toDate();
-        dbPlan.content = plan.content;
-        dbPlan.image = plan.image;
+        
+        dbPlan.name = plan.name;
+        dbPlan.events = plan.events;
 
         await dbPlan.save();
         return true;

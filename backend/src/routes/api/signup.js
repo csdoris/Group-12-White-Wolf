@@ -12,16 +12,17 @@
  const router = express.Router();
  
  // Create new user
+ //TODO auth token
  router.post('/', async (req, res) => {
-    const newArticle = await createUser({
+    const newUser = await createUser({
         username: req.body.username,
-        image: req.body.image,
-        content: req.body.content
+        email: req.body.email,
+        password: req.body.password
     });
 
     res.status(HTTP_CREATED)
-        .header('Location', `/api/articles/${newArticle._id}`)
-        .json(newArticle);
+        .header('Location', `/api/articles/${newUser._id}`)
+        .json(newUser);
  })
  
  export default router;
