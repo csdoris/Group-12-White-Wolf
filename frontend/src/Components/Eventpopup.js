@@ -14,9 +14,9 @@ import { TimePicker } from '@patternfly/react-core';
 import LocationAutoComplete from './LocationAutoComplete';
 import throttle from 'lodash/throttle';
 
-import styles from './EventPopup.module.css';
-import "./DatePicker.css"
-import "./TimePicker.css"
+import styles from '../Styles/EventPopup.module.css';
+import "../Styles/DatePicker.css"
+import "../Styles/TimePicker.css"
 import "react-datepicker/dist/react-datepicker.css";
 import "@patternfly/react-core/dist/styles/base.css";
 
