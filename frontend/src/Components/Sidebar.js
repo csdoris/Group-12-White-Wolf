@@ -14,6 +14,7 @@ import Plan from './Plan.js';
 import CreateImportDropdown from './CreateImportDropdown.js';
 import { makeStyles } from '@material-ui/core/styles';
 import '../Styles/SidebarStyles.css';
+import SidebarForEvents from './SidebarForEvents.js';
 
 const useStyles = makeStyles(() => ({
     drawer: {
@@ -31,13 +32,15 @@ const useStyles = makeStyles(() => ({
 
 function SideNav() {
     const [isOpen, setIsOpen] = useState();
+    const [planShown, setPlanShown] = useState(null);
     const classes = useStyles();
 
+    // information and function to control plans 
     const [allPlans, setAllPlans] = useState([
-        { name: 'Plan1' },
-        { name: 'Plan2' },
-        { name: 'Plan3' },
-        { name: 'Plan4' },
+        { id: 1, name: 'Plan1' },
+        { id: 2, name: 'Plan2' },
+        { id: 3, name: 'Plan3' },
+        { id: 4, name: 'Plan4' },
     ]);
 
     const [addingPlan, setAddingPlan] = useState(false);
@@ -79,6 +82,19 @@ function SideNav() {
         setAllPlans(temp);
     }
 
+    // handles the situation when a plan is clicked 
+    function navigateToPlan(id, name) {
+        const planClick = {
+            id: id,
+            name: name
+        };
+        setPlanShown(planClick);
+    };
+
+    function handleGoBackToPlans() {
+        setPlanShown(null);
+    }
+
     const listPlans = () => (
         <div>
             <List>
@@ -94,7 +110,7 @@ function SideNav() {
                 {allPlans.map((planName) => (
                     <div>
                         <Grid container justify="space-between">
-                            <Plan name={planName} deletePlan={deletePlan} />
+                            <Plan name={planName} deletePlan={deletePlan} navigateToPlan={navigateToPlan}/>
                         </Grid>
                         <Divider />
                     </div>
@@ -121,13 +137,17 @@ function SideNav() {
                 <Button onClick={toggleDrawer()} className={classes.openButton}>
                     <ArrowRightIcon />
                 </Button>
+
+                {/* content in the sideabr */}
                 <Drawer
                     anchor="left"
                     open={isOpen}
                     onClose={toggleDrawer()}
                     variant="persistent"
                 >
-                    {listPlans()}
+                    {
+                        planShown == null ? listPlans() : <SidebarForEvents plan={planShown} handleGoBackToPlans={handleGoBackToPlans}/>
+                    }
                 </Drawer>
                 {isOpen && (
                     <Button

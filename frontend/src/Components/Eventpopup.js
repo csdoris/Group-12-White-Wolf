@@ -35,8 +35,7 @@ const style = {
 
 const autocompleteService = { current: null };
 
-export default function EventPopup() {
-    const [open, setOpen] = React.useState(true);
+export default function EventPopup({open, handleClose, handleSave}) {
 
     // data needed for creating event 
     const [title, setTitle] = useState("");
@@ -59,14 +58,6 @@ export default function EventPopup() {
     function handleLocationInputValueChange(event, newInputValue) {
         setLocationInputValue(newInputValue);
     }
-
-    const handleOpen = () => {
-        setOpen(true);
-    };
-
-    const handleClose = () => {
-        setOpen(false);
-    };
 
     // used when initialise the timeTo and timeFrom state
     function convert24HourTo12Hour(date) {
@@ -153,16 +144,6 @@ export default function EventPopup() {
         }
     }
 
-    function handleSave() {
-        console.log(title);
-        console.log(dateFrom);
-        console.log(dateTo);
-        console.log(timeFrom);
-        console.log(timeTo);
-        console.log(location);
-        console.log(description);
-    }
-
     const fetch = React.useMemo(
         () =>
             throttle((request, callback) => {
@@ -213,7 +194,7 @@ export default function EventPopup() {
                 aria-labelledby="transition-modal-title"
                 aria-describedby="transition-modal-description"
                 open={open}
-                onClose={handleClose}
+                onClose={() => handleClose()}
                 closeAfterTransition
                 BackdropComponent={Backdrop}
                 BackdropProps={{
@@ -221,12 +202,12 @@ export default function EventPopup() {
                 }}
             >
                 <Fade in={open}>
-                    <Box sx={style} className={styles.modal}>
+                    <div className={styles.modal}>
                         <div className={styles.buttonDiv}> 
                             <CloseIcon 
                                 className={styles.closeIcon}
                                 color="primary"
-                                onClick={handleClose}
+                                onClick={() => handleClose()}
                             />
                         </div>
                         <div>
@@ -266,11 +247,11 @@ export default function EventPopup() {
                             />
                         </div>
                         <div className={styles.buttonDiv}>
-                            <Button variant="contained" color="primary" onClick={handleSave}>
+                            <Button variant="contained" color="primary" onClick={() => handleSave()}>
                                 Save
                             </Button>
                         </div>
-                    </Box>
+                    </div>
                 </Fade>
             </Modal>
         </div>
