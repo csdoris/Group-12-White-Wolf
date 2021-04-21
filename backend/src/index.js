@@ -20,6 +20,13 @@ app.use(express.json());
 if (process.env.NODE_ENV === 'production') {
     console.log('Running in production!');
 
+    // Make all files in that folder public
+    app.use(express.static(path.join(__dirname, '../../frontend/build')));
+
+    // If we get any GET request we can't process using one of the server routes, serve up index.html by default.
+    app.get('*', (req, res) => {
+        res.sendFile(path.join(__dirname, '../../frontend/build/index.html'));
+    });
 }
 
 //example listen to post request
