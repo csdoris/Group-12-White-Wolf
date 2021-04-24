@@ -7,6 +7,7 @@ import {
     Grid,
     TextField,
     IconButton,
+    Slide,
 } from '@material-ui/core';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import ArrowLeftIcon from '@material-ui/icons/ArrowLeft';
@@ -21,12 +22,19 @@ const useStyles = makeStyles(() => ({
         width: '350px',
     },
     openButton: {
-        backgroundColor: 'lightgrey',
+        backgroundColor: 'grey',
+        position: 'absolute',
+        zIndex: '1200',
+        opacity: '70%',
+        '&:hover': { cursor: 'pointer', opacity: '100%' },
     },
     closeButton: {
         position: 'absolute',
         left: '350px',
-        backgroundColor: 'lightgrey',
+        backgroundColor: 'grey',
+        zIndex: '1200',
+        opacity: '70%',
+        '&:hover': { cursor: 'pointer', opacity: '100%' },
     },
 }));
 
@@ -35,7 +43,7 @@ function SideNav() {
     const [planShown, setPlanShown] = useState(null);
     const classes = useStyles();
 
-    // information and function to control plans 
+    // information and function to control plans
     const [allPlans, setAllPlans] = useState([
         { id: 1, name: 'Plan1' },
         { id: 2, name: 'Plan2' },
@@ -82,14 +90,14 @@ function SideNav() {
         setAllPlans(temp);
     }
 
-    // handles the situation when a plan is clicked 
+    // handles the situation when a plan is clicked
     function navigateToPlan(id, name) {
         const planClick = {
             id: id,
-            name: name
+            name: name,
         };
         setPlanShown(planClick);
-    };
+    }
 
     function handleGoBackToPlans() {
         setPlanShown(null);
@@ -110,7 +118,11 @@ function SideNav() {
                 {allPlans.map((planName) => (
                     <div key={planName.name}>
                         <Grid container justify="space-between">
-                            <Plan name={planName} deletePlan={deletePlan} navigateToPlan={navigateToPlan}/>
+                            <Plan
+                                name={planName}
+                                deletePlan={deletePlan}
+                                navigateToPlan={navigateToPlan}
+                            />
                         </Grid>
                         <Divider />
                     </div>
@@ -134,9 +146,11 @@ function SideNav() {
     return (
         <div>
             <React.Fragment>
-                <Button onClick={toggleDrawer()} className={classes.openButton}>
-                    <ArrowRightIcon />
-                </Button>
+                <ArrowRightIcon
+                    onClick={toggleDrawer()}
+                    className={classes.openButton}
+                    style={{ fontSize: 40 }}
+                />
 
                 {/* content in the sideabr */}
                 <Drawer
@@ -145,17 +159,28 @@ function SideNav() {
                     onClose={toggleDrawer()}
                     variant="persistent"
                 >
-                    {
-                        planShown == null ? listPlans() : <SidebarForEvents plan={planShown} handleGoBackToPlans={handleGoBackToPlans}/>
-                    }
+                    {planShown == null ? (
+                        listPlans()
+                    ) : (
+                        <SidebarForEvents
+                            plan={planShown}
+                            handleGoBackToPlans={handleGoBackToPlans}
+                        />
+                    )}
                 </Drawer>
                 {isOpen && (
-                    <Button
-                        onClick={toggleDrawer()}
-                        className={classes.closeButton}
+                    <Slide
+                        direction="right"
+                        in={isOpen}
+                        mountOnEnter
+                        unmountOnExit
                     >
-                        <ArrowLeftIcon />
-                    </Button>
+                        <ArrowLeftIcon
+                            onClick={toggleDrawer()}
+                            className={classes.closeButton}
+                            style={{ fontSize: 40 }}
+                        />
+                    </Slide>
                 )}
             </React.Fragment>
         </div>
