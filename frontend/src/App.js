@@ -1,13 +1,13 @@
 import React from 'react';
 import './App.css';
-import SideNav from './Components/Sidebar';
+import Home from './Pages/Home';
 const axios = require('axios');
 
 function App() {
     return (
         <>
-            <SideNav />
-            <button onClick={gettee}>click me to get</button>
+            {/* <button onClick={gettee}>click me to get</button> */}
+            <Home />
         </>
     );
 }
