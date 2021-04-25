@@ -16,7 +16,7 @@
     const username = req.body.username
     const password = req.body.pasword
     //retrieve user info from db
-    const dbUser = await retrieveUser(username);    
+    // const dbUser = await retrieveUser(username);    
     
     
      res.status(HTTP_CREATED)

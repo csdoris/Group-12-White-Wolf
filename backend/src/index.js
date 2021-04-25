@@ -34,10 +34,6 @@ if (process.env.NODE_ENV === 'production') {
     });
 }
 
-// Setup our routes.
-import routes from './routes';
-app.use('/', routes);
-
 
 // //example listen to post request
 // app.post('/', (req, res) => {
