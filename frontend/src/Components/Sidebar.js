@@ -72,22 +72,18 @@ function SideNav() {
     function submitPlanName(e) {
         if (e.key === 'Enter') {
             setAddingPlan(false);
-            setAllPlans([...allPlans, { name: newPlanName }]);
+            setAllPlans([...allPlans, { id: 3, name: newPlanName }]);
         }
     }
 
     function deletePlan(planName) {
         console.log(planName);
-        let planIndex = 0;
-        allPlans.forEach((plan, index) => {
-            if (plan.name === planName) {
-                planIndex = index;
-            }
-        });
-        console.log(planIndex);
-        let temp = allPlans;
-        temp.splice(planIndex, 1);
-        setAllPlans(temp);
+        let matchingPlanName = (element) => element.name === planName;
+        let indexOfPlan = allPlans.findIndex(matchingPlanName);
+        setAllPlans([
+            ...allPlans.slice(0, indexOfPlan),
+            ...allPlans.slice(indexOfPlan + 1),
+        ]);
     }
 
     // handles the situation when a plan is clicked
