@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 
 const Schema = mongoose.Schema;
 
@@ -32,7 +32,7 @@ export const User = mongoose.model('User', userSchema);
 
 const planSchema = new Schema({
 
-    name: String,
+    name: {type: String, default: "Untitled"},
 
     events: [{
         name: String,

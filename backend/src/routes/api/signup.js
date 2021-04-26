@@ -3,6 +3,9 @@
  */
 
  import express from 'express';
+ import {
+    createUser
+} from '../../database/user-dao';
 
  // const HTTP_OK = 200; // Not really needed; this is the default if you don't set something else.
  const HTTP_CREATED = 201;
