@@ -12,8 +12,8 @@ async function retrieveUserList() {
     return await User.find({},'name');
 }
 
-async function retrieveUser(id) {
-    return await User.findById(id);
+async function retrieveUser(search) {
+    return await User.findOne({username: search});
 }
 
 // Kinda sus, needs to supply info to be overwritten
