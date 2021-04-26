@@ -17,7 +17,6 @@ const jwt = require('jsonwebtoken');
  const router = express.Router();
  
  // Create new user
- //TODO auth token
  router.post('/', async (req, res) => {
     const newUser = await createUser({
         username: req.body.username,
@@ -32,7 +31,7 @@ const jwt = require('jsonwebtoken');
 
     res.status(HTTP_CREATED)
     .header('Location', `/api/users/${newUser._id}`)
-    .json({newUser, token:token});
+    .json({user: newUser, token:token});
  })
  
  export default router;

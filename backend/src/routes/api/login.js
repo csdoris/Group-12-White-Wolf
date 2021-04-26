@@ -17,20 +17,25 @@ const router = express.Router();
 
 // login user
 router.post('/', async (req, res) => {
-    const username = req.body.username
+    const email = req.body.email
     const password = req.body.pasword
     //retrieve user info from db
-    const dbUser = await retrieveUser(username);    
+    const dbUser = await retrieveUser(email);    
+
+    if (dbUser) {
+        const token = jwt.sign(
+            { userId: dbUser._id }, 
+            process.env.SECRET_KEY,
+            { expiresIn: '24h' });
     
-    const token = jwt.sign(
-        { userId: dbUser._id }, 
-        process.env.SECRET_KEY,
-        { expiresIn: '24h' });
+    
+        res.status(HTTP_CREATED)
+            .header('Location', `/api/users/${dbUser._id}`)
+            .json({user: dbUser, token:token});
+    } else {
+        res.sendStatus(HTTP_NOT_FOUND);
+    }
 
-
-    res.status(HTTP_CREATED)
-        .header('Location', `/api/users/${newUser._id}`)
-        .json({newUser, token:token});
 })
 
 export default router;
