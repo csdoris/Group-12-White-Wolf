@@ -16,7 +16,7 @@ function App() {
 // example post to backend
 const gettee = async () => {
     console.log('clicked');
-    let weatherInfo = await FetchWeatherInfo('Auckland');
+    let weatherInfo = await FetchWeatherInfo('Auckland' , 36.8509, 174.7645);
     console.log(weatherInfo);
 };
 

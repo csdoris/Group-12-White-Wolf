@@ -14,17 +14,20 @@ const router = express.Router();
 router.get('/', async (req, res) => {
     let weatherAPIKey = process.env.WEATHER_API_KEY;
     let cityName = req.query.city;
-	let lat = req.query.lat;
-	let lon = req.query.lon;
-    // console.log(weatherAPIKey);
+    let lat = req.query.lat;
+    let lon = req.query.lon;
     // let lat = 36.8509;
     // let lon = 174.7645;
-    // let url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${weatherAPIKey}&units=metric`;
     // let cityName = 'Auckland';
-    let url = `https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=${weatherAPIKey}&units=metric`;
-    let weather;
-    console.log(url);
+    let url;
+    if (cityName) {
+        url = `https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=${weatherAPIKey}&units=metric`;
+    } else {
+        url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${weatherAPIKey}&units=metric`;
+    }
 
+    console.log(url);
+    let weather;
     await axios
         .get(url)
         .then(function (response) {
