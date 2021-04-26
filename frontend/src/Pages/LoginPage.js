@@ -66,7 +66,9 @@ export default function LoginPage({ setData }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [body, setBody] = useState({});
-  const [isError, setIsError] = useState(false);
+  const [isError, setIsError] = useState(false);  // error from login after querying the backend 
+  const [isEmailValid, setIsEmailValid] = useState(true);
+  const [isPasswordEntered, setIsPasswordEntered] = useState(true);
   const [firstMount, setFirstMount] = useState(true); 
   const axios = require('axios');
 
@@ -94,13 +96,45 @@ export default function LoginPage({ setData }) {
     }
   }, [body]);
 
+  function validateEmail() {
+    var pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
+
+    if (!pattern.test(email)) {
+      return false;
+    }
+    
+    return true;
+  }
+
   function handleSubmit(e) {
     e.preventDefault();
-    let body = {
-      email: email,
-      password: password
+
+    let passChecking = true;
+    const valid = validateEmail();
+    if (!valid) {
+      passChecking = false;
+      setIsEmailValid(false);
     }
-    setBody(body);
+    else {
+      setIsEmailValid(true);
+    }
+
+    if (password === "") {
+      passChecking = false;
+      setIsPasswordEntered(false);
+    }
+    else {
+      setIsPasswordEntered(true);
+    }
+    
+    if (passChecking) {
+      let body = {
+        email: email,
+        password: password
+      }
+      setBody(body);
+      setIsEmailValid(true);
+    }
   }
 
   return (
@@ -115,7 +149,7 @@ export default function LoginPage({ setData }) {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <form className={classes.form}>
+          <form className={classes.form} noValidate>
             <TextField
               variant="outlined"
               margin="normal"
@@ -129,6 +163,7 @@ export default function LoginPage({ setData }) {
               value={email}
               onChange={e => setEmail(e.target.value)}
             />
+            {isEmailValid ? null : <div className={styles.textDanger}>Please enter valid email address</div>}
             <TextField
               variant="outlined"
               margin="normal"
@@ -142,6 +177,7 @@ export default function LoginPage({ setData }) {
               value={password}
               onChange={e => setPassword(e.target.value)}
             />
+            {isPasswordEntered ? null : <div className={styles.textDanger}>Please enter your password</div>}
             <Button
               type="submit"
               fullWidth

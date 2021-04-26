@@ -5,3 +5,7 @@
 .signup {
     justify-self: end;
 }
+
+.textDanger {
+    color: red;
+}
