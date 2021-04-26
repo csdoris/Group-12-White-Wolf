@@ -1,14 +1,32 @@
-import React from 'react';
-import './App.css';
+import React, { useState } from 'react';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import FetchWeatherInfo from './ExternalAPI/OpenWeatherMapAPI';
 import Home from './Pages/Home';
+import LoginPage from './Pages/LoginPage'
+import useToken from './hooks/useToken'
+
+import './App.css';
+
 const axios = require('axios');
 
 function App() {
+
+    const {token, setToken} = useToken();
+
+    if (!token) {
+        return <LoginPage setToken={setToken} />
+    }
+
     return (
         <>
-            <button onClick={gettee}>click me to get</button>
-            <Home />
+            <BrowserRouter>
+                <Switch>
+                    <Route path="/home">
+                        <button onClick={gettee}>click me to get</button>
+                        <Home /> 
+                    </Route>
+                </Switch>
+            </BrowserRouter>
         </>
     );
 }
