@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import FetchWeatherInfo from './ExternalAPI/OpenWeatherMapAPI';
+import React, { useEffect, useState } from 'react';
+import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
+import { useHistory } from "react-router-dom";
+import {withRouter} from 'react-router-dom';
 import Home from './Pages/Home';
 import LoginPage from './Pages/LoginPage'
 import useToken from './hooks/useToken'
+import PrivateRoute from './Components/PrivateRoute'
 
 import './App.css';
 
@@ -13,8 +18,9 @@ function App() {
 
     const {token, setToken} = useToken();
 
-    if (!token) {
-        return <LoginPage setToken={setToken} />
+    function handleLoginData(data) {
+        console.log(data);
+        setToken(data.Token);
     }
 
     return (
@@ -24,6 +30,12 @@ function App() {
                     <Route path="/home">
                         <button onClick={gettee}>click me to get</button>
                         <Home /> 
+                    <Route exact path="/login">
+                        <LoginPage setData={handleLoginData}/> 
+                    </Route>
+                    <PrivateRoute exact path="/home" component={Home} authenticated={token ? true : false}/>
+                    <Route path="/">
+                        <Redirect to="/home" />
                     </Route>
                 </Switch>
             </BrowserRouter>

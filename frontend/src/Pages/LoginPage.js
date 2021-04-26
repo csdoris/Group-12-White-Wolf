@@ -15,6 +15,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 
 import styles from '../Styles/LoginPage.module.css'
+import { useHistory } from 'react-router';
 
 function Copyright() {
   return (
@@ -59,56 +60,47 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function LoginPage({ setToken }) {
+export default function LoginPage({ setData }) {
+  const history = useHistory();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [submit, setSubmit] = useState(false);
+  const [body, setBody] = useState({});
+  const [isError, setIsError] = useState(false);
+  const [firstMount, setFirstMount] = useState(true); 
   const axios = require('axios');
 
   const classes = useStyles();
 
   useEffect(() => {
-    console.log(submit);
+    const fetchData = async() => {
+      // return the whole data to App, app can clean it up and send it to other components 
+      try {
+        const result = await axios.post("/api/login", body);
+        setIsError(false);
+        setData(result.data);
+        history.push("/");
+      } catch (error) {
+        setIsError(true);
+      }
+    };
 
-    if (submit === false) {
-      return;
+    if (firstMount) {
+      // don't want to fetch when this component is mounted for the first time 
+      setFirstMount(false);
     }
-
-    console.log("email: " + email);
-    console.log("password " + password);
-
-    let mounted = true;
-    axios
-      .post('/api/login', {
-          email: email,
-          password: password
-        })
-      .then(response => {
-        if (mounted) {
-            // check HTTP header first
-            if (response.status === 201) {
-              console.log(response.data);
-              const data = response.data;
-
-              // get the user token from the data
-              const id_token = data.Token;
-              console.log(id_token);
-
-              // setToken(id_token);
-              setToken(id_token);
-            }
-        }
-      })
-      .catch(error => {
-        console.log(error);
-      })
-
-      return () => mounted = false;
-  }, [submit]);
+    else {
+      fetchData();
+    }
+  }, [body]);
 
   function handleSubmit(e) {
     e.preventDefault();
-    setSubmit(true);
+    let body = {
+      email: email,
+      password: password
+    }
+    setBody(body);
   }
 
   return (
@@ -123,7 +115,7 @@ export default function LoginPage({ setToken }) {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <form className={classes.form} noValidate>
+          <form className={classes.form}>
             <TextField
               variant="outlined"
               margin="normal"
@@ -175,5 +167,5 @@ export default function LoginPage({ setToken }) {
 }
 
 LoginPage.propTypes = {
-  setToken: PropTypes.func.isRequired
+  setData: PropTypes.func.isRequired
 }
