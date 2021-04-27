@@ -11,4 +11,10 @@ router.use('/signup', signup);
 import plans from './plans';
 router.use('/plans', plans);
 
+import apikeys from './apikeys';
+router.use('/apikeys', apikeys);
+
+import weather from './weatherApi';
+router.use('/weather', weather);
+
 export default router;
