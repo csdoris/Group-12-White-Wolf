@@ -42,6 +42,9 @@ function App() {
                         <button onClick={gettee}>click me to get</button>
                         <LoginPage setData={handleLoginData} validateEmail={validateEmail} />
                     </Route>
+                    <Route exact path="/signup">
+                        <SignupPage validateEmail={validateEmail} />
+                    </Route>
                     <PrivateRoute exact path="/home" component={Home} authenticated={token ? true : false} />
                     <Route path="/">
                         <Redirect to="/home" />
