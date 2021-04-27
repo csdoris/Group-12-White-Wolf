@@ -1,10 +1,6 @@
-import React, { useState } from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import FetchWeatherInfo from './ExternalAPI/OpenWeatherMapAPI';
 import React, { useEffect, useState } from 'react';
+import FetchWeatherInfo from './ExternalAPI/OpenWeatherMapAPI';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
-import { useHistory } from "react-router-dom";
-import {withRouter} from 'react-router-dom';
 import Home from './Pages/Home';
 import LoginPage from './Pages/LoginPage'
 import useToken from './hooks/useToken'
@@ -41,13 +37,11 @@ function App() {
         <>
             <BrowserRouter>
                 <Switch>
-                    <Route path="/home">
-                        <button onClick={gettee}>click me to get</button>
-                        <Home /> 
                     <Route exact path="/login">
-                        <LoginPage setData={handleLoginData} validateEmail={validateEmail}/> 
+                        <button onClick={gettee}>click me to get</button>
+                        <LoginPage setData={handleLoginData} validateEmail={validateEmail} />
                     </Route>
-                    <PrivateRoute exact path="/home" component={Home} authenticated={token ? true : false}/>
+                    <PrivateRoute exact path="/home" component={Home} authenticated={token ? true : false} />
                     <Route path="/">
                         <Redirect to="/home" />
                     </Route>
