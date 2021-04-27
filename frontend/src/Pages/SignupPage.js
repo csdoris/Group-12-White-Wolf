@@ -56,10 +56,12 @@ export default function SignupPage({ validateEmail }) {
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [passwordConfirm, setPasswordConfirm] = useState("");
     const [valid, setValid] = useState({
         username: true,
         password: true,
-        email: true
+        email: true,
+        passwordConfirm: true
     })
     const [body, setBody] = useState("");
     const [firstMount, setFirstMount] = useState(true); 
@@ -71,7 +73,8 @@ export default function SignupPage({ validateEmail }) {
         let newValid = {
             username: true,
             email: true,
-            password: true
+            password: true,
+            passwordConfirm: true
         };
 
         let allPass = true;
@@ -85,21 +88,25 @@ export default function SignupPage({ validateEmail }) {
             newValid.password = false;
         }
 
+        if (password !== passwordConfirm) {
+            allPass = false;
+            newValid.passwordConfirm = false;
+        }
+
         const emailValid = validateEmail(email);
         if (!emailValid) {
             allPass = false;
             newValid.email = false;
         }
 
-        if (!allPass) {
-            setValid(newValid);
-        }
-        else {
-            setBody({
+        setValid(newValid);
+
+        if (allPass) {
+           setBody({
                 username: username,
                 email: email,
                 password: password
-            })
+            }) 
         }
     }
 
@@ -180,6 +187,21 @@ export default function SignupPage({ validateEmail }) {
                                 onChange={e => setPassword(e.target.value)}
                             />
                             {valid.password ? null : <div className={styles.textDanger}>Please enter your password</div>}
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField 
+                                variant="outlined"
+                                required
+                                fullWidth
+                                name="password-confirm"
+                                label="Confirm Password"
+                                type="password"
+                                id="password-confirm"
+                                autoComplete="password-confirm"
+                                value={passwordConfirm}
+                                onChange={e => setPasswordConfirm(e.target.value)}
+                            />
+                            {valid.passwordConfirm ? null : <div className={styles.textDanger}>Password doesn't match</div>}
                         </Grid>
                     </Grid>
                     <Button
