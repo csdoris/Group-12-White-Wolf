@@ -21,7 +21,7 @@ function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
+      <Link color="inherit" href="#">
         Weather you are ready
       </Link>{' '}
       {new Date().getFullYear()}
@@ -60,7 +60,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function LoginPage({ setData }) {
+export default function LoginPage({ setData, validateEmail }) {
   const history = useHistory();
 
   const [email, setEmail] = useState("");
@@ -96,21 +96,11 @@ export default function LoginPage({ setData }) {
     }
   }, [body]);
 
-  function validateEmail() {
-    var pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
-
-    if (!pattern.test(email)) {
-      return false;
-    }
-    
-    return true;
-  }
-
   function handleSubmit(e) {
     e.preventDefault();
 
     let passChecking = true;
-    const valid = validateEmail();
+    const valid = validateEmail(email);
     if (!valid) {
       passChecking = false;
       setIsEmailValid(false);

@@ -23,6 +23,20 @@ function App() {
         setToken(data.Token);
     }
 
+    function validateEmail(email) {
+        if (!email) {
+            return false;
+        }
+    
+        var pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
+    
+        if (!pattern.test(email)) {
+          return false;
+        }
+        
+        return true;
+    }
+
     return (
         <>
             <BrowserRouter>
@@ -31,7 +45,7 @@ function App() {
                         <button onClick={gettee}>click me to get</button>
                         <Home /> 
                     <Route exact path="/login">
-                        <LoginPage setData={handleLoginData}/> 
+                        <LoginPage setData={handleLoginData} validateEmail={validateEmail}/> 
                     </Route>
                     <PrivateRoute exact path="/home" component={Home} authenticated={token ? true : false}/>
                     <Route path="/">
