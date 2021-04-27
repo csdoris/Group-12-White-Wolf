@@ -132,10 +132,10 @@ export default function LoginPage({ setData, validateEmail }) {
       <CssBaseline />
       <Grid item xs={false} sm={4} md={7} className={classes.image} />
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-          <Typography component="h1" variant="h3">
+        <div className={classes.paper}>
+          <Typography component="h1" variant="h5">
             Welcome to Weather you're ready
           </Typography>
-        <div className={classes.paper}>
           <Avatar className={classes.avatar}>
             <LockOutlinedIcon />
           </Avatar>
@@ -171,6 +171,7 @@ export default function LoginPage({ setData, validateEmail }) {
               onChange={e => setPassword(e.target.value)}
             />
             {isPasswordEntered ? null : <div className={styles.textDanger}>Please enter your password</div>}
+            {isError ? <div className={styles.textDanger}>Incorrect email or password</div> : null}
             <Button
               type="submit"
               fullWidth
