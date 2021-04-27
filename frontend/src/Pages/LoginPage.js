@@ -153,7 +153,7 @@ export default function LoginPage({ setData, validateEmail }) {
               value={email}
               onChange={e => setEmail(e.target.value)}
             />
-            {isEmailValid ? null : <div className={styles.textDanger}>Please enter valid email address</div>}
+            {isEmailValid ? null : <div className={styles.textDanger}>Please enter a valid email address</div>}
             <TextField
               variant="outlined"
               margin="normal"
