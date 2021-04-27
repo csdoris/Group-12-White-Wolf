@@ -3,6 +3,7 @@ import FetchWeatherInfo from './ExternalAPI/OpenWeatherMapAPI';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import Home from './Pages/Home';
 import LoginPage from './Pages/LoginPage'
+import SignupPage from './Pages/SignupPage'
 import useToken from './hooks/useToken'
 import PrivateRoute from './Components/PrivateRoute'
 

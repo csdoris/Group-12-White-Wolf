@@ -182,7 +182,7 @@ export default function LoginPage({ setData, validateEmail }) {
               Sign In
             </Button>
             <Grid item className={styles.grid}>
-              <Link href="#" variant="body2" className={styles.signup}>
+              <Link href="/signup" variant="body2" className={styles.signup}>
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>
