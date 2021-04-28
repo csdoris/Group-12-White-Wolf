@@ -12,9 +12,11 @@ import './App.css';
 function App() {
 
     const {token, setToken} = useToken();
+    const [username, setUsername] = useState(""); 
 
     function handleLoginData(data) {
         console.log(data);
+        setUsername(data.username);
         setToken(data.token);
     }
 
@@ -29,7 +31,12 @@ function App() {
                     <Route exact path="/signup">
                         <SignupPage />
                     </Route>
-                    <PrivateRoute exact path="/home" component={Home} authenticated={token ? true : false} />
+                    <PrivateRoute exact path="/home" 
+                        component={Home} 
+                        authenticated={token ? true : false} 
+                        username={username} 
+                        token={token}
+                    />
                     <Route path="/">
                         <Redirect to="/home" />
                     </Route>

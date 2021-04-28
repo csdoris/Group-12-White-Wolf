@@ -93,7 +93,6 @@ export default function LoginPage({ setData }) {
     const fetchData = async () => {
         // return the whole data to App, app can clean it up and send it to other components 
         try {
-            console.log("google token is: " + googleToken)
             const result = await axios.post("/api/login/google", {}, {
                 headers: {
                     "Content-Type": "application/json",
@@ -104,7 +103,7 @@ export default function LoginPage({ setData }) {
             setData(result.data);
             history.push("/home"); 
         } catch (error) {
-            setIsError(true);
+            console.log(error);
         }
     };
     
