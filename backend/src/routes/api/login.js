@@ -10,7 +10,7 @@ import {
 } from '../../database/user-dao';
 const jwt = require('jsonwebtoken');
 
-// const HTTP_OK = 200; // Not really needed; this is the default if you don't set something else.
+const HTTP_OK = 200; // Not really needed; this is the default if you don't set something else.
 const HTTP_CREATED = 201;
 const HTTP_NOT_FOUND = 404;
 const HTTP_NO_CONTENT = 204;
@@ -32,19 +32,19 @@ router.post('/', async (req, res) => {
     if (dbUser) {
         dbUser.comparePassword(password, (error, match) => {
             if(!match) {
-                res.status(HTTP_UNAUTHORIZED); 
+                res.sendStatus(HTTP_UNAUTHORIZED); 
+            } else {
+                const token = jwt.sign(
+                    { userId: dbUser._id }, 
+                    process.env.SECRET_KEY,
+                    { expiresIn: '24h' });
+            
+            
+                res.status(HTTP_OK)
+                    .header('Location', `/api/users/${dbUser._id}`)
+                    .json({username: dbUser.username, token:token});
             }
         });
-
-        const token = jwt.sign(
-            { userId: dbUser._id }, 
-            process.env.SECRET_KEY,
-            { expiresIn: '24h' });
-    
-    
-        res.status(HTTP_CREATED)
-            .header('Location', `/api/users/${dbUser._id}`)
-            .json({username: dbUser.username, token:token});
     } else {
         res.sendStatus(HTTP_NOT_FOUND);
     }

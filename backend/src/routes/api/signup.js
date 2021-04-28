@@ -24,7 +24,7 @@ const jwt = require('jsonwebtoken');
         password: req.body.password
     });
 
-    res.status(HTTP_CREATED);
+    res.sendStatus(HTTP_CREATED);
  })
  
  export default router;
