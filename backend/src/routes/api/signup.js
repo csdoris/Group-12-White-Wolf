@@ -22,7 +22,7 @@ const jwt = require('jsonwebtoken');
  router.post('/', async (req, res) => {
     try {
         await createUser({
-                username: req.body.username,
+                name: req.body.name,
                 email: req.body.email,
                 password: req.body.password
         });

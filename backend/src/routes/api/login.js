@@ -40,7 +40,7 @@ router.post('/', async (req, res) => {
             
                 res.status(HTTP_OK)
                     .header('Location', `/api/users/${dbUser._id}`)
-                    .json({username: dbUser.username, token:token});
+                    .json({name: dbUser.name, email: dbUser.email, token:token});
             }
         });
     } else {

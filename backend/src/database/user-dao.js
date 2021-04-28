@@ -26,12 +26,12 @@ async function updateUser(id, newData) {
     const dbUser = await User.findById(user._id);
     if (dbUser) {
         
-        dbUser.username = user.username;
+        dbUser.name = user.name;
         dbUser.password = user.password;
         dbUser.email = user.email;
 
         await dbUser.save();
-        return true;
+        return dbUser;
     }
 
     return false;
