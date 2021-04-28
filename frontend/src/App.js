@@ -15,7 +15,7 @@ function App() {
 
     function handleLoginData(data) {
         console.log(data);
-        setToken(data.Token);
+        setToken(data.token);
     }
 
     return (

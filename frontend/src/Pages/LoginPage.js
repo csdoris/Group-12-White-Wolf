@@ -52,6 +52,7 @@ const useStyles = makeStyles((theme) => ({
 export default function LoginPage({ setData }) {
   const history = useHistory();
 
+  const [googleToken, setGoogleToken] = useState(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [body, setBody] = useState({});
@@ -63,14 +64,16 @@ export default function LoginPage({ setData }) {
 
   const classes = useStyles();
 
+  // for normal login
   useEffect(() => {
+    // for login using the application account 
     const fetchData = async() => {
       // return the whole data to App, app can clean it up and send it to other components 
       try {
         const result = await axios.post("/api/login", body);
         setIsError(false);
         setData(result.data);
-        history.push("/");
+        history.push("/home");
       } catch (error) {
         setIsError(true);
       }
@@ -84,6 +87,35 @@ export default function LoginPage({ setData }) {
       fetchData();
     }
   }, [body]);
+
+  // for login using google 
+  useEffect(() => {
+    const fetchData = async () => {
+        // return the whole data to App, app can clean it up and send it to other components 
+        try {
+            console.log("google token is: " + googleToken)
+            const result = await axios.post("/api/login/google", {}, {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${googleToken}`
+                }
+            })
+            setIsError(false);
+            setData(result.data);
+            history.push("/home"); 
+        } catch (error) {
+            setIsError(true);
+        }
+    };
+    
+    if (!googleToken) {
+        return;
+    }
+    else {
+        fetchData();
+    }
+
+}, [googleToken]);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -170,7 +202,7 @@ export default function LoginPage({ setData }) {
             >
               Sign In
             </Button>
-            <GoogleLoginButton />
+            <GoogleLoginButton setGoogleToken={setGoogleToken}/>
             <Grid item className={styles.grid}>
               <Link href="/signup" variant="body2" className={styles.signup}>
                 {"Don't have an account? Sign Up"}
