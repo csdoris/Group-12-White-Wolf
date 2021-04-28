@@ -1,44 +1,66 @@
-import { Plan } from './schema';
+import { Plan, User } from './schema';
 
-async function createPlan(plan) {
+async function createPlan(user_id, plan) {
 
     const dbPlan = new Plan(plan);
     await dbPlan.save();
+    User.findByIdAndUpdate(user_id,{ $push: {plans: dbPlan._id}}, function (error, success) {
+        if (error) {
+            console.log(error);
+        } else {
+            console.log(success);
+        }
+    });
     return dbPlan;
 }
 
-// Returns list of plans with their id and name only
-async function retrievePlanList() {
-    return await Plan.find({},'name');
+// Returns list of plans with their id and name only for a particular user
+async function retrievePlanList(user_id) {
+    const dbUser = await User.findById(user_id);
+    return await Plan.find({'_id': { $in: dbUser.plans} },'name');
 }
 
 async function retrievePlan(id) {
     return await Plan.findById(id);
 }
 
-// A little sus, rewrites the entire plan, and needs the id to be supplied for the events
+// Updates only the name
 async function updatePlan(plan) {
-
-    const dbPlan = await Plan.findById(plan._id);
-    if (dbPlan) {
-        
-        dbPlan.name = plan.name;
-        dbPlan.events = plan.events;
-
-        await dbPlan.save();
+    try {
+        await Plan.findByIdAndUpdate(plan._id, { name: plan.name});    
         return true;
+    } catch (err) {
+        console.log(err);
+        return false;
     }
-
-//     Plan.findOneAndUpdate(id, newData,false, function(err, doc) {
-//     if (err) return res.send(500, {error: err});
-//     return res.send('Succesfully saved.');
-// });
-
-    return false;
 }
 
 async function deletePlan(id) {
     await Plan.deleteOne({ _id: id });
+}
+
+
+async function createEvent(planId, event) {
+    return await Plan.findByIdAndUpdate(planId, { $push: { events: event }},{new:true});
+}
+
+async function updateEvent(planId,eventId, event) {
+    try {
+        await Plan.findOneAndUpdate({"_id": planId, "events._id": eventId},{ $set: { "events.$": event }},{new:true});
+        return true;
+    } catch (err ){
+        console.log(err);
+        return false;
+    }
+}
+
+async function deleteEvent(planId,eventId) {
+    try {
+        await Plan.findByIdAndUpdate(planId,{ $pull: { events : {_id: eventId}}});
+    } catch (err) {
+        console.log(err);
+        return false;
+    }
 }
 
 export {
@@ -46,5 +68,8 @@ export {
     retrievePlan,
     retrievePlanList,
     updatePlan,
-    deletePlan
+    deletePlan,
+    createEvent,
+    updateEvent,
+    deleteEvent
 }
