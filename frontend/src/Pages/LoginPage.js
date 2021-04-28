@@ -13,6 +13,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import Copyright from '../Components/Copyright';
 
+import validateEmail from '../helpers/validateEmail';
+
 import styles from '../Styles/LoginPage.module.css'
 import { useHistory } from 'react-router';
 
@@ -46,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function LoginPage({ setData, validateEmail }) {
+export default function LoginPage({ setData }) {
   const history = useHistory();
 
   const [email, setEmail] = useState("");
@@ -108,8 +110,8 @@ export default function LoginPage({ setData, validateEmail }) {
         email: email,
         password: password
       }
-      setBody(body);
       setIsEmailValid(true);
+      setBody(body);
     }
   }
 

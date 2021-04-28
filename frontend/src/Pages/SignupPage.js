@@ -13,6 +13,7 @@ import Container from '@material-ui/core/Container';
 import { useHistory } from 'react-router';
 import Copyright from '../Components/Copyright';
 
+import validateEmail from '../helpers/validateEmail';
 
 import styles from '../Styles/LoginPage.module.css'
 
@@ -36,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function SignupPage({ validateEmail }) {
+export default function SignupPage() {
     const history = useHistory();
     const axios = require('axios');
 
