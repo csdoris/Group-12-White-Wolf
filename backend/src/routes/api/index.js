@@ -1,5 +1,5 @@
 import express from 'express';
-
+import auth from '../../middleware/auth';
 const router = express.Router();
 
 import login from './login';
@@ -9,7 +9,7 @@ import signup from './signup';
 router.use('/signup', signup);
 
 import plans from './plans';
-router.use('/plans', plans);
+router.use('/plans', auth , plans);
 
 import apikeys from './apikeys';
 router.use('/apikeys', apikeys);

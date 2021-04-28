@@ -3,6 +3,11 @@
  */
 
  import express from 'express';
+ import {
+    createUser
+} from '../../database/user-dao';
+const jwt = require('jsonwebtoken');
+
 
  // const HTTP_OK = 200; // Not really needed; this is the default if you don't set something else.
  const HTTP_CREATED = 201;
@@ -12,7 +17,6 @@
  const router = express.Router();
  
  // Create new user
- //TODO auth token
  router.post('/', async (req, res) => {
     const newUser = await createUser({
         username: req.body.username,
@@ -21,8 +25,8 @@
     });
 
     res.status(HTTP_CREATED)
-        .header('Location', `/api/articles/${newUser._id}`)
-        .json(newUser);
+    .header('Location', `/api/users/${newUser._id}`)
+    .json({newUser});
  })
  
  export default router;
