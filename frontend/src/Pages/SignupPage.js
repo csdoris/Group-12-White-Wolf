@@ -55,7 +55,7 @@ export default function SignupPage() {
     })
     const [body, setBody] = useState("");
     const [firstMount, setFirstMount] = useState(true); 
-    const [error, setError] = useState(null);
+    const [error, setError] = useState(false);
 
     function handleSubmit(e) {
         e.preventDefault();
@@ -106,11 +106,11 @@ export default function SignupPage() {
           console.log("try to fetch the data"); 
           try {
             const result = await axios.post("/api/signup", body);
-            setError(null);
             console.log(result.data);
+            setError(false);
             history.push("/");
           } catch (error) {
-            setError(error);
+            setError(true);
           }
         };
     
@@ -194,6 +194,7 @@ export default function SignupPage() {
                             {valid.passwordConfirm ? null : <div className={styles.textDanger}>Password doesn't match</div>}
                         </Grid>
                     </Grid>
+                    {error ? <div className={styles.textDanger}>Email already exists</div> : null}
                     <Button
                         type="submit"
                         fullWidth
