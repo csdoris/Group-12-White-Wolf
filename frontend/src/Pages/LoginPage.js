@@ -12,6 +12,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import Copyright from '../Components/Copyright';
+import GoogleLoginButton from '../Components/GoogleLoginButton';
 
 import validateEmail from '../helpers/validateEmail';
 
@@ -169,6 +170,7 @@ export default function LoginPage({ setData }) {
             >
               Sign In
             </Button>
+            <GoogleLoginButton />
             <Grid item className={styles.grid}>
               <Link href="/signup" variant="body2" className={styles.signup}>
                 {"Don't have an account? Sign Up"}
