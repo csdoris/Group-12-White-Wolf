@@ -14,6 +14,7 @@ const jwt = require('jsonwebtoken');
 const HTTP_CREATED = 201;
 const HTTP_NOT_FOUND = 404;
 const HTTP_NO_CONTENT = 204;
+const HTTP_UNAUTHORIZED = 401;
 
 const router = express.Router();
 
@@ -24,11 +25,17 @@ const client = new OAuth2Client(process.env.CLIENT_ID)
 router.post('/', async (req, res) => {
     
     const email = req.body.email
-    const password = req.body.pasword
+    const password = req.body.password
     //retrieve user info from db
     const dbUser = await retrieveUserByEmail(email);    
 
     if (dbUser) {
+        dbUser.comparePassword(password, (error, match) => {
+            if(!match) {
+                res.status(HTTP_UNAUTHORIZED); 
+            }
+        });
+
         const token = jwt.sign(
             { userId: dbUser._id }, 
             process.env.SECRET_KEY,
@@ -37,7 +44,7 @@ router.post('/', async (req, res) => {
     
         res.status(HTTP_CREATED)
             .header('Location', `/api/users/${dbUser._id}`)
-            .json({user: dbUser, token:token});
+            .json({username: dbUser.username, token:token});
     } else {
         res.sendStatus(HTTP_NOT_FOUND);
     }

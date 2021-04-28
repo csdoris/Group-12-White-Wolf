@@ -24,9 +24,7 @@ const jwt = require('jsonwebtoken');
         password: req.body.password
     });
 
-    res.status(HTTP_CREATED)
-    .header('Location', `/api/users/${newUser._id}`)
-    .json({newUser});
+    res.status(HTTP_CREATED);
  })
  
  export default router;
