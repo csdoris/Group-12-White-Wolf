@@ -43,12 +43,12 @@ export default function SignupPage() {
 
     const classes = useStyles();
 
-    const [username, setUsername] = useState("");
+    const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [passwordConfirm, setPasswordConfirm] = useState("");
     const [valid, setValid] = useState({
-        username: true,
+        name: true,
         password: true,
         email: true,
         passwordConfirm: true
@@ -61,16 +61,16 @@ export default function SignupPage() {
         e.preventDefault();
 
         let newValid = {
-            username: true,
+            name: true,
             email: true,
             password: true,
             passwordConfirm: true
         };
 
         let allPass = true;
-        if (username === "") {
+        if (name === "") {
             allPass = false;
-            newValid.username = false;
+            newValid.name = false;
         }
 
         if (password === "") {
@@ -93,7 +93,7 @@ export default function SignupPage() {
 
         if (allPass) {
            setBody({
-                username: username,
+                name: name,
                 email: email,
                 password: password
             }) 
@@ -140,14 +140,14 @@ export default function SignupPage() {
                                 variant="outlined"
                                 required
                                 fullWidth
-                                id="username"
-                                label="Username"
-                                name="username"
-                                autoComplete="username"
-                                value={username}
-                                onChange={e => setUsername(e.target.value)}
+                                id="name"
+                                label="Name"
+                                name="name"
+                                autoComplete="name"
+                                value={name}
+                                onChange={e => setName(e.target.value)}
                             />
-                            {valid.username ? null : <div className={styles.textDanger}>Please enter your username</div>}
+                            {valid.name ? null : <div className={styles.textDanger}>Please enter your name</div>}
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
