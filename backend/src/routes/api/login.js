@@ -73,7 +73,7 @@ router.post('/', async (req, res) => {
 
     res.status(HTTP_CREATED)
         .header('Location', `/api/users/${dbUser._id}`)
-        .json({user: dbUser, token:applicationToken});
+        .json({username: dbUser.username, token:applicationToken});
  })
  
 export default router;
