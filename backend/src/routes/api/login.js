@@ -4,7 +4,7 @@
 
 import express from 'express';
 import {
-    retrieveUser
+    retrieveUserByEmail
 } from '../../database/user-dao';
 const jwt = require('jsonwebtoken');
 
@@ -17,10 +17,11 @@ const router = express.Router();
 
 // login user
 router.post('/', async (req, res) => {
+    
     const email = req.body.email
     const password = req.body.pasword
     //retrieve user info from db
-    const dbUser = await retrieveUser(email);    
+    const dbUser = await retrieveUserByEmail(email);    
 
     if (dbUser) {
         const token = jwt.sign(

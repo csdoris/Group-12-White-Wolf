@@ -1,13 +1,19 @@
+import {
+  retrieveUserById  
+} from '../database/user-dao';
 const jwt = require('jsonwebtoken');
 
-module.exports = (req, res, next) => {
+export default async function auth(req, res, next) {
   try {
     const token = req.headers.authorization.split(' ')[1];
     const decodedToken = jwt.verify(token, process.env.SECRET_KEY);
     const userId = decodedToken.userId;
-    if (req.body._id && req.body._id !== userId) {
+    const dbUser = await retrieveUserById(userId);    
+
+    if (!dbUser) {
       throw 'Invalid user ID';
     } else {
+      req.body.user_id = dbUser._id; 
       next();
     }
   } catch {
@@ -16,3 +22,4 @@ module.exports = (req, res, next) => {
     });
   }
 };
+ 

@@ -12,8 +12,12 @@ async function retrieveUserList() {
     return await User.find({},'name');
 }
 
-async function retrieveUser(email) {
-    return await User.findOne({email: email});
+async function retrieveUserByEmail(email) {
+    return await User.findOne({email: email });
+}
+
+async function retrieveUserById(id) {
+    return await User.findOne({_id: id });
 }
 
 // Kinda sus, needs to supply info to be overwritten
@@ -39,7 +43,8 @@ async function deleteUser(id) {
 
 export {
     createUser,
-    retrieveUser,
+    retrieveUserByEmail,
+    retrieveUserById,
     retrieveUserList,
     updateUser,
     deleteUser
