@@ -10,10 +10,8 @@ import {
 } from '../../database/user-dao';
 const jwt = require('jsonwebtoken');
 
-const HTTP_OK = 200; // Not really needed; this is the default if you don't set something else.
-const HTTP_CREATED = 201;
+const HTTP_OK = 200; 
 const HTTP_NOT_FOUND = 404;
-const HTTP_NO_CONTENT = 204;
 const HTTP_UNAUTHORIZED = 401;
 
 const router = express.Router();

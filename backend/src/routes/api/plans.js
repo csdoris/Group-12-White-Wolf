@@ -14,15 +14,12 @@
      deleteEvent
  } from '../../database/plans-dao';
  
- // const HTTP_OK = 200; // Not really needed; this is the default if you don't set something else.
  const HTTP_CREATED = 201;
  const HTTP_NOT_FOUND = 404;
  const HTTP_NO_CONTENT = 204;
  
  const router = express.Router();
  
-//  router.use(middleware?)
-
  // Create new plan
  router.post('/', async (req, res) => {
      const newPlan = await createPlan(req.body.user_id, {
