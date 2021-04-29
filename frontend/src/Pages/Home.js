@@ -5,7 +5,7 @@ import { Loader } from '@googlemaps/js-api-loader';
 import axios from 'axios';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-function Home({ username, token }) {
+function Home({ username, email, token }) {
     const [keyObtained, setKeyObtained] = useState(false);
 
     useEffect(() => {

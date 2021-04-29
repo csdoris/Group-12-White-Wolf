@@ -5,7 +5,8 @@
 import express from 'express';
 import {
     retrieveUserByEmail,
-    createUser
+    createUser,
+    updateUser
 } from '../../database/user-dao';
 const jwt = require('jsonwebtoken');
 
@@ -64,6 +65,13 @@ router.post('/', async (req, res) => {
             email: email
         });
     }
+    else {
+        // Todo: update our user entry in case the google name changes 
+        // dbUser = await updateUser(dbUser._id, {
+        //     username: name,
+        //     email: email
+        // });
+    }
 
     // generate a new application token 
     const applicationToken = jwt.sign(
@@ -73,7 +81,7 @@ router.post('/', async (req, res) => {
 
     res.status(HTTP_CREATED)
         .header('Location', `/api/users/${dbUser._id}`)
-        .json({username: dbUser.username, token:applicationToken});
+        .json({name: dbUser.username, email: dbUser.email, token:applicationToken});
  })
  
 export default router;
