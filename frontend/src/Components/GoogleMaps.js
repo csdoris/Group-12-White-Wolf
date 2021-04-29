@@ -21,14 +21,6 @@ const options = {
 };
 
 function GoogleMaps() {
-    const { isLoaded, loadError } = useLoadScript({
-        googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
-        libraries,
-    });
-
-    if (loadError) return 'Error';
-    if (!isLoaded) return 'Loading...';
-
     return (
         <div>
             <GoogleMap
