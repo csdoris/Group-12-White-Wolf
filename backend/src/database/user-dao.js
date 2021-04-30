@@ -20,15 +20,15 @@ async function retrieveUserById(id) {
     return await User.findOne({_id: id });
 }
 
-// Kinda sus, needs to supply info to be overwritten
-async function updateUser(id, newData) {
+// Updates corresponding attributes of a user
+async function updateUser(id, user) {
 
-    const dbUser = await User.findById(user._id);
+    const dbUser = await User.findById(id);
     if (dbUser) {
         
-        dbUser.name = user.name;
-        dbUser.password = user.password;
-        dbUser.email = user.email;
+        dbUser.name = user.name ? user.name: dbUser.name;
+        dbUser.password = user.password ? user.password: dbUser.password;
+        dbUser.email = user.email ? user.email : dbUser.email;
 
         await dbUser.save();
         return dbUser;

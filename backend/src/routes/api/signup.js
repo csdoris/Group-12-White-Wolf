@@ -6,13 +6,8 @@
  import {
     createUser
 } from '../../database/user-dao';
-const jwt = require('jsonwebtoken');
 
-
- // const HTTP_OK = 200; // Not really needed; this is the default if you don't set something else.
  const HTTP_CREATED = 201;
- const HTTP_NOT_FOUND = 404;
- const HTTP_NO_CONTENT = 204;
  const HTTP_BAD_REQUEST = 400;
 
  
@@ -30,7 +25,6 @@ const jwt = require('jsonwebtoken');
     } catch (err) {
         res.status(HTTP_BAD_REQUEST);
     }
-
  })
  
  export default router;
