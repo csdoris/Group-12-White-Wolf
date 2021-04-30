@@ -39,7 +39,6 @@ router.post('/', async (req, res) => {
             
             
                 res.status(HTTP_OK)
-                    .header('Location', `/api/users/${dbUser._id}`)
                     .json({name: dbUser.name, email: dbUser.email, token:token});
             }
         });
@@ -66,16 +65,17 @@ router.post('/', async (req, res) => {
     if (!dbUser) {
         // create a new user entry
         dbUser = await createUser({
-            username: name,
+            name: name,
             email: email
         });
     }
     else {
-        // Todo: update our user entry in case the google name changes 
-        // dbUser = await updateUser(dbUser._id, {
-        //     username: name,
-        //     email: email
-        // });
+        // Update our user entry in case the google name changes 
+        if (name != dbUser.name) {
+            dbUser = await updateUser(dbUser._id, {
+                name: name
+            });
+        }
     }
 
     // generate a new application token 
@@ -84,9 +84,8 @@ router.post('/', async (req, res) => {
         process.env.SECRET_KEY,
         { expiresIn: '24h' });
 
-    res.status(HTTP_CREATED)
-        .header('Location', `/api/users/${dbUser._id}`)
-        .json({name: dbUser.username, email: dbUser.email, token:applicationToken});
+        res.status(HTTP_OK)
+        .json({name: dbUser.name, email: dbUser.email, token:applicationToken});
  })
  
 export default router;
