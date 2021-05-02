@@ -8,6 +8,9 @@ router.use('/login', login);
 import signup from './signup';
 router.use('/signup', signup);
 
+import user from './user';
+router.use('/user', auth, user);
+
 import plans from './plans';
 router.use('/plans', auth , plans);
 

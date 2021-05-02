@@ -39,7 +39,7 @@ router.post('/', async (req, res) => {
             
             
                 res.status(HTTP_OK)
-                    .json({name: dbUser.name, email: dbUser.email, token:token});
+                    .json({token: token});
             }
         });
     } else {
