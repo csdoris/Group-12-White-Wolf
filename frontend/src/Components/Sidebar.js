@@ -189,7 +189,7 @@ function SideNav({ view, deleteFunc }) {
                 <ArrowRightIcon
                     onClick={toggleDrawer()}
                     className={classes.openButton}
-                    style={{ fontSize: 40 }}
+                    style={{ fontSize: 48 }}
                 />
                 {/* content in the sideabr */}
                 <Drawer
@@ -217,7 +217,7 @@ function SideNav({ view, deleteFunc }) {
                         <ArrowLeftIcon
                             onClick={toggleDrawer()}
                             className={classes.closeButton}
-                            style={{ fontSize: 40 }}
+                            style={{ fontSize: 48 }}
                         />
                     </Slide>
                 )}

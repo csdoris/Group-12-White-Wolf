@@ -85,69 +85,75 @@ export default function ScheduleView() {
 
     if (planName) {
         return (
-            <div className={isOpen ? styles.shiftTextRight : styles.shiftTextLeft}>
+            <div>
                 <div className={styles.heading}>
                     <h1>{planName}</h1>
                 </div>
-                <Table aria-label="simple table">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell align="center">
-                                <p className={styles.header}>Event Name</p>
-                            </TableCell>
-                            <TableCell align="center">
-                                <p className={styles.header}>Date</p>
-                            </TableCell>
-                            <TableCell align="center">
-                                <p className={styles.header}>Time</p>
-                            </TableCell>
-                            <TableCell align="center">
-                                <p className={styles.header}>Weather</p>
-                            </TableCell>
-                            <TableCell align="center">
-                                <p className={styles.header}>Location</p>
-                            </TableCell>
-                            <TableCell align="center">
-                                <p className={styles.header}>Offline Map</p>
-                            </TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {events.map((event) => (
-                            <TableRow key={event.id}>
+                <div
+                    className={
+                        isOpen ? styles.shiftTextRight : styles.shiftTextLeft
+                    }
+                >
+                    <Table aria-label="simple table">
+                        <TableHead>
+                            <TableRow>
                                 <TableCell align="center">
-                                    {event.name}
+                                    <p className={styles.header}>Event Name</p>
                                 </TableCell>
                                 <TableCell align="center">
-                                    {event.date}
+                                    <p className={styles.header}>Date</p>
                                 </TableCell>
                                 <TableCell align="center">
-                                    {event.DateFrom}-{event.DateTo}
+                                    <p className={styles.header}>Time</p>
                                 </TableCell>
                                 <TableCell align="center">
-                                    {event.weather}
+                                    <p className={styles.header}>Weather</p>
                                 </TableCell>
                                 <TableCell align="center">
-                                    {event.location}
+                                    <p className={styles.header}>Location</p>
                                 </TableCell>
-                                <TableCell
-                                    align="center"
-                                    className={styles.map}
-                                    onClick={handleOpen}
-                                    lat={event.lat}
-                                    long={event.long}
-                                >
-                                    Click to open a map for this event
+                                <TableCell align="center">
+                                    <p className={styles.header}>Offline Map</p>
                                 </TableCell>
                             </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-                <OfflineMapPopup
-                    open={mapOpen}
-                    handleClose={handleClose}
-                    url={urlBuilder()}
-                />
+                        </TableHead>
+                        <TableBody>
+                            {events.map((event) => (
+                                <TableRow key={event.id}>
+                                    <TableCell align="center">
+                                        {event.name}
+                                    </TableCell>
+                                    <TableCell align="center">
+                                        {event.date}
+                                    </TableCell>
+                                    <TableCell align="center">
+                                        {event.DateFrom}-{event.DateTo}
+                                    </TableCell>
+                                    <TableCell align="center">
+                                        {event.weather}
+                                    </TableCell>
+                                    <TableCell align="center">
+                                        {event.location}
+                                    </TableCell>
+                                    <TableCell
+                                        align="center"
+                                        className={styles.map}
+                                        onClick={handleOpen}
+                                        lat={event.lat}
+                                        long={event.long}
+                                    >
+                                        Click to open a map for this event
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                    <OfflineMapPopup
+                        open={mapOpen}
+                        handleClose={handleClose}
+                        url={urlBuilder()}
+                    />
+                </div>
             </div>
         );
     } else {
