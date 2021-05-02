@@ -1,0 +1,8 @@
+.loginButton {
+    width: 100%;
+    justify-content: center;
+}
+
+.textDanger {
+    color: red;
+}

@@ -1,0 +1,11 @@
+.grid {
+    display: grid;
+}
+
+.signup {
+    justify-self: end;
+}
+
+.textDanger {
+    color: red;
+}
