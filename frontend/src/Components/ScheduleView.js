@@ -19,9 +19,9 @@ export default function ScheduleView() {
         {
             id: 1,
             name: 'Event1',
-            date: '04/04/2021',
-            DateFrom: '17:00',
-            DateTo: '17:00',
+            date: '01/04/2021',
+            DateFrom: '19:00',
+            DateTo: '20:00',
             weather: 'cloudy 24°C',
             location: 'Auckland',
             lat: '-36.8509',
@@ -30,9 +30,9 @@ export default function ScheduleView() {
         {
             id: 2,
             name: 'Event2',
-            date: '04/04/2021',
+            date: '01/04/2021',
             DateFrom: '17:00',
-            DateTo: '17:00',
+            DateTo: '18:00',
             weather: 'cloudy 24°C',
             location: 'Auckland',
             lat: '-37.8509',
@@ -41,7 +41,7 @@ export default function ScheduleView() {
         {
             id: 3,
             name: 'Event3',
-            date: '04/04/2021',
+            date: '08/04/2021',
             DateFrom: '17:00',
             DateTo: '17:00',
             weather: 'cloudy 24°C',
@@ -118,34 +118,45 @@ export default function ScheduleView() {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {events.map((event) => (
-                                <TableRow key={event.id}>
-                                    <TableCell align="center">
-                                        {event.name}
-                                    </TableCell>
-                                    <TableCell align="center">
-                                        {event.date}
-                                    </TableCell>
-                                    <TableCell align="center">
-                                        {event.DateFrom}-{event.DateTo}
-                                    </TableCell>
-                                    <TableCell align="center">
-                                        {event.weather}
-                                    </TableCell>
-                                    <TableCell align="center">
-                                        {event.location}
-                                    </TableCell>
-                                    <TableCell
-                                        align="center"
-                                        className={styles.map}
-                                        onClick={handleOpen}
-                                        lat={event.lat}
-                                        long={event.long}
-                                    >
-                                        Click to open a map for this event
-                                    </TableCell>
-                                </TableRow>
-                            ))}
+                            {/*Sorts the events first on date then by time of day*/}
+                            {events
+                                .sort((a, b) =>
+                                    a.date > b.date
+                                        ? 1
+                                        : a.date === b.date
+                                        ? a.DateFrom > b.DateFrom
+                                            ? 1
+                                            : -1
+                                        : -1
+                                )
+                                .map((event) => (
+                                    <TableRow key={event.id}>
+                                        <TableCell align="center">
+                                            {event.name}
+                                        </TableCell>
+                                        <TableCell align="center">
+                                            {event.date}
+                                        </TableCell>
+                                        <TableCell align="center">
+                                            {event.DateFrom}-{event.DateTo}
+                                        </TableCell>
+                                        <TableCell align="center">
+                                            {event.weather}
+                                        </TableCell>
+                                        <TableCell align="center">
+                                            {event.location}
+                                        </TableCell>
+                                        <TableCell
+                                            align="center"
+                                            className={styles.map}
+                                            onClick={handleOpen}
+                                            lat={event.lat}
+                                            long={event.long}
+                                        >
+                                            Click to open a map for this event
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
                         </TableBody>
                     </Table>
                     <OfflineMapPopup
