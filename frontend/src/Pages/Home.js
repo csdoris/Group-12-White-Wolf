@@ -28,6 +28,7 @@ function Home({ username, email, token }) {
     if (keyObtained) {
         return (
             <div>
+                <button onClick={gettee}>click me to get</button>
                 <SideNav />
                 <GoogleMaps />
             </div>
@@ -41,5 +42,17 @@ function Home({ username, email, token }) {
         );
     }
 }
+
+const gettee = async () => {
+    console.log('clicked');
+    axios
+        .get('/api/plans')
+        .then(function (response) {
+            console.log(response);
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+};
 
 export default Home;
