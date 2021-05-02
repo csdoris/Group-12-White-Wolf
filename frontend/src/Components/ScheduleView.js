@@ -20,7 +20,8 @@ export default function ScheduleView() {
             id: 1,
             name: 'Event1',
             date: '04/04/2021',
-            time: '17:00',
+            DateFrom: '17:00',
+            DateTo: '17:00',
             weather: 'cloudy 24°C',
             location: 'Auckland',
             lat: '-36.8509',
@@ -30,7 +31,8 @@ export default function ScheduleView() {
             id: 2,
             name: 'Event2',
             date: '04/04/2021',
-            time: '17:00',
+            DateFrom: '17:00',
+            DateTo: '17:00',
             weather: 'cloudy 24°C',
             location: 'Auckland',
             lat: '-37.8509',
@@ -40,7 +42,8 @@ export default function ScheduleView() {
             id: 3,
             name: 'Event3',
             date: '04/04/2021',
-            time: '17:00',
+            DateFrom: '17:00',
+            DateTo: '17:00',
             weather: 'cloudy 24°C',
             location: 'Auckland',
             lat: '-35.8509',
@@ -50,7 +53,8 @@ export default function ScheduleView() {
             id: 4,
             name: 'Event4',
             date: '04/04/2021',
-            time: '17:00',
+            DateFrom: '17:00',
+            DateTo: '17:00',
             weather: 'cloudy 24°C',
             location: 'Auckland',
             lat: '-36.8509',
@@ -118,7 +122,7 @@ export default function ScheduleView() {
                                     {event.date}
                                 </TableCell>
                                 <TableCell align="center">
-                                    {event.time}
+                                    {event.DateFrom}-{event.DateTo}
                                 </TableCell>
                                 <TableCell align="center">
                                     {event.weather}

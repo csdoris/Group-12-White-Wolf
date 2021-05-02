@@ -18,6 +18,7 @@ import '../Styles/SidebarStyles.css';
 import SidebarForEvents from './SidebarForEvents.js';
 import { AppContext } from '../helpers/AppContextProvider.js';
 import { SidebarContext } from '../helpers/SidebarContextProvider.js';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 
 const useStyles = makeStyles(() => ({
     drawer: {
@@ -37,6 +38,9 @@ const useStyles = makeStyles(() => ({
         zIndex: '1200',
         opacity: '70%',
         '&:hover': { cursor: 'pointer', opacity: '100%' },
+    },
+    cancelButton: {
+        float: 'right',
     },
 }));
 
@@ -60,11 +64,16 @@ function SideNav({ view, deleteFunc }) {
     function toggleDrawer() {
         return (event) => {
             setIsOpen(!isOpen);
+            handleCancel();
         };
     }
 
     function addPlan() {
         setAddingPlan(true);
+    }
+
+    function handleCancel() {
+        setAddingPlan(false);
     }
 
     function setPlanNameFunc(e) {
@@ -101,11 +110,11 @@ function SideNav({ view, deleteFunc }) {
 
     // handles the situation when a plan is clicked
     function navigateToPlan(id, name) {
+        handleCancel();
         const planClick = {
             id: id,
             name: name,
         };
-        console.log(view);
         if (view == 0) {
             setPlanShown(planClick);
         }
@@ -115,6 +124,10 @@ function SideNav({ view, deleteFunc }) {
     function handleGoBackToPlans() {
         setPlanShown(null);
     }
+
+    const handleClickAway = () => {
+        setAddingPlan(false);
+    };
 
     const listPlans = () => (
         <div>
@@ -141,16 +154,30 @@ function SideNav({ view, deleteFunc }) {
                     </div>
                 ))}
                 {addingPlan && (
-                    <TextField
-                        id="outlined-basic"
-                        label="Type plan name here..."
-                        placeholder="Type plan name here..."
-                        variant="filled"
-                        className={classes.drawer}
-                        autoFocus
-                        onChange={setPlanNameFunc}
-                        onKeyDown={submitPlanName}
-                    />
+                    <ClickAwayListener onClickAway={handleClickAway}>
+                        <Grid>
+                            <Grid item>
+                                <TextField
+                                    id="outlined-basic"
+                                    label="Type plan name here..."
+                                    placeholder="Type plan name here..."
+                                    variant="filled"
+                                    className={classes.drawer}
+                                    autoFocus
+                                    onChange={setPlanNameFunc}
+                                    onKeyDown={submitPlanName}
+                                />
+                            </Grid>
+                            <Grid item>
+                                <Button
+                                    onClick={handleCancel}
+                                    className={classes.cancelButton}
+                                >
+                                    Cancel
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </ClickAwayListener>
                 )}
             </List>
         </div>
@@ -164,7 +191,6 @@ function SideNav({ view, deleteFunc }) {
                     className={classes.openButton}
                     style={{ fontSize: 40 }}
                 />
-
                 {/* content in the sideabr */}
                 <Drawer
                     anchor="left"
