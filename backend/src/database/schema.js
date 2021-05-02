@@ -8,7 +8,6 @@ const userSchema = new Schema({
     name: String,
     email: { type: String, unique: true, required: true },
     password: String,
-    auth_token: String,
 
     plans: [{ type: Schema.Types.ObjectId, ref: 'Plan' }]
 
