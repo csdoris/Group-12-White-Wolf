@@ -42,13 +42,18 @@ export default function SidebarForEvents({ plan, handleGoBackToPlans }) {
     ]);
 
     const [addEvent, setAddEvent] = useState(false);
+    const [newEventSaved, setNewEventSaved] = useState(false);
 
     function handleClose() {
         setAddEvent(false);
     }
 
-    function handleSave() {
+    function handleSave(newEvent) {
         console.log("save called");
+        console.log(newEvent);
+
+        // call the endpoint to store the event in the database 
+
         setAddEvent(false);
     }
 
