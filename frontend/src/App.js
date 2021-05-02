@@ -12,13 +12,9 @@ import './App.css';
 function App() {
 
     const {token, setToken} = useToken();
-    const [username, setUsername] = useState(""); 
-    const [email, setEmail] = useState("");
-
+    
     function handleLoginData(data) {
         console.log(data);
-        setUsername(data.name);
-        setEmail(data.email); 
         setToken(data.token);
     }
 
@@ -36,8 +32,6 @@ function App() {
                     <PrivateRoute exact path="/home" 
                         component={Home} 
                         authenticated={token ? true : false} 
-                        username={username} 
-                        email={email}
                         token={token}
                     />
                     <Route path="/">
