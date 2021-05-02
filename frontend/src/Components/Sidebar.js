@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
     Drawer,
     Button,
@@ -16,6 +16,7 @@ import CreateImportDropdown from './CreateImportDropdown.js';
 import { makeStyles } from '@material-ui/core/styles';
 import '../Styles/SidebarStyles.css';
 import SidebarForEvents from './SidebarForEvents.js';
+import { AppContext } from '../helpers/AppContextProvider.js';
 
 const useStyles = makeStyles(() => ({
     drawer: {
@@ -51,6 +52,7 @@ function SideNav() {
         { id: 4, name: 'Plan4' },
     ]);
 
+    const { planName, setPlanName } = useContext(AppContext);
     const [addingPlan, setAddingPlan] = useState(false);
     const [newPlanName, setNewPlanName] = useState('');
 
@@ -64,7 +66,7 @@ function SideNav() {
         setAddingPlan(true);
     }
 
-    function setPlanName(e) {
+    function setPlanNameFunc(e) {
         console.log(e.target.value);
         setNewPlanName(e.target.value);
     }
@@ -93,6 +95,7 @@ function SideNav() {
             name: name,
         };
         setPlanShown(planClick);
+        setPlanName(name)
     }
 
     function handleGoBackToPlans() {
@@ -131,7 +134,7 @@ function SideNav() {
                         variant="filled"
                         className={classes.drawer}
                         autoFocus
-                        onChange={setPlanName}
+                        onChange={setPlanNameFunc}
                         onKeyDown={submitPlanName}
                     />
                 )}

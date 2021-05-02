@@ -1,0 +1,14 @@
+.header {
+    font-size: x-large;
+    font-weight: 900;
+}
+
+.heading {
+    display: flex;
+    justify-content: center;
+}
+
+h1 {
+    font-size: xx-large;
+    font-weight: 900;
+}

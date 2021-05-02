@@ -1,12 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import GoogleMaps from '../Components/GoogleMaps';
 import SideNav from '../Components/Sidebar';
 import { Loader } from '@googlemaps/js-api-loader';
 import axios from 'axios';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import ScheduleView from '../Components/ScheduleView';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 
 function Home({ username, email, token }) {
     const [keyObtained, setKeyObtained] = useState(false);
+    const [value, setValue] = useState(0);
 
     useEffect(() => {
         axios
@@ -25,11 +29,25 @@ function Home({ username, email, token }) {
             });
     }, []);
 
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
+    };
+
     if (keyObtained) {
         return (
             <div>
                 <SideNav />
-                <GoogleMaps />
+                <Tabs
+                    value={value}
+                    onChange={handleChange}
+                    indicatorColor="primary"
+                    textColor="primary"
+                    centered
+                >
+                    <Tab label="Map View" />
+                    <Tab label="Schedule View" />
+                </Tabs>
+                {value ? <ScheduleView /> : <GoogleMaps />}
             </div>
         );
     } else {
