@@ -30,7 +30,7 @@ const style = {
     p: 4,
 };
 
-export default function ViewEventPopup({eventId, open, handleClose}) {
+export default function ViewEventPopup({eventId, open, handleClose, handleEdit}) {
     function getTitle() {
         return("Trip");
     }
@@ -86,7 +86,9 @@ export default function ViewEventPopup({eventId, open, handleClose}) {
                                 fullWidth={true}
                                 inputProps={{ 'aria-label': 'description' }}
                                 value={getTitle()}
-                                disabled
+                                InputProps={{
+                                    readOnly: true,
+                                }}
                             />
                         </div>
                         <div className={styles.timeDiv}>
@@ -100,7 +102,9 @@ export default function ViewEventPopup({eventId, open, handleClose}) {
                             <TextField
                                 value={getLocation()}
                                 fullWidth={true}
-                                disabled
+                                InputProps={{
+                                    readOnly: true,
+                                }}
                             />
                         </div>
                         <div>
@@ -112,8 +116,15 @@ export default function ViewEventPopup({eventId, open, handleClose}) {
                                 variant="outlined"
                                 value={getDescription()}
                                 fullWidth={true}
-                                disabled
+                                InputProps={{
+                                    readOnly: true,
+                                }}
                             />
+                        </div>
+                        <div className={styles.buttonDiv}>
+                            <Button variant="contained" color="primary" onClick={() => handleEdit()}>
+                                Edit
+                            </Button>
                         </div>
                     </div>
                 </Fade>

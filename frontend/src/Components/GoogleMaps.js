@@ -42,6 +42,11 @@ function GoogleMaps() {
         setViewEvent(null);
     }
 
+    function handleEdit() {
+        console.log("edit called");
+        setViewEvent(null);
+    }
+
     return (
         <div>
             <GoogleMap
@@ -90,7 +95,7 @@ function GoogleMaps() {
                 ))}
             </GoogleMap>
             {
-                viewEvent!=null && <ViewEventPopup eventId={viewEvent} open={viewEvent} handleClose={handleClose} />
+                viewEvent!=null && <ViewEventPopup eventId={viewEvent} open={viewEvent} handleClose={handleClose} handleEdit={handleEdit} />
             }
         </div>
     );
