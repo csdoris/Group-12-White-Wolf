@@ -39,7 +39,7 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-function SideNav() {
+function SideNav({ view, deleteFunc }) {
     const [isOpen, setIsOpen] = useState();
     const [planShown, setPlanShown] = useState(null);
     const classes = useStyles();
@@ -78,15 +78,25 @@ function SideNav() {
         }
     }
 
-    function deletePlan(planName) {
-        console.log(planName);
-        let matchingPlanName = (element) => element.name === planName;
+    function deletePlan(name) {
+        console.log(name);
+        let matchingPlanName = (element) => element.name === name;
         let indexOfPlan = allPlans.findIndex(matchingPlanName);
         setAllPlans([
             ...allPlans.slice(0, indexOfPlan),
             ...allPlans.slice(indexOfPlan + 1),
         ]);
+        if (planName === name) {
+            deleteFunc();
+            setPlanName(null);
+        }
     }
+
+    useEffect(() => {
+        if (view) {
+            handleGoBackToPlans()
+        }
+    }, [view]);
 
     // handles the situation when a plan is clicked
     function navigateToPlan(id, name) {
@@ -94,8 +104,11 @@ function SideNav() {
             id: id,
             name: name,
         };
-        setPlanShown(planClick);
-        setPlanName(name)
+        console.log(view);
+        if (view == 0) {
+            setPlanShown(planClick);
+        }
+        setPlanName(name);
     }
 
     function handleGoBackToPlans() {

@@ -36,10 +36,15 @@ function Home({ username, email, token }) {
         setValue(newValue);
     };
 
+    //This function is to switch back to map view when in schedule view and the plan is delted
+    const deleteCalled = () => {
+        setValue(0)
+    }
+
     if (keyObtained) {
         return (
             <div>
-                <SideNav />
+                <SideNav view={value} deleteFunc={deleteCalled}/>
                 <Tabs
                     value={value}
                     onChange={handleChange}
