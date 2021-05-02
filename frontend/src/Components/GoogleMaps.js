@@ -29,14 +29,7 @@ function GoogleMaps() {
     const [plan, setPlan] = useContext(PlanContext);
     const [viewEvent, setViewEvent] = useState(null);
 
-    const { isLoaded, loadError } = useLoadScript({
-        googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
-        libraries,
-    });
     var dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    
-    if (loadError) return 'Error';
-    if (!isLoaded) return 'Loading...';
 
     function changePlan(plan) {
         // TODO: Get plan events from database and weather info
