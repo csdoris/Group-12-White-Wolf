@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
     Drawer,
     Button,
@@ -16,6 +16,7 @@ import CreateImportDropdown from './CreateImportDropdown.js';
 import { makeStyles } from '@material-ui/core/styles';
 import '../Styles/SidebarStyles.css';
 import SidebarForEvents from './SidebarForEvents.js';
+import { PlanContext } from '../Pages/Home';
 
 const useStyles = makeStyles(() => ({
     drawer: {
@@ -42,6 +43,7 @@ function SideNav() {
     const [isOpen, setIsOpen] = useState();
     const [planShown, setPlanShown] = useState(null);
     const classes = useStyles();
+    const [plan, setPlan] = useContext(PlanContext);
 
     // information and function to control plans
     const [allPlans, setAllPlans] = useState([
@@ -88,6 +90,7 @@ function SideNav() {
 
     // handles the situation when a plan is clicked
     function navigateToPlan(id, name) {
+        setPlan(id);
         const planClick = {
             id: id,
             name: name,

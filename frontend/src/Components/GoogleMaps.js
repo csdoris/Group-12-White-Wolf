@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useContext } from 'react';
 import {
     GoogleMap,
     useLoadScript,
@@ -6,6 +6,9 @@ import {
     InfoWindow,
 } from '@react-google-maps/api';
 import '../Styles/MapPinStyles.css'
+import { PlanContext } from '../Pages/Home';
+
+import ViewEventPopup from './ViewEventPopup';
 
 const libraries = ['places'];
 const mapContainerStyle = {
@@ -22,8 +25,10 @@ const options = {
 };
 
 function GoogleMaps() {
-    const [markers, setMarkers] = React.useState([]);
-    const [plan, setPlan] = React.useState(undefined);
+    const [markers, setMarkers] = useState([]);
+    const [plan, setPlan] = useContext(PlanContext);
+    const [viewEvent, setViewEvent] = useState(null);
+
     const { isLoaded, loadError } = useLoadScript({
         googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
         libraries,
@@ -33,8 +38,15 @@ function GoogleMaps() {
     if (loadError) return 'Error';
     if (!isLoaded) return 'Loading...';
 
-    function changePlan(planMarkers) {
-        setMarkers(planMarkers);
+    function changePlan(plan) {
+        // TODO: Get plan events from database and weather info
+        // var updatedMarkers = [];
+        // setMarkers(updatedMarkers);
+        console.log("change plan");
+    }
+
+    function handleClose() {
+        setViewEvent(null);
     }
 
     return (
@@ -46,10 +58,12 @@ function GoogleMaps() {
                 center={center}
                 options={options}
 
+                // Delete later
                 onClick={(event) => {
                     setMarkers((current) => [
                         ...current,
                         {
+                            id: 1,
                             lat: event.latLng.lat(),
                             lng: event.latLng.lng(),
                             time: new Date(),
@@ -57,6 +71,7 @@ function GoogleMaps() {
                     ]);
                 }}
             >
+                {changePlan(plan)}
                 {markers.map((marker) => (
                     <Marker
                         key={marker.time.toISOString()}
@@ -64,25 +79,26 @@ function GoogleMaps() {
                     />
                 ))}
                 {markers.map((marker) => (
-                    <InfoWindow
-                        position = {{ lat: marker.lat, lng: marker.lng }}
-                        onClick={(event) => {
-                            
-                        }}
-                    >
-                        <div>
+                    <InfoWindow position = {{ lat: marker.lat, lng: marker.lng }}>
+                        <div
+                            className="eventInfo"
+                            onClick={(event) => {setViewEvent(marker.id)}}
+                            >
                             {/* TODO: heading corresponding with event name, img, date and temp */}
                             <h2>Event1</h2>
                             <p>{marker.time.toLocaleDateString("en-US", dateOptions) }</p>
                             <div>
                                 {/* TODO: https://stackoverflow.com/questions/44177417/how-to-display-openweathermap-weather-icon */}
-                                <img src= {"http://openweathermap.org/img/w/" + "10d" + ".png" }/>
+                                <img src={"http://openweathermap.org/img/w/" + "10d" + ".png" }/>
                                 <span>21&#176;C</span>
                             </div>
                         </div>
                     </InfoWindow>
                 ))}
             </GoogleMap>
+            {
+                viewEvent!=null && <ViewEventPopup eventId={viewEvent} open={viewEvent} handleClose={handleClose} />
+            }
         </div>
     );
 }

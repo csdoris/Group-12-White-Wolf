@@ -1,3 +1,7 @@
 .gm-style-iw > button {
     display: none !important;
 }
+
+.eventInfo:hover {
+    cursor: pointer;
+}
