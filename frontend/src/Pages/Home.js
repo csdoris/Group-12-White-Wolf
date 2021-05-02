@@ -7,7 +7,8 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import ScheduleView from '../Components/ScheduleView';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import { AppContext, AppContextProvider } from '../helpers/AppContextProvider';
+import { AppContext } from '../helpers/AppContextProvider';
+import { SidebarContextProvider } from '../helpers/SidebarContextProvider';
 
 function Home({ username, email, token }) {
     const { APIkey, setAPIkey } = useContext(AppContext);
@@ -38,25 +39,27 @@ function Home({ username, email, token }) {
 
     //This function is to switch back to map view when in schedule view and the plan is delted
     const deleteCalled = () => {
-        setValue(0)
-    }
+        setValue(0);
+    };
 
     if (keyObtained) {
         return (
-            <div>
-                <SideNav view={value} deleteFunc={deleteCalled}/>
-                <Tabs
-                    value={value}
-                    onChange={handleChange}
-                    indicatorColor="primary"
-                    textColor="primary"
-                    centered
-                >
-                    <Tab label="Map View" />
-                    <Tab label="Schedule View" />
-                </Tabs>
-                {value ? <ScheduleView /> : <GoogleMaps />}
-            </div>
+            <SidebarContextProvider>
+                <div>
+                    <SideNav view={value} deleteFunc={deleteCalled} />
+                    <Tabs
+                        value={value}
+                        onChange={handleChange}
+                        indicatorColor="primary"
+                        textColor="primary"
+                        centered
+                    >
+                        <Tab label="Map View" />
+                        <Tab label="Schedule View" />
+                    </Tabs>
+                    {value ? <ScheduleView /> : <GoogleMaps />}
+                </div>
+            </SidebarContextProvider>
         );
     } else {
         return (

@@ -16,12 +16,6 @@ function DeleteDropdown({name, deleteFunc }) {
         setIsOpen(null);
     };
 
-    const sharePlan = () => {
-        closeDropdown();
-        console.log('clicked share');
-        console.log('modal opens');
-    };
-
     const exportPlan = () => {
         closeDropdown();
         console.log('clicked export');
@@ -51,7 +45,6 @@ function DeleteDropdown({name, deleteFunc }) {
                 open={Boolean(isOpen)}
                 onClose={closeDropdown}
             >
-                <MenuItem onClick={sharePlan}>Share</MenuItem>
                 <MenuItem onClick={exportPlan}>Export</MenuItem>
                 <MenuItem onClick={deletePlan}>Delete</MenuItem>
             </Menu>

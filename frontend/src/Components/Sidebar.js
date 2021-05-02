@@ -17,6 +17,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import '../Styles/SidebarStyles.css';
 import SidebarForEvents from './SidebarForEvents.js';
 import { AppContext } from '../helpers/AppContextProvider.js';
+import { SidebarContext } from '../helpers/SidebarContextProvider.js';
 
 const useStyles = makeStyles(() => ({
     drawer: {
@@ -40,7 +41,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 function SideNav({ view, deleteFunc }) {
-    const [isOpen, setIsOpen] = useState();
+    const { isOpen, setIsOpen } = useContext(SidebarContext);
     const [planShown, setPlanShown] = useState(null);
     const classes = useStyles();
 
@@ -94,7 +95,7 @@ function SideNav({ view, deleteFunc }) {
 
     useEffect(() => {
         if (view) {
-            handleGoBackToPlans()
+            handleGoBackToPlans();
         }
     }, [view]);
 
