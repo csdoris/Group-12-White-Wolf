@@ -32,8 +32,8 @@ export default function Logout({ logout }) {
     const anchorRef = React.useRef(null);
 
     // for great the user
-    const [name, setName] = useState("Emily");
-    const [email, setEmail] = useState("ziwei.yang116@gmail.com");
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
     const {token, deleteToken} = useToken();
 
     const handleToggle = () => {
@@ -65,14 +65,19 @@ export default function Logout({ logout }) {
         // get user's name and email 
         const fetchData = async() => {
             try {
-                const result = await axios.post("/user", {}, {
+                const result = await axios.get("/api/user", {
                     headers: {
-                        "Content-Type": "application/json",
                         "Authorization": `Bearer ${token}`
                     }
                 })
+                
+                const data = result.data;
+                setName(data.name);
+                setEmail(data.email);
             } catch (error) {
-                console.log(error);
+                // user cannot be found with the authentication token given
+                deleteToken();
+                history.push('/login');
             }
         };
 
