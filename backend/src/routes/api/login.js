@@ -10,10 +10,9 @@ import {
 } from '../../database/user-dao';
 const jwt = require('jsonwebtoken');
 
-// const HTTP_OK = 200; // Not really needed; this is the default if you don't set something else.
-const HTTP_CREATED = 201;
+const HTTP_OK = 200; 
 const HTTP_NOT_FOUND = 404;
-const HTTP_NO_CONTENT = 204;
+const HTTP_UNAUTHORIZED = 401;
 
 const router = express.Router();
 
@@ -24,20 +23,25 @@ const client = new OAuth2Client(process.env.CLIENT_ID)
 router.post('/', async (req, res) => {
     
     const email = req.body.email
-    const password = req.body.pasword
+    const password = req.body.password
     //retrieve user info from db
     const dbUser = await retrieveUserByEmail(email);    
 
     if (dbUser) {
-        const token = jwt.sign(
-            { userId: dbUser._id }, 
-            process.env.SECRET_KEY,
-            { expiresIn: '24h' });
-    
-    
-        res.status(HTTP_CREATED)
-            .header('Location', `/api/users/${dbUser._id}`)
-            .json({user: dbUser, token:token});
+        dbUser.comparePassword(password, (error, match) => {
+            if(!match) {
+                res.sendStatus(HTTP_UNAUTHORIZED); 
+            } else {
+                const token = jwt.sign(
+                    { userId: dbUser._id }, 
+                    process.env.SECRET_KEY,
+                    { expiresIn: '24h' });
+            
+            
+                res.status(HTTP_OK)
+                    .json({token: token});
+            }
+        });
     } else {
         res.sendStatus(HTTP_NOT_FOUND);
     }
@@ -61,16 +65,17 @@ router.post('/', async (req, res) => {
     if (!dbUser) {
         // create a new user entry
         dbUser = await createUser({
-            username: name,
+            name: name,
             email: email
         });
     }
     else {
-        // Todo: update our user entry in case the google name changes 
-        // dbUser = await updateUser(dbUser._id, {
-        //     username: name,
-        //     email: email
-        // });
+        // Update our user entry in case the google name changes 
+        if (name != dbUser.name) {
+            dbUser = await updateUser(dbUser._id, {
+                name: name
+            });
+        }
     }
 
     // generate a new application token 
@@ -79,9 +84,8 @@ router.post('/', async (req, res) => {
         process.env.SECRET_KEY,
         { expiresIn: '24h' });
 
-    res.status(HTTP_CREATED)
-        .header('Location', `/api/users/${dbUser._id}`)
-        .json({name: dbUser.username, email: dbUser.email, token:applicationToken});
+        res.status(HTTP_OK)
+        .json({name: dbUser.name, email: dbUser.email, token:applicationToken});
  })
  
 export default router;
