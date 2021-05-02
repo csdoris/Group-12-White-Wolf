@@ -12,6 +12,7 @@ function AppContextProvider({ children }) {
     // Stateful value initialization
     const [planName, setPlanName] = useState();
     const [events, setEvents] = useState();
+    const [APIkey, setAPIkey] = useState();
 
     // The context value that will be supplied to any descendants of this component.
     const context = {
@@ -19,6 +20,8 @@ function AppContextProvider({ children }) {
         setPlanName,
         events,
         setEvents,
+        APIkey,
+        setAPIkey,
     };
 
     // Wraps the given child components in a Provider for the above context.

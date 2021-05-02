@@ -7,8 +7,10 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import ScheduleView from '../Components/ScheduleView';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import { AppContext, AppContextProvider } from '../helpers/AppContextProvider';
 
 function Home({ username, email, token }) {
+    const { APIkey, setAPIkey } = useContext(AppContext);
     const [keyObtained, setKeyObtained] = useState(false);
     const [value, setValue] = useState(0);
 
@@ -22,6 +24,7 @@ function Home({ username, email, token }) {
                 });
                 loader.load().then(() => {
                     setKeyObtained(true);
+                    setAPIkey(response.data.googleAPIKey);
                 });
             })
             .catch(function (error) {
