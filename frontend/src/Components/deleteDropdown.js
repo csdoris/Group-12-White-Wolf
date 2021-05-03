@@ -27,7 +27,7 @@ function DeleteDropdown({ name, deleteFunc }) {
         closeDropdown();
         console.log('clicked export');
         console.log('modal opens');
-        // ExportICS(events);
+        // ExportICS(events); //Undo when plan context has been merged in
     };
 
     const deletePlan = () => {
