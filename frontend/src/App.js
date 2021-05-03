@@ -8,6 +8,8 @@ import useToken from './hooks/useToken'
 import PrivateRoute from './Components/PrivateRoute'
 
 import './App.css';
+import { AppContextProvider } from './helpers/AppContextProvider';
+import ExportICS from './helpers/ExportICS';
 
 function App() {
 
@@ -46,8 +48,19 @@ function App() {
 // example post to backend
 const gettee = async () => {
     console.log('clicked');
-    let weatherInfo = await FetchWeatherInfo('Auckland' , 36.8509, 174.7645);
-    console.log(weatherInfo);
+    let ourEvent = {
+        title: 'No title',
+        address: 'Folsom Field, University of Colorado',
+        description: 'des',
+        endTime: '2021-05-02T07:47:09.149Z',
+        lat: 52.61732,
+        lng: -1.8604,
+        startTime: '2021-05-03T09:47:09.149Z',
+    };
+    let events = [];
+    events.push(ourEvent);
+    await ExportICS(events);
+    
 };
 
 export default App;
