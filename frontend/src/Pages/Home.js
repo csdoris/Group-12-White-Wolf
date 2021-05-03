@@ -6,11 +6,13 @@ import axios from 'axios';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Logout from '../Components/Logout';
 import { AppContext } from '../AppContextProvider';
+import useToken from '../hooks/useToken';
 
 function Home() {
     const [keyObtained, setKeyObtained] = useState(false);
     const [plansObtained, setPlansObtained] = useState(false);
     const { plans, setPlans } = useContext(AppContext);
+    const token = useToken().token;
 
     useEffect(() => {
         axios
