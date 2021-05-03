@@ -12,8 +12,9 @@ import ClearIcon from '@material-ui/icons/Clear';
 import AddIcon from '@material-ui/icons/Add';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import { makeStyles } from '@material-ui/core/styles';
-
+import useToken from '../hooks/useToken';
 import EventPopup from './Eventpopup';
+import axios from 'axios';
 
 const useStyles = makeStyles(() => ({
     drawer: {
@@ -32,6 +33,7 @@ const useStyles = makeStyles(() => ({
 
 export default function SidebarForEvents({ plan, handleGoBackToPlans }) {
     const classes = useStyles();
+    const { token } = useToken();
 
     // dummy information for testing
     const [events, setEvents] = useState([
@@ -52,9 +54,19 @@ export default function SidebarForEvents({ plan, handleGoBackToPlans }) {
         console.log("save called");
         console.log(newEvent);
 
-        // call the endpoint to store the event in the database 
-
-        setAddEvent(false);
+        // call the endpoint to store the event in the database
+        const url = "/api/plans/" + plan.id; 
+        axios.post(url, newEvent, {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        }).then((response) => {
+            if (response.status === 201) {
+                setAddEvent(false);
+            }
+        }).catch((error) => {
+            console.log(error);
+        });
     }
 
     function handleAddEvent() {
