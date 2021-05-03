@@ -109,6 +109,34 @@ export default function EventPopup({eventId, open, handleClose, handleSave}) {
         }
     }
 
+    function handleEdit() {
+        setTitle("Trip");
+        setDescription("Gonna go camping?");
+        setLocation("3 Symonds Street, Auckland");
+        setTimeFrom("2:30 PM");
+        setTimeTo("3:35 PM");
+        setDateFrom(new Date());
+        setDateTo(new Date());
+
+        setViewOnly(false)
+    }
+
+    function getButton() {
+        if(viewOnly) {
+            return(
+                <Button variant="contained" color="primary" onClick={() => handleEdit()}>
+                    Edit
+                </Button>
+            )
+        } else {
+            return(
+                <Button variant="contained" color="primary" onClick={() => handleSave()}>
+                    Save
+                </Button>
+            )
+        }
+    }
+
     function handleLocationChange(event, newValue) {
         setOptions(newValue ? [newValue, ...options] : options);
         setLocation(newValue);
@@ -246,23 +274,6 @@ export default function EventPopup({eventId, open, handleClose, handleSave}) {
             active = false;
         };
     }, [location, locationInputValue, fetch]);
-
-    function getButton() {
-        if(viewOnly) {
-            return(
-                <Button variant="contained" color="primary" onClick={() => setViewOnly(false)}>
-                    Edit
-                </Button>
-            )
-        }
-        else {
-            return(
-                <Button variant="contained" color="primary" onClick={() => handleSave()}>
-                    Save
-                </Button>
-            )
-        }
-    }
 
     return (
         <div>
