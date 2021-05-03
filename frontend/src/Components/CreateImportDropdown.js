@@ -6,9 +6,10 @@ import AddIcon from '@material-ui/icons/Add';
 import ImportICS from '../helpers/ImportICS';
 import ImportNameRequestPopup from './ImportNameRequestPopup';
 
-function CreateImportDropdown({ addPlan }) {
+function CreateImportDropdown({ addPlan, addImportedPlan }) {
     const [isOpen, setIsOpen] = useState(false);
     const [importing, setImporting] = useState(false);
+    const [contents, setContents] = useState(null);
 
     const openDropdown = (event) => {
         setIsOpen(event.currentTarget);
@@ -32,7 +33,7 @@ function CreateImportDropdown({ addPlan }) {
         let contents = await ImportICS();
         if (contents) {
             setImporting(true);
-            console.log(contents);
+            setContents(contents);
         }
     };
 
@@ -42,8 +43,8 @@ function CreateImportDropdown({ addPlan }) {
 
     function handleSave(name) {
         console.log('save called');
-        console.log(name);
         setImporting(false);
+        addImportedPlan(name, contents);
     }
 
     return (

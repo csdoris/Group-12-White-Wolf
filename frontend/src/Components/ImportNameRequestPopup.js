@@ -6,6 +6,7 @@ import Modal from '@material-ui/core/Modal';
 import Fade from '@material-ui/core/Fade';
 import Input from '@material-ui/core/Input';
 import styles from '../Styles/ImportNamePopup.module.css';
+import { Grid, TextField } from '@material-ui/core';
 
 export default function ImportNameRequestPopup({
     open,
@@ -28,7 +29,13 @@ export default function ImportNameRequestPopup({
             >
                 <Fade in={open}>
                     <div className={styles.modal}>
-                        <div className={styles.buttonDiv}>
+                        <Grid
+                            container
+                            direction="row"
+                            justify="space-between"
+                            alignItems="center"
+                        >
+                            <h1 className={styles.heading}>Name your plan</h1>
                             <Button
                                 variant="contained"
                                 color="primary"
@@ -36,14 +43,17 @@ export default function ImportNameRequestPopup({
                             >
                                 Close
                             </Button>
-                        </div>
-                        <Input
+                        </Grid>
+
+                        <TextField
+                            id="outlined-basic"
+                            label="Type plan name here..."
                             placeholder="< Type plan name here >"
-                            inputProps={{ 'aria-label': 'description' }}
-                            onInput={(e) => {
+                            variant="filled"
+                            autoFocus
+                            onChange={(e) => {
                                 setPlanName(e.target.value);
                             }}
-                            value={planName}
                         />
                         <div className={styles.buttonDiv}>
                             <Button

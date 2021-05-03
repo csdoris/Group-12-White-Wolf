@@ -76,6 +76,11 @@ function SideNav() {
         }
     }
 
+    function importPlan(planName, contents) {
+        setAllPlans([...allPlans, { id: 3, name: planName }]);
+        console.log(contents);
+    }
+
     function deletePlan(planName) {
         console.log(planName);
         let matchingPlanName = (element) => element.name === planName;
@@ -109,7 +114,10 @@ function SideNav() {
                     className={classes.drawer}
                 >
                     <h1>My plans</h1>
-                    <CreateImportDropdown addPlan={addPlan} />
+                    <CreateImportDropdown
+                        addPlan={addPlan}
+                        addImportedPlan={importPlan}
+                    />
                 </Grid>
                 {allPlans.map((planName) => (
                     <div key={planName.name}>

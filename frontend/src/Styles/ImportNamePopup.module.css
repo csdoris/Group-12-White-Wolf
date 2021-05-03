@@ -1,6 +1,6 @@
 .modal > div {
     display: flex;
-    margin: 2%;
+    padding: 1%;
     background-color: white;
 }
 
@@ -22,4 +22,8 @@
 
 .closeIcon:hover {
     cursor: pointer;
+}
+
+.heading {
+    font-size: xx-large;
 }
