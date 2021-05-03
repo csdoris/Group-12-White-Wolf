@@ -8,12 +8,10 @@ import useToken from './hooks/useToken'
 import PrivateRoute from './Components/PrivateRoute'
 
 import './App.css';
-import { AppContext } from './AppContextProvider';
+import { AppContextProvider } from './AppContextProvider';
 
 function App() {
 
-    const [plans, setPlans] = useState([]);
-    const value = { plans, setPlans };
 
     const { token, setToken } = useToken();
     const [username, setUsername] = useState("");
@@ -28,7 +26,7 @@ function App() {
 
     return (
         <>
-            <AppContext.Provider value={value}>
+            <AppContextProvider>
                 <BrowserRouter>
                     <Switch>
                         <Route exact path="/login">
@@ -50,7 +48,7 @@ function App() {
                         </Route>
                     </Switch>
                 </BrowserRouter>
-            </AppContext.Provider>
+            </AppContextProvider>
         </>
     );
 }
