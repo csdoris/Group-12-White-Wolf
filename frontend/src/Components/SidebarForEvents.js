@@ -15,6 +15,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import useToken from '../hooks/useToken';
 import EventPopup from './Eventpopup';
 import axios from 'axios';
+import useToken from '../hooks/useToken';
 
 const useStyles = makeStyles(() => ({
     drawer: {
@@ -33,15 +34,23 @@ const useStyles = makeStyles(() => ({
 
 export default function SidebarForEvents({ plan, handleGoBackToPlans }) {
     const classes = useStyles();
-    const { token } = useToken();
 
-    // dummy information for testing
-    const [events, setEvents] = useState([
-        { id: 1, name: 'Event1' },
-        { id: 2, name: 'Event2' },
-        { id: 3, name: 'Event3' },
-        { id: 4, name: 'Event4' },
-    ]);
+    const { token } = useToken();
+    const header = {
+        headers: {
+            "Authorization": `Bearer ${token}`
+        }
+    };
+
+    const [events, setEvents] = useState([]);
+
+    useEffect(() => {
+        console.log(plan);
+        axios.get(`/api/plans/${plan._id}`, header).then(function (resp) {
+            setEvents(resp.data.events)
+        });
+    }, []);
+
 
     const [addEvent, setAddEvent] = useState(false);
     const [newEventSaved, setNewEventSaved] = useState(false);
@@ -55,7 +64,7 @@ export default function SidebarForEvents({ plan, handleGoBackToPlans }) {
         console.log(newEvent);
 
         // call the endpoint to store the event in the database
-        const url = "/api/plans/" + plan.id; 
+        const url = "/api/plans/" + plan.id;
         axios.post(url, newEvent, {
             headers: {
                 "Authorization": `Bearer ${token}`
@@ -73,14 +82,16 @@ export default function SidebarForEvents({ plan, handleGoBackToPlans }) {
         setAddEvent(true);
     }
 
-    function handleDeleteEvent() {
-        console.log("delete event called");
+    function handleDeleteEvent(eventId) {
+        axios.delete(`/api/plans/${plan._id}/${eventId}`, header).then(async function () {
+            const plansResponse = await axios.get(`/api/plans/${plan._id}`, header);
+            setEvents(plansResponse.data.events);
+        });
     }
 
     return (
         <div>
             <List>
-
                 <Grid
                     container
                     direction="row"
@@ -92,7 +103,7 @@ export default function SidebarForEvents({ plan, handleGoBackToPlans }) {
                         aria-haspopup="true"
                         onClick={() => handleGoBackToPlans()}
                     >
-                        <ArrowBackIcon/>
+                        <ArrowBackIcon />
                     </Button>
                     <h1>{plan.name}</h1>
                     <Button
@@ -103,6 +114,18 @@ export default function SidebarForEvents({ plan, handleGoBackToPlans }) {
                         <AddIcon className="plusSign" />
                     </Button>
                 </Grid>
+                {events.map((event) => (
+                    <div key={event._id}>
+                        <Grid container justify="space-between">
+                            <PlanRow
+                                plan={event}
+                                deletePlan={handleDeleteEvent}
+                                navigateToPlan={() => { }}
+                            />
+                        </Grid>
+                        <Divider />
+                    </div>
+                ))}
             </List>
 
             {
