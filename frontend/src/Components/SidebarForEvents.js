@@ -61,14 +61,11 @@ export default function SidebarForEvents({ plan, handleGoBackToPlans }) {
         console.log(newEvent);
 
         // call the endpoint to store the event in the database
-        const url = "/api/plans/" + plan.id;
-        axios.post(url, newEvent, {
-            headers: {
-                "Authorization": `Bearer ${token}`
-            }
-        }).then((response) => {
+        axios.post(`/api/plans/${plan._id}`, newEvent, header).then(async (response) => {
             if (response.status === 201) {
                 setAddEvent(false);
+                const plansResponse = await axios.get(`/api/plans/${plan._id}`, header);
+                setEvents(plansResponse.data.events);
             }
         }).catch((error) => {
             console.log(error);

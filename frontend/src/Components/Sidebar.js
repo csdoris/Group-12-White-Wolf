@@ -73,7 +73,7 @@ function SideNav() {
         setNewPlanName(e.target.value);
     }
 
-    async function submitPlanName(e) {
+    function submitPlanName(e) {
         if (e.key === 'Enter') {
             setAddingPlan(false);
 
