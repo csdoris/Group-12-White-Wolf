@@ -8,8 +8,8 @@ import useToken from './hooks/useToken'
 import PrivateRoute from './Components/PrivateRoute'
 
 import './App.css';
-import { AppContextProvider } from './helpers/AppContextProvider';
 import ExportICS from './helpers/ExportICS';
+import ImportICS from './helpers/ImportICS';
 
 function App() {
 
@@ -59,8 +59,11 @@ const gettee = async () => {
     };
     let events = [];
     events.push(ourEvent);
-    await ExportICS(events);
-    
+    // let contents = await ExportICS(events);
+    let contents = await ImportICS();
+    if (contents) {
+        console.log(contents);
+    }
 };
 
 export default App;
