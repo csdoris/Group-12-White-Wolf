@@ -137,6 +137,19 @@ export default function EventPopup({eventId, open, handleClose, handleSave}) {
         }
     }
 
+    function getWeatherInfo() {
+        if(viewOnly) {
+            return(
+                <div>
+                    <p>
+                        Temperature: 20C
+                        Wind Speed: blah
+                    </p>
+                </div>
+            )
+        }
+    }
+
     function handleLocationChange(event, newValue) {
         setOptions(newValue ? [newValue, ...options] : options);
         setLocation(newValue);
@@ -340,6 +353,7 @@ export default function EventPopup({eventId, open, handleClose, handleSave}) {
                                 }}
                             />
                         </div>
+                        {getWeatherInfo()}
                         <div className={styles.buttonDiv}>
                             {getButton()}
                         </div>

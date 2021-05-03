@@ -32,7 +32,7 @@ function GoogleMaps() {
 
     var dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 
-    function changePlan(plan) {
+    function changePlan() {
         // TODO: Get plan events from database and weather info
         // var updatedMarkers = [];
         // setMarkers(updatedMarkers);
@@ -70,7 +70,7 @@ function GoogleMaps() {
                     ]);
                 }}
             >
-                {changePlan(plan)}
+                {changePlan()}
                 {markers.map((marker) => (
                     <Marker
                         key={marker.time.toISOString()}
