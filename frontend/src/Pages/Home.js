@@ -4,8 +4,9 @@ import SideNav from '../Components/Sidebar';
 import { Loader } from '@googlemaps/js-api-loader';
 import axios from 'axios';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Logout from '../Components/Logout';
 
-function Home({ username, email, token }) {
+function Home() {
     const [keyObtained, setKeyObtained] = useState(false);
 
     useEffect(() => {
@@ -29,6 +30,7 @@ function Home({ username, email, token }) {
         return (
             <div>
                 <SideNav />
+                <Logout />
                 <GoogleMaps />
             </div>
         );
