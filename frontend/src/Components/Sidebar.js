@@ -16,6 +16,9 @@ import CreateImportDropdown from './CreateImportDropdown.js';
 import { makeStyles } from '@material-ui/core/styles';
 import '../Styles/SidebarStyles.css';
 import SidebarForEvents from './SidebarForEvents.js';
+import { AppContext } from '../AppContextProvider.js';
+import axios from 'axios';
+import useToken from '../hooks/useToken.js';
 
 const useStyles = makeStyles(() => ({
     drawer: {
@@ -44,12 +47,14 @@ function SideNav() {
     const classes = useStyles();
 
     // information and function to control plans
-    const [allPlans, setAllPlans] = useState([
-        { id: 1, name: 'Plan1' },
-        { id: 2, name: 'Plan2' },
-        { id: 3, name: 'Plan3' },
-        { id: 4, name: 'Plan4' },
-    ]);
+    const {plans, addPlan, updatePlan, deletePlan} = useContext(AppContext);
+    const token = useToken().token;
+    const header = {
+        headers: {
+            "Authorization": `Bearer ${token}`
+        }
+    };
+    const [allPlans, setAllPlans] = useState(plans);
 
     const [addingPlan, setAddingPlan] = useState(false);
     const [newPlanName, setNewPlanName] = useState('');
@@ -60,7 +65,7 @@ function SideNav() {
         };
     }
 
-    function addPlan() {
+    function addPlanRow() {
         setAddingPlan(true);
     }
 
@@ -69,21 +74,22 @@ function SideNav() {
         setNewPlanName(e.target.value);
     }
 
-    function submitPlanName(e) {
+    async function submitPlanName(e) {
         if (e.key === 'Enter') {
             setAddingPlan(false);
-            setAllPlans([...allPlans, { id: 3, name: newPlanName }]);
+
+            axios.post('/api/plans', { name: newPlanName }, header).then( async function () {
+                const plansResponse = await axios.get('/api/plans', header);
+                setAllPlans(plansResponse.data);
+            });
         }
     }
 
-    function deletePlan(planName) {
-        console.log(planName);
-        let matchingPlanName = (element) => element.name === planName;
-        let indexOfPlan = allPlans.findIndex(matchingPlanName);
-        setAllPlans([
-            ...allPlans.slice(0, indexOfPlan),
-            ...allPlans.slice(indexOfPlan + 1),
-        ]);
+    function deletePlanRow(planId) {
+        axios.delete(`/api/plans/${planId}`, header).then( async function () {
+            const plansResponse = await axios.get('/api/plans', header);
+            setAllPlans(plansResponse.data);
+        });
     }
 
     // handles the situation when a plan is clicked
@@ -109,14 +115,14 @@ function SideNav() {
                     className={classes.drawer}
                 >
                     <h1>My plans</h1>
-                    <CreateImportDropdown addPlan={addPlan} />
+                    <CreateImportDropdown addPlan={addPlanRow} />
                 </Grid>
-                {allPlans.map((planName) => (
-                    <div key={planName.name}>
+                {allPlans.map((plan) => (
+                    <div key={plan.name}>
                         <Grid container justify="space-between">
                             <Plan
-                                name={planName}
-                                deletePlan={deletePlan}
+                                plan={plan}
+                                deletePlan={deletePlanRow}
                                 navigateToPlan={navigateToPlan}
                             />
                         </Grid>
