@@ -9,7 +9,6 @@ import {
 } from '@material-ui/core';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import ArrowLeftIcon from '@material-ui/icons/ArrowLeft';
-import PlanRow from './PlanRow.js';
 import CreateImportDropdown from './CreateImportDropdown.js';
 import { makeStyles } from '@material-ui/core/styles';
 import '../Styles/SidebarStyles.css';
@@ -17,6 +16,7 @@ import SidebarForEvents from './SidebarForEvents.js';
 import { AppContext } from '../AppContextProvider.js';
 import axios from 'axios';
 import useToken from '../hooks/useToken.js';
+import SidebarRow from './SidebarRow.js';
 
 
 const useStyles = makeStyles(() => ({
@@ -115,10 +115,10 @@ function SideNav() {
                 {plans.map((plan) => (
                     <div key={plan._id}>
                         <Grid container justify="space-between">
-                            <PlanRow
-                                plan={plan}
-                                deletePlan={deletePlanRow}
-                                navigateToPlan={navigateToPlan}
+                            <SidebarRow
+                                item={plan}
+                                handleDelete={deletePlanRow}
+                                handleOnClick={navigateToPlan}
                             />
                         </Grid>
                         <Divider />

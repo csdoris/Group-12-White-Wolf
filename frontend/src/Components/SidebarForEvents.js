@@ -8,10 +8,11 @@ import {
 import AddIcon from '@material-ui/icons/Add';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import { makeStyles } from '@material-ui/core/styles';
-import useToken from '../hooks/useToken';
-import EventPopup from './Eventpopup';
+
+import EventPopup from './EventPopup';
 import axios from 'axios';
 import useToken from '../hooks/useToken';
+import SidebarRow from './SidebarRow';
 
 const useStyles = makeStyles(() => ({
     drawer: {
@@ -74,10 +75,15 @@ export default function SidebarForEvents({ plan, handleGoBackToPlans }) {
         });
     }
 
+    function handleOpenEvent(event) {
+        //Display info about event in the pop up @jacinta
+        console.log(event);
+    }
+
     function handleAddEvent() {
         setAddEvent(true);
     }
-
+    
     function handleDeleteEvent(eventId) {
         axios.delete(`/api/plans/${plan._id}/${eventId}`, header).then(async function () {
             const plansResponse = await axios.get(`/api/plans/${plan._id}`, header);
@@ -113,10 +119,11 @@ export default function SidebarForEvents({ plan, handleGoBackToPlans }) {
                 {events.map((event) => (
                     <div key={event._id}>
                         <Grid container justify="space-between">
-                            <PlanRow
-                                plan={event}
-                                deletePlan={handleDeleteEvent}
-                                navigateToPlan={() => { }}
+                            <SidebarRow
+                                item={event}
+                                handleDelete={handleDeleteEvent}
+                                handleOnClick={handleOpenEvent}
+                                hasExport={false}
                             />
                         </Grid>
                         <Divider />

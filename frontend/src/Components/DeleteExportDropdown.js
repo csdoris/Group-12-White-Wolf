@@ -4,7 +4,7 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import { ThreeDotsVertical } from 'react-bootstrap-icons';
 
-function DeleteDropdown({id, deleteFunc }) {
+function DeleteExportDropdown({id, deleteFunc, showExport = true }) {
     const [isOpen, setIsOpen] = useState(false);
 
     const openDropdown = (event) => {
@@ -13,12 +13,6 @@ function DeleteDropdown({id, deleteFunc }) {
 
     const closeDropdown = () => {
         setIsOpen(null);
-    };
-
-    const sharePlan = () => {
-        closeDropdown();
-        console.log('clicked share');
-        console.log('modal opens');
     };
 
     const exportPlan = () => {
@@ -50,12 +44,11 @@ function DeleteDropdown({id, deleteFunc }) {
                 open={Boolean(isOpen)}
                 onClose={closeDropdown}
             >
-                <MenuItem onClick={sharePlan}>Share</MenuItem>
-                <MenuItem onClick={exportPlan}>Export</MenuItem>
+               {showExport && <MenuItem onClick={exportPlan}>Export</MenuItem> }
                 <MenuItem onClick={deletePlan}>Delete</MenuItem>
             </Menu>
         </>
     );
 }
 
-export default DeleteDropdown;
+export default DeleteExportDropdown;
