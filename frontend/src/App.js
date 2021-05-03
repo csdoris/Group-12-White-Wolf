@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import FetchWeatherInfo from './ExternalAPI/OpenWeatherMapAPI';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import Home from './Pages/Home';

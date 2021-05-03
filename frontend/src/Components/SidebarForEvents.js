@@ -1,14 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import {
-    Drawer,
     Button,
     List,
     Divider,
-    Grid,
-    TextField,
-    IconButton,
+    Grid
 } from '@material-ui/core';
-import ClearIcon from '@material-ui/icons/Clear';
 import AddIcon from '@material-ui/icons/Add';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import { makeStyles } from '@material-ui/core/styles';

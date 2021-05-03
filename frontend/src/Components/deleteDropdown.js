@@ -6,7 +6,6 @@ import { ThreeDotsVertical } from 'react-bootstrap-icons';
 
 function DeleteDropdown({id, deleteFunc }) {
     const [isOpen, setIsOpen] = useState(false);
-    const [itemId, setItemId] = useState(id);
 
     const openDropdown = (event) => {
         setIsOpen(event.currentTarget);
@@ -32,8 +31,8 @@ function DeleteDropdown({id, deleteFunc }) {
         closeDropdown();
         console.log('clicked delete');
         console.log('check modal opens');
-        console.log(itemId)
-        deleteFunc(itemId);
+        console.log(id)
+        deleteFunc(id);
     };
 
     return (
