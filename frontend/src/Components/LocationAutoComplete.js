@@ -19,6 +19,7 @@ export default function LocationAutoComplete({
     options,
     handleChange,
     handleInputChange,
+    viewOnly,
 }) {
     const classes = useStyles();
 
@@ -45,6 +46,9 @@ export default function LocationAutoComplete({
                     label="Add a location"
                     variant="outlined"
                     fullWidth
+                    InputProps={{
+                        readOnly: viewOnly,
+                    }}
                 />
             )}
             renderOption={(option) => {

@@ -8,7 +8,7 @@ import {
 import '../Styles/MapPinStyles.css'
 import { PlanContext } from '../Pages/Home';
 
-import ViewEventPopup from './ViewEventPopup';
+import EventPopup from './Eventpopup';
 
 const libraries = ['places'];
 const mapContainerStyle = {
@@ -28,6 +28,7 @@ function GoogleMaps() {
     const [markers, setMarkers] = useState([]);
     const [plan, setPlan] = useContext(PlanContext);
     const [viewEvent, setViewEvent] = useState(null);
+    const [open, setOpen] = useState(false);
 
     var dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 
@@ -39,12 +40,12 @@ function GoogleMaps() {
     }
 
     function handleClose() {
-        setViewEvent(null);
+        setOpen(false);
     }
 
-    function handleEdit() {
-        console.log("edit called");
-        setViewEvent(null);
+    function handleSave() {
+        console.log("save called");
+        setOpen(false);
     }
 
     return (
@@ -80,7 +81,10 @@ function GoogleMaps() {
                     <InfoWindow position = {{ lat: marker.lat, lng: marker.lng }}>
                         <div
                             className="eventInfo"
-                            onClick={(event) => {setViewEvent(marker.id)}}
+                            onClick={(event) => {
+                                setViewEvent(marker.id);
+                                setOpen(true);
+                            }}
                             >
                             {/* TODO: heading corresponding with event name, img, date and temp */}
                             <h2>Event1</h2>
@@ -95,7 +99,7 @@ function GoogleMaps() {
                 ))}
             </GoogleMap>
             {
-                viewEvent!=null && <ViewEventPopup eventId={viewEvent} open={viewEvent} handleClose={handleClose} handleEdit={handleEdit} />
+                open && <EventPopup eventId={viewEvent} open={open} handleClose={handleClose} handleSave={handleSave} />
             }
         </div>
     );

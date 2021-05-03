@@ -35,7 +35,7 @@ const style = {
 
 const autocompleteService = { current: null };
 
-export default function EventPopup({open, handleClose, handleSave}) {
+export default function EventPopup({eventId, open, handleClose, handleSave}) {
 
     // data needed for creating event 
     const [title, setTitle] = useState("");
@@ -49,6 +49,65 @@ export default function EventPopup({open, handleClose, handleSave}) {
     const [location, setLocation] = useState(null);
     const [locationInputValue, setLocationInputValue] = React.useState('');
     const [options, setOptions] = React.useState([]);
+
+    // state for if readonly or editable
+    const [viewOnly, setViewOnly] = useState(eventId!==null);
+
+    function getTitle() {
+        if(viewOnly) {
+            return("Trip");
+        } else {
+            return(title);
+        }
+    }
+
+    function getDescription() {
+        if(viewOnly) {
+            return("Gonna go camping?");
+        } else {
+            return(description);
+        }
+    }
+
+    function getLocation() {
+        if(viewOnly) {
+            return("3 Symonds Street, Auckland");
+        } else {
+            return(location);
+        }
+    }
+
+    function getTimeTo() {
+        if(viewOnly) {
+            return("3:35 PM");
+        } else {
+            return(timeTo);
+        }
+    }
+
+    function getTimeFrom() {
+        if(viewOnly) {
+            return("2:30 PM");
+        } else {
+            return(timeFrom);
+        }
+    }
+
+    function getDateTo() {
+        if(viewOnly) {
+            return(new Date());
+        } else {
+            return(dateTo);
+        }
+    }
+
+    function getDateFrom() {
+        if(viewOnly) {
+            return(new Date());
+        } else {
+            return(dateFrom);
+        }
+    }
 
     function handleLocationChange(event, newValue) {
         setOptions(newValue ? [newValue, ...options] : options);
@@ -188,6 +247,23 @@ export default function EventPopup({open, handleClose, handleSave}) {
         };
     }, [location, locationInputValue, fetch]);
 
+    function getButton() {
+        if(viewOnly) {
+            return(
+                <Button variant="contained" color="primary" onClick={() => setViewOnly(false)}>
+                    Edit
+                </Button>
+            )
+        }
+        else {
+            return(
+                <Button variant="contained" color="primary" onClick={() => handleSave()}>
+                    Save
+                </Button>
+            )
+        }
+    }
+
     return (
         <div>
             <Modal
@@ -216,22 +292,26 @@ export default function EventPopup({open, handleClose, handleSave}) {
                                 placeholder="< Insert title here >"
                                 inputProps={{ 'aria-label': 'description' }}
                                 onInput={e => { setTitle(e.target.value) }}
-                                value={title}
+                                value={getTitle()}
+                                InputProps={{
+                                    readOnly: viewOnly,
+                                }}
                             />
                         </div>
                         <div className={styles.timeDiv}>
-                            <DatePicker selected={dateFrom} onChange={date => handleDateChange(true, date)}/>
-                            <TimePicker value={timeFrom} defaultTime={timeFrom} onChange={time => handleTimeChange(true, time)} />
+                            <DatePicker selected={getDateFrom()} onChange={date => handleDateChange(true, date)} disabled={viewOnly} />
+                            <TimePicker value={getTimeFrom()} defaultTime={timeFrom} onChange={time => handleTimeChange(true, time)} isDisabled={viewOnly} />
                             <div className={styles.to}>to</div>
-                            <DatePicker selected={dateTo} onChange={date => handleDateChange(false, date)} />
-                            <TimePicker value={timeTo} defaultTime={timeTo} onChange={time => handleTimeChange(false, time)} />
+                            <DatePicker selected={getDateTo()} onChange={date => handleDateChange(false, date)} disabled={viewOnly} />
+                            <TimePicker value={getTimeTo()} defaultTime={timeTo} onChange={time => handleTimeChange(false, time)} isDisabled={viewOnly} />
                         </div>
                         <div>
                             <LocationAutoComplete
-                                value={location}
+                                value={getLocation()}
                                 options={options}
                                 handleChange={handleLocationChange}
                                 handleInputChange={handleLocationInputValueChange}
+                                viewOnly={viewOnly}
                             />
                         </div>
                         <div>
@@ -242,14 +322,15 @@ export default function EventPopup({open, handleClose, handleSave}) {
                                 rows={4}
                                 variant="outlined"
                                 onChange={e => setDescription(e.target.value)}
-                                value={description}
+                                value={getDescription()}
                                 fullWidth={true}
+                                InputProps={{
+                                    readOnly: viewOnly,
+                                }}
                             />
                         </div>
                         <div className={styles.buttonDiv}>
-                            <Button variant="contained" color="primary" onClick={() => handleSave()}>
-                                Save
-                            </Button>
+                            {getButton()}
                         </div>
                     </div>
                 </Fade>

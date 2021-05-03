@@ -89,7 +89,7 @@ export default function SidebarForEvents({ plan, handleGoBackToPlans }) {
             </List>
 
             {
-                addEvent && <EventPopup open={addEvent} handleClose={handleClose} handleSave={handleSave} />
+                addEvent && <EventPopup eventId={null} open={addEvent} handleClose={handleClose} handleSave={handleSave} />
             }
         </div>
     );
