@@ -4,7 +4,7 @@ import Button from '@material-ui/core/Button';
 import '../Styles/planStyle.css';
 import DeleteDropdown from './deleteDropdown';
 
-function Plan({plan, deletePlan, navigateToPlan}) {
+function PlanRow({plan, deletePlan, navigateToPlan}) {
     const [planObj, setPlanObj] = useState(plan);
 
     return (
@@ -12,7 +12,7 @@ function Plan({plan, deletePlan, navigateToPlan}) {
             <Button
                 aria-controls="simple-menu"
                 aria-haspopup="true"
-                onClick={() => {navigateToPlan(planObj._id, planObj.name)}}
+                onClick={() => {navigateToPlan(planObj)}}
             >
                 <h3>{planObj.name}</h3>
             </Button>
@@ -21,4 +21,4 @@ function Plan({plan, deletePlan, navigateToPlan}) {
     );
 }
 
-export default Plan;
+export default PlanRow;

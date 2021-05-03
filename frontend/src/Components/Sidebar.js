@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
     Drawer,
     Button,
@@ -11,7 +11,7 @@ import {
 } from '@material-ui/core';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import ArrowLeftIcon from '@material-ui/icons/ArrowLeft';
-import Plan from './Plan.js';
+import PlanRow from './PlanRow.js';
 import CreateImportDropdown from './CreateImportDropdown.js';
 import { makeStyles } from '@material-ui/core/styles';
 import '../Styles/SidebarStyles.css';
@@ -19,6 +19,7 @@ import SidebarForEvents from './SidebarForEvents.js';
 import { AppContext } from '../AppContextProvider.js';
 import axios from 'axios';
 import useToken from '../hooks/useToken.js';
+
 
 const useStyles = makeStyles(() => ({
     drawer: {
@@ -46,18 +47,18 @@ function SideNav() {
     const [planShown, setPlanShown] = useState(null);
     const classes = useStyles();
 
-    // information and function to control plans
-    const {plans, addPlan, updatePlan, deletePlan} = useContext(AppContext);
+    const {plans, setPlans} = useContext(AppContext);
+
     const token = useToken().token;
     const header = {
         headers: {
             "Authorization": `Bearer ${token}`
         }
     };
-    const [allPlans, setAllPlans] = useState(plans);
 
     const [addingPlan, setAddingPlan] = useState(false);
     const [newPlanName, setNewPlanName] = useState('');
+
 
     function toggleDrawer() {
         return (event) => {
@@ -80,7 +81,7 @@ function SideNav() {
 
             axios.post('/api/plans', { name: newPlanName }, header).then( async function () {
                 const plansResponse = await axios.get('/api/plans', header);
-                setAllPlans(plansResponse.data);
+                setPlans(plansResponse.data);
             });
         }
     }
@@ -88,17 +89,13 @@ function SideNav() {
     function deletePlanRow(planId) {
         axios.delete(`/api/plans/${planId}`, header).then( async function () {
             const plansResponse = await axios.get('/api/plans', header);
-            setAllPlans(plansResponse.data);
+            setPlans(plansResponse.data);
         });
     }
 
     // handles the situation when a plan is clicked
-    function navigateToPlan(id, name) {
-        const planClick = {
-            id: id,
-            name: name,
-        };
-        setPlanShown(planClick);
+    function navigateToPlan(plan) {
+        setPlanShown(plan);
     }
 
     function handleGoBackToPlans() {
@@ -117,10 +114,10 @@ function SideNav() {
                     <h1>My plans</h1>
                     <CreateImportDropdown addPlan={addPlanRow} />
                 </Grid>
-                {allPlans.map((plan) => (
-                    <div key={plan.name}>
+                {plans.map((plan) => (
+                    <div key={plan._id}>
                         <Grid container justify="space-between">
-                            <Plan
+                            <PlanRow
                                 plan={plan}
                                 deletePlan={deletePlanRow}
                                 navigateToPlan={navigateToPlan}
