@@ -124,7 +124,7 @@ export default function ScheduleView() {
             </div>
         );
     } else {
-        if (events.length == 0) {
+        if (events && events.length == 0) {
             return (
                 <p className={styles.heading}>
                     You have no events for this plan, consider make one first
