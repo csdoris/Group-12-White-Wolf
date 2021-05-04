@@ -5,10 +5,19 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { ThreeDotsVertical } from 'react-bootstrap-icons';
 import ExportICS from '../helpers/ExportICS';
 import { SidebarContext } from '../helpers/SidebarContextProvider';
+import useToken from '../hooks/useToken';
+import axios from 'axios';
 
 function DeleteExportDropdown({id, deleteFunc, showExport = true }) {
     const [isOpen, setIsOpen] = useState(false);
     const {events} = useContext(SidebarContext)
+
+    const token = useToken().token;
+    const header = {
+        headers: {
+            "Authorization": `Bearer ${token}`
+        }
+    };
 
     const openDropdown = (event) => {
         setIsOpen(event.currentTarget);
@@ -18,9 +27,11 @@ function DeleteExportDropdown({id, deleteFunc, showExport = true }) {
         setIsOpen(null);
     };
 
-    const exportPlan = () => {
+    const exportPlan = async () => {
         closeDropdown();
-        ExportICS(events);
+        axios.get(`/api/plans/${id}`, header).then(function (resp) {
+            ExportICS(resp.data.events);
+        });
     };
 
     const deletePlan = () => {

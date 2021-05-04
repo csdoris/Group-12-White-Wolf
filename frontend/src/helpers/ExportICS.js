@@ -2,6 +2,7 @@ const FileSaver = require('file-saver');
 const ics = require('ics');
 
 export default function ExportICS(events) {
+    console.log(events);
     let eventsToExport = [];
     events.forEach((element) => {
         let start = new Date(element.startTime);
