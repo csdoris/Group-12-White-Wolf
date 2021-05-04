@@ -5,15 +5,18 @@ const AppContext = React.createContext({
     plans: [],
     setPlans: () => {},
     events: [],
-    setEvents: () => {}
+    setEvents: () => {},
+    plan: null,
+    setPlan: () => {}
 });
 
 function AppContextProvider({ children }) {
 
     const [plans, setPlans] = useState([]);
     const [events, setEvents] = useState([]);
+    const [plan, setPlan] = useState(null);
     // The context value that will be supplied to any descendants of this component.
-    const value = { plans, setPlans, events, setEvents };
+    const value = { plans, setPlans, events, setEvents, plan, setPlan };
 
 
     // Wraps the given child components in a Provider for the above context.

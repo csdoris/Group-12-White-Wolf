@@ -30,7 +30,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 
-export default function SidebarForEvents({ plan, handleGoBackToPlans }) {
+export default function SidebarForEvents(handleGoBackToPlans) {
     const classes = useStyles();
 
     const { token } = useToken();
@@ -40,7 +40,7 @@ export default function SidebarForEvents({ plan, handleGoBackToPlans }) {
         }
     };
 
-    const { events, setEvents } = useContext(AppContext);
+    const { events, setEvents, plan } = useContext(AppContext);
 
     useEffect(() => {
         console.log(plan);

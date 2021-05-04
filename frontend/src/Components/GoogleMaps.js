@@ -5,8 +5,10 @@ import {
     Marker,
 } from '@react-google-maps/api';
 import '../Styles/MapPinStyles.css'
-import { AppContext } from '../AppContextProvider.js';
 
+import axios from 'axios';
+import useToken from '../hooks/useToken';
+import { AppContext } from '../AppContextProvider.js';
 import EventPopup from './EventPopup';
 
 const mapContainerStyle = {
@@ -23,9 +25,16 @@ const options = {
 };
 
 function GoogleMaps() {
-    const {events} = useContext(AppContext);
+    const {events, setEvents, plan} = useContext(AppContext);
     const [viewEvent, setViewEvent] = useState(null);
     const [open, setOpen] = useState(false);
+
+    const { token } = useToken();
+    const header = {
+        headers: {
+            "Authorization": `Bearer ${token}`
+        }
+    };
 
     var dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 
@@ -39,8 +48,19 @@ function GoogleMaps() {
     }
 
     function handleUpdate(updatedEvent) {
-        console.log("Update event");
-        setOpen(false);
+        console.log("update called");
+        console.log(updatedEvent);
+
+        // call the endpoint to update the event in the database
+        axios.put(`/api/plans/${plan._id}/${viewEvent._id}`, updatedEvent, header).then(async (response) => {
+            if (response.status === 204) {
+                setOpen(false);
+                const plansResponse = await axios.get(`/api/plans/${plan._id}`, header);
+                setEvents(plansResponse.data.events);
+            }
+        }).catch((error) => {
+            console.log(error);
+        });
     }
 
     return (

@@ -42,10 +42,10 @@ const useStyles = makeStyles(() => ({
 
 function SideNav() {
     const [isOpen, setIsOpen] = useState();
-    const [planShown, setPlanShown] = useState(null);
+    // const [planShown, setPlanShown] = useState(null);
     const classes = useStyles();
 
-    const {plans, setPlans} = useContext(AppContext);
+    const {plans, setPlans, plan, setPlan} = useContext(AppContext);
 
     const token = useToken().token;
     const header = {
@@ -93,11 +93,11 @@ function SideNav() {
 
     // handles the situation when a plan is clicked
     function navigateToPlan(plan) {
-        setPlanShown(plan);
+        setPlan(plan);
     }
 
     function handleGoBackToPlans() {
-        setPlanShown(null);
+        setPlan(null);
     }
 
     const listPlans = () => (
@@ -156,11 +156,10 @@ function SideNav() {
                     onClose={toggleDrawer()}
                     variant="persistent"
                 >
-                    {planShown == null ? (
+                    {plan == null ? (
                         listPlans()
                     ) : (
                         <SidebarForEvents
-                            plan={planShown}
                             handleGoBackToPlans={handleGoBackToPlans}
                         />
                     )}
