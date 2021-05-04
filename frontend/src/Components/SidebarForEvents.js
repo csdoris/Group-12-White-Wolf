@@ -53,8 +53,11 @@ export default function SidebarForEvents({ plan, handleGoBackToPlans }) {
     const [addEvent, setAddEvent] = useState(false);
     const [newEventSaved, setNewEventSaved] = useState(false);
 
+    const [viewEvent, setViewEvent] = useState(null);
+
     function handleClose() {
         setAddEvent(false);
+        setViewEvent(null);
     }
 
     function handleSave(newEvent) {
@@ -75,7 +78,8 @@ export default function SidebarForEvents({ plan, handleGoBackToPlans }) {
 
     function handleOpenEvent(event) {
         //Display info about event in the pop up @jacinta
-        console.log(event);
+        setViewEvent(event);
+        setAddEvent(true);
     }
 
     function handleAddEvent() {
@@ -130,7 +134,7 @@ export default function SidebarForEvents({ plan, handleGoBackToPlans }) {
             </List>
 
             {
-                addEvent && <EventPopup event={null} open={addEvent} handleClose={handleClose} handleSave={handleSave} />
+                addEvent && <EventPopup event={viewEvent} open={addEvent} handleClose={handleClose} handleSave={handleSave} />
             }
         </div>
     );

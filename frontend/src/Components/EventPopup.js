@@ -173,6 +173,10 @@ export default function EventPopup({event, open, handleClose, handleSave}) {
         setViewOnly(false)
     }
 
+    function handleUpdate() {
+        console.log("update");
+    }
+
     function getButton() {
         if(viewOnly) {
             return(
@@ -182,7 +186,7 @@ export default function EventPopup({event, open, handleClose, handleSave}) {
             )
         } else {
             return(
-                <Button variant="contained" color="primary" onClick={() => handleSave()}>
+                <Button variant="contained" color="primary" onClick={() => event ? handleUpdate() : handleSave()}>
                     Save
                 </Button>
             )
