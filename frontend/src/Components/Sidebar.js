@@ -1,17 +1,14 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import {
     Drawer,
-    Button,
     List,
     Divider,
     Grid,
     TextField,
-    IconButton,
     Slide,
 } from '@material-ui/core';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import ArrowLeftIcon from '@material-ui/icons/ArrowLeft';
-import Plan from './Plan.js';
 import CreateImportDropdown from './CreateImportDropdown.js';
 import { makeStyles } from '@material-ui/core/styles';
 import '../Styles/SidebarStyles.css';
@@ -19,6 +16,10 @@ import SidebarForEvents from './SidebarForEvents.js';
 import { AppContext } from '../helpers/AppContextProvider.js';
 import { SidebarContext } from '../helpers/SidebarContextProvider.js';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import { AppContext } from '../AppContextProvider.js';
+import axios from 'axios';
+import useToken from '../hooks/useToken.js';
+import SidebarRow from './SidebarRow.js';
 
 const useStyles = makeStyles(() => ({
     drawer: {
@@ -49,17 +50,19 @@ function SideNav({ view, deleteFunc }) {
     const [planShown, setPlanShown] = useState(null);
     const classes = useStyles();
 
-    // information and function to control plans
-    const [allPlans, setAllPlans] = useState([
-        { id: 1, name: 'Plan1' },
-        { id: 2, name: 'Plan2' },
-        { id: 3, name: 'Plan3' },
-        { id: 4, name: 'Plan4' },
-    ]);
+    const {plans, setPlans} = useContext(AppContext);
+
+    const token = useToken().token;
+    const header = {
+        headers: {
+            "Authorization": `Bearer ${token}`
+        }
+    };
 
     const { planName, setPlanName } = useContext(AppContext);
     const [addingPlan, setAddingPlan] = useState(false);
     const [newPlanName, setNewPlanName] = useState('');
+
 
     function toggleDrawer() {
         return (event) => {
@@ -68,7 +71,7 @@ function SideNav({ view, deleteFunc }) {
         };
     }
 
-    function addPlan() {
+    function addPlanRow() {
         setAddingPlan(true);
     }
 
@@ -84,18 +87,20 @@ function SideNav({ view, deleteFunc }) {
     function submitPlanName(e) {
         if (e.key === 'Enter') {
             setAddingPlan(false);
-            setAllPlans([...allPlans, { id: 3, name: newPlanName }]);
+
+            axios.post('/api/plans', { name: newPlanName }, header).then( async function () {
+                const plansResponse = await axios.get('/api/plans', header);
+                setPlans(plansResponse.data);
+            });
         }
     }
 
-    function deletePlan(name) {
-        console.log(name);
-        let matchingPlanName = (element) => element.name === name;
-        let indexOfPlan = allPlans.findIndex(matchingPlanName);
-        setAllPlans([
-            ...allPlans.slice(0, indexOfPlan),
-            ...allPlans.slice(indexOfPlan + 1),
-        ]);
+    function deletePlanRow(planId) {
+        axios.delete(`/api/plans/${planId}`, header).then( async function () {
+            const plansResponse = await axios.get('/api/plans', header);
+            setPlans(plansResponse.data);
+        });
+
         if (planName === name) {
             deleteFunc();
             setPlanName(null);
@@ -109,14 +114,10 @@ function SideNav({ view, deleteFunc }) {
     }, [view]);
 
     // handles the situation when a plan is clicked
-    function navigateToPlan(id, name) {
+    function navigateToPlan(plan) {
         handleCancel();
-        const planClick = {
-            id: id,
-            name: name,
-        };
         if (view == 0) {
-            setPlanShown(planClick);
+            setPlanShown(plan);
         }
         setPlanName(name);
     }
@@ -139,15 +140,15 @@ function SideNav({ view, deleteFunc }) {
                     className={classes.drawer}
                 >
                     <h1>My plans</h1>
-                    <CreateImportDropdown addPlan={addPlan} />
+                    <CreateImportDropdown addPlan={addPlanRow} />
                 </Grid>
-                {allPlans.map((planName) => (
-                    <div key={planName.name}>
-                        <Grid container justify="space-between">
-                            <Plan
-                                name={planName}
-                                deletePlan={deletePlan}
-                                navigateToPlan={navigateToPlan}
+                {plans.map((plan) => (
+                    <div key={plan._id}>
+                        <Grid wrap="nowrap" container justify="space-between">
+                            <SidebarRow
+                                item={plan}
+                                handleDelete={deletePlanRow}
+                                handleOnClick={navigateToPlan}
                             />
                         </Grid>
                         <Divider />

@@ -57,6 +57,7 @@ async function updateEvent(planId,eventId, event) {
 async function deleteEvent(planId,eventId) {
     try {
         await Plan.findByIdAndUpdate(planId,{ $pull: { events : {_id: eventId}}});
+        return true;
     } catch (err) {
         console.log(err);
         return false;

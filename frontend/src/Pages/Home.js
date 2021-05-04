@@ -9,11 +9,16 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import { AppContext } from '../helpers/AppContextProvider';
 import { SidebarContextProvider } from '../helpers/SidebarContextProvider';
+import Logout from '../Components/Logout';
+import { AppContext } from '../AppContextProvider';
+import useToken from '../hooks/useToken';
 
-function Home({ username, email, token }) {
-    const { APIkey, setAPIkey } = useContext(AppContext);
+function Home() {
     const [keyObtained, setKeyObtained] = useState(false);
-    const [value, setValue] = useState(0);
+    const [plansObtained, setPlansObtained] = useState(false);
+    const { plans, setPlans } = useContext(AppContext);
+    const { APIkey, setAPIkey } = useContext(AppContext);
+    const token = useToken().token;
 
     useEffect(() => {
         axios
@@ -31,6 +36,13 @@ function Home({ username, email, token }) {
             .catch(function (error) {
                 console.log(error);
             });
+        
+        axios.get(`/api/plans`, { headers: { "Authorization": `Bearer ${token}` }}).then( function (resp) {
+            console.log("RESP FROM HOME",resp.data);
+            setPlans(resp.data);
+            console.log(plans);
+            setPlansObtained(true);
+        });
     }, []);
 
     const handleChange = (event, newValue) => {
@@ -42,7 +54,7 @@ function Home({ username, email, token }) {
         setValue(0);
     };
 
-    if (keyObtained) {
+    if (keyObtained && plansObtained) {
         return (
             <SidebarContextProvider>
                 <div>
@@ -57,6 +69,7 @@ function Home({ username, email, token }) {
                         <Tab label="Map View" />
                         <Tab label="Schedule View" />
                     </Tabs>
+                    <Logout />
                     {value ? <ScheduleView /> : <GoogleMaps />}
                 </div>
             </SidebarContextProvider>
@@ -64,7 +77,6 @@ function Home({ username, email, token }) {
     } else {
         return (
             <div>
-                <SideNav />
                 <CircularProgress />
             </div>
         );

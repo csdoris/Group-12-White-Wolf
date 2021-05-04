@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState, useStyles } from "react";
+import { useState, useEffect, useMemo } from "react";
 
 import Input from '@material-ui/core/Input';
 import Backdrop from '@material-ui/core/Backdrop';
@@ -34,11 +34,12 @@ const style = {
 };
 
 const autocompleteService = { current: null };
+const placeService = { current: null };
 
-export default function EventPopup({open, handleClose, handleSave}) {
+export default function EventPopup({ open, handleClose, handleSave }) {
 
     // data needed for creating event 
-    const [title, setTitle] = useState("");
+    const [name, setName] = useState("");
     const [dateFrom, setDateFrom] = useState(new Date());
     const [dateTo, setDateTo] = useState(new Date());
     const [timeFrom, setTimeFrom] = useState(convert24HourTo12Hour(dateFrom));
@@ -47,8 +48,61 @@ export default function EventPopup({open, handleClose, handleSave}) {
 
     // state for location autocomplete
     const [location, setLocation] = useState(null);
-    const [locationInputValue, setLocationInputValue] = React.useState('');
-    const [options, setOptions] = React.useState([]);
+    const [locationInputValue, setLocationInputValue] = useState('');
+    const [options, setOptions] = useState([]);
+    const [validLocation, setValidLocation] = useState(true);
+
+    function getLatAndLongForLocation() {
+        if (!placeService.current && window.google) {
+            placeService.current = new window.google.maps.places.PlacesService(document.createElement('div'));
+        }
+
+        if (!placeService.current) {
+            console.log("Cannot initialise the placeService")
+        }
+
+        const request = {
+            placeId: location.place_id
+        };
+
+        placeService.current.getDetails(request, (result, status) => {
+            if (status === window.google.maps.places.PlacesServiceStatus.OK) {
+                const position = result.geometry.location.toJSON();
+                
+                const newEvent = {
+                    startTime: dateFrom.toJSON(),
+                    endTime: dateTo.toJSON(),
+                    address: location.description,
+                    description: description,
+                    lat: position.lat,
+                    lng: position.lng
+                }
+
+                if (name) {
+                    newEvent.name = name;
+                }
+
+                handleSave(newEvent);
+            }
+            else {
+                console.log("Cannot get exact location of the place")
+            }
+        });
+    }
+
+    function handleSaveButonClicked() {
+        // check location is entered 
+        if (!location) {
+            setValidLocation(false);
+            return;
+        }
+        else {
+            setValidLocation(true);
+        }
+
+        // get the latitude and longitude of the location
+        getLatAndLongForLocation();
+    }
 
     function handleLocationChange(event, newValue) {
         setOptions(newValue ? [newValue, ...options] : options);
@@ -144,7 +198,7 @@ export default function EventPopup({open, handleClose, handleSave}) {
         }
     }
 
-    const fetch = React.useMemo(
+    const fetch = useMemo(
         () =>
             throttle((request, callback) => {
                 autocompleteService.current.getPlacePredictions(request, callback);
@@ -152,7 +206,7 @@ export default function EventPopup({open, handleClose, handleSave}) {
         [],
     );
 
-    React.useEffect(() => {
+    useEffect(() => {
         let active = true;
 
         if (!autocompleteService.current && window.google) {
@@ -215,8 +269,8 @@ export default function EventPopup({open, handleClose, handleSave}) {
                                 fullWidth={true}
                                 placeholder="< Insert title here >"
                                 inputProps={{ 'aria-label': 'description' }}
-                                onInput={e => { setTitle(e.target.value) }}
-                                value={title}
+                                onInput={e => { setName(e.target.value) }}
+                                value={name}
                             />
                         </div>
                         <div className={styles.timeDiv}>
@@ -234,6 +288,7 @@ export default function EventPopup({open, handleClose, handleSave}) {
                                 handleInputChange={handleLocationInputValueChange}
                             />
                         </div>
+                        {validLocation ? null : <div className={styles.textDanger}>Please enter a valid location</div>}
                         <div>
                             <TextField
                                 id="outlined-multiline-static"
@@ -247,7 +302,7 @@ export default function EventPopup({open, handleClose, handleSave}) {
                             />
                         </div>
                         <div className={styles.buttonDiv}>
-                            <Button variant="contained" color="primary" onClick={() => handleSave()}>
+                            <Button variant="contained" color="primary" onClick={handleSaveButonClicked}>
                                 Save
                             </Button>
                         </div>
