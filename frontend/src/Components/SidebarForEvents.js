@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
     Button,
     List,
@@ -13,6 +13,7 @@ import EventPopup from './EventPopup';
 import axios from 'axios';
 import useToken from '../hooks/useToken';
 import SidebarRow from './SidebarRow';
+import { SidebarContext } from '../helpers/SidebarContextProvider';
 
 const useStyles = makeStyles(() => ({
     drawer: {
@@ -38,13 +39,14 @@ export default function SidebarForEvents({ plan, handleGoBackToPlans }) {
             "Authorization": `Bearer ${token}`
         }
     };
-
-    const [events, setEvents] = useState([]);
+    
+    const {events, setEvents} = useContext(SidebarContext);
 
     useEffect(() => {
         console.log(plan);
         axios.get(`/api/plans/${plan._id}`, header).then(function (resp) {
             setEvents(resp.data.events)
+            console.log(resp.data.events);
         });
     }, []);
 
@@ -82,11 +84,14 @@ export default function SidebarForEvents({ plan, handleGoBackToPlans }) {
     }
     
     function handleDeleteEvent(eventId) {
+        console.log(eventId);
         axios.delete(`/api/plans/${plan._id}/${eventId}`, header).then(async function () {
             const plansResponse = await axios.get(`/api/plans/${plan._id}`, header);
             setEvents(plansResponse.data.events);
+            
         });
     }
+
 
     return (
         <div>
@@ -113,7 +118,7 @@ export default function SidebarForEvents({ plan, handleGoBackToPlans }) {
                         <AddIcon className="plusSign" />
                     </Button>
                 </Grid>
-                {events.map((event) => (
+                {events ? events.length !=0 ? events.map((event) => (
                     <div key={event._id}>
                         <Grid wrap="nowrap" container justify="space-between">
                             <SidebarRow
@@ -125,7 +130,7 @@ export default function SidebarForEvents({ plan, handleGoBackToPlans }) {
                         </Grid>
                         <Divider />
                     </div>
-                ))}
+                )) : <p>No events to display</p> : null}
             </List>
 
             {
@@ -133,4 +138,5 @@ export default function SidebarForEvents({ plan, handleGoBackToPlans }) {
             }
         </div>
     );
+        
 }

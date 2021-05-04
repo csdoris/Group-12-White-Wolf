@@ -9,9 +9,10 @@ const AppContext = React.createContext({
 function AppContextProvider({ children }) {
 
     const [plans, setPlans] = useState([]);
+    const [APIkey, setAPIkey] = useState();
+    
     // The context value that will be supplied to any descendants of this component.
-    const value = { plans, setPlans };
-
+    const value = { plans, setPlans, APIkey, setAPIkey };
 
     // Wraps the given child components in a Provider for the above context.
     return (

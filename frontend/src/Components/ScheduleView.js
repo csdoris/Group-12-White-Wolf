@@ -6,61 +6,17 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import OfflineMapPopup from './OfflineMapPopup';
 import styles from '../Styles/ScheduleView.module.css';
-import { AppContext } from '../helpers/AppContextProvider';
+import { AppContext } from '../AppContextProvider';
 import { SidebarContext } from '../helpers/SidebarContextProvider';
 
 export default function ScheduleView() {
-    const { planName, APIkey } = useContext(AppContext);
-    const { isOpen, setIsOpen } = useContext(SidebarContext);
+    
+    const { plans, APIkey } = useContext(AppContext);
+    const { isOpen, setIsOpen, events, setEvents } = useContext(SidebarContext);
     const [mapOpen, setMapOpen] = useState(false);
     const [mapLat, setMapLat] = useState();
     const [mapLong, setMapLong] = useState();
-    const [events, setEvents] = useState([
-        {
-            id: 1,
-            name: 'Event1',
-            date: '01/04/2021',
-            DateFrom: '19:00',
-            DateTo: '20:00',
-            weather: 'cloudy 24°C',
-            location: 'Auckland',
-            lat: '-36.8509',
-            long: '174.7645',
-        },
-        {
-            id: 2,
-            name: 'Event2',
-            date: '01/04/2021',
-            DateFrom: '17:00',
-            DateTo: '18:00',
-            weather: 'cloudy 24°C',
-            location: 'Auckland',
-            lat: '-37.8509',
-            long: '174.7645',
-        },
-        {
-            id: 3,
-            name: 'Event3',
-            date: '08/04/2021',
-            DateFrom: '17:00',
-            DateTo: '17:00',
-            weather: 'cloudy 24°C',
-            location: 'Auckland',
-            lat: '-35.8509',
-            long: '174.7645',
-        },
-        {
-            id: 4,
-            name: 'Event4',
-            date: '04/04/2021',
-            DateFrom: '17:00',
-            DateTo: '17:00',
-            weather: 'cloudy 24°C',
-            location: 'Auckland',
-            lat: '-36.8509',
-            long: '174.7645',
-        },
-    ]);
+    
 
     function handleClose() {
         setMapOpen(false);
@@ -83,11 +39,11 @@ export default function ScheduleView() {
         return url;
     }
 
-    if (planName) {
+    if (events && events.length != 0) {
         return (
             <div>
                 <div className={styles.heading}>
-                    <h1>{planName}</h1>
+                    <h1>{plans.name}</h1>
                 </div>
                 <div
                     className={
@@ -168,10 +124,18 @@ export default function ScheduleView() {
             </div>
         );
     } else {
+        if (events.length == 0) {
+            return (
+                <p className={styles.heading}>
+                    You have no events for this plan, consider make one first
+                </p>
+            );
+        } else {
         return (
             <p className={styles.heading}>
                 Please click on the plan which you want to view the events for
             </p>
         );
+    }
     }
 }

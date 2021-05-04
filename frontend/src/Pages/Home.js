@@ -7,7 +7,6 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import ScheduleView from '../Components/ScheduleView';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import { AppContext } from '../helpers/AppContextProvider';
 import { SidebarContextProvider } from '../helpers/SidebarContextProvider';
 import Logout from '../Components/Logout';
 import { AppContext } from '../AppContextProvider';
@@ -16,11 +15,12 @@ import useToken from '../hooks/useToken';
 function Home() {
     const [keyObtained, setKeyObtained] = useState(false);
     const [plansObtained, setPlansObtained] = useState(false);
-    const { plans, setPlans } = useContext(AppContext);
-    const { APIkey, setAPIkey } = useContext(AppContext);
+    const { plans, setPlans, APIkey, setAPIkey } = useContext(AppContext);
+    const [value, setValue] = useState(false);
     const token = useToken().token;
 
     useEffect(() => {
+        setValue(0);
         axios
             .get('/api/apikeys/googlekey')
             .then(function (response) {

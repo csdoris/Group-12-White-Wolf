@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
     Drawer,
     List,
@@ -6,6 +6,7 @@ import {
     Grid,
     TextField,
     Slide,
+    Button
 } from '@material-ui/core';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import ArrowLeftIcon from '@material-ui/icons/ArrowLeft';
@@ -13,7 +14,6 @@ import CreateImportDropdown from './CreateImportDropdown.js';
 import { makeStyles } from '@material-ui/core/styles';
 import '../Styles/SidebarStyles.css';
 import SidebarForEvents from './SidebarForEvents.js';
-import { AppContext } from '../helpers/AppContextProvider.js';
 import { SidebarContext } from '../helpers/SidebarContextProvider.js';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import { AppContext } from '../AppContextProvider.js';
@@ -46,11 +46,13 @@ const useStyles = makeStyles(() => ({
 }));
 
 function SideNav({ view, deleteFunc }) {
-    const { isOpen, setIsOpen } = useContext(SidebarContext);
+    
+    const { isOpen, setIsOpen, planId, setPlanId, events, setEvents } = useContext(SidebarContext);
     const [planShown, setPlanShown] = useState(null);
+    // const [planName, setPlanName] = useState(null);
     const classes = useStyles();
 
-    const {plans, setPlans} = useContext(AppContext);
+    const {plans, setPlans } = useContext(AppContext);
 
     const token = useToken().token;
     const header = {
@@ -59,7 +61,6 @@ function SideNav({ view, deleteFunc }) {
         }
     };
 
-    const { planName, setPlanName } = useContext(AppContext);
     const [addingPlan, setAddingPlan] = useState(false);
     const [newPlanName, setNewPlanName] = useState('');
 
@@ -101,9 +102,10 @@ function SideNav({ view, deleteFunc }) {
             setPlans(plansResponse.data);
         });
 
-        if (planName === name) {
+        if (planId === planId) {
             deleteFunc();
-            setPlanName(null);
+            setEvents(null)
+            setPlanId(null);
         }
     }
 
@@ -119,11 +121,17 @@ function SideNav({ view, deleteFunc }) {
         if (view == 0) {
             setPlanShown(plan);
         }
-        setPlanName(name);
+
+        axios.get(`/api/plans/${plan._id}`, header).then(function (resp) {
+            setEvents(resp.data.events)
+            console.log(resp.data.events);
+        });
+        setPlanId(plan.id);
     }
 
     function handleGoBackToPlans() {
         setPlanShown(null);
+        setEvents(null);
     }
 
     const handleClickAway = () => {

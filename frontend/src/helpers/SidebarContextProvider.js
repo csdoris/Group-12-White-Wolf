@@ -11,11 +11,17 @@ const SidebarContext = React.createContext([]);
 function SidebarContextProvider({ children }) {
     // Stateful value initialization
     const [isOpen, setIsOpen] = useState();
+    const [events, setEvents] = useState(null);
+    const [planId, setPlanId] = useState();
 
     // The context value that will be supplied to any descendants of this component.
     const context = {
         isOpen,
         setIsOpen,
+        planId,
+        setPlanId,
+        events,
+        setEvents
     };
 
     // Wraps the given child components in a Provider for the above context.
