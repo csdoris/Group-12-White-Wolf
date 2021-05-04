@@ -1,14 +1,10 @@
 import React from 'react';
 import {
     GoogleMap,
-    useLoadScript,
-    Marker,
-    InfoWindow,
 } from '@react-google-maps/api';
 
-const libraries = ['places'];
 const mapContainerStyle = {
-    height: '100vh',
+    height: '95vh',
     width: '100vw',
 };
 const center = {

@@ -34,12 +34,13 @@ const planSchema = new Schema({
     name: {type: String, default: "Untitled"},
 
     events: [{
-        name: String,
+        name: {type: String, default: "Untitled"},
         description: String,
         startTime: { type: Date, required: true },
         endTime: { type: Date, required: true },
         address: { type: String, required: true },
-        city: { type: String, required: true }
+        lat: { type: String, required: true },
+        lng: { type: String, required: true }
     }]
 
 }, {
