@@ -97,6 +97,7 @@ function SideNav({ view, deleteFunc }) {
 
     function importPlan(planName, contents) {
         // setAllPlans([...allPlans, { id: 3, name: planName }]);
+        //post to backend and get id and save it in plans appcontext and then trigger a refetch of the plans 
         console.log(contents);
         console.log(planName);
     }
