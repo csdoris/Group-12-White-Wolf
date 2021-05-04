@@ -115,7 +115,7 @@ export default function SidebarForEvents({ plan, handleGoBackToPlans }) {
                 </Grid>
                 {events.map((event) => (
                     <div key={event._id}>
-                        <Grid container justify="space-between">
+                        <Grid wrap="nowrap" container justify="space-between">
                             <SidebarRow
                                 item={event}
                                 handleDelete={handleDeleteEvent}

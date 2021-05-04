@@ -114,7 +114,7 @@ function SideNav() {
                 </Grid>
                 {plans.map((plan) => (
                     <div key={plan._id}>
-                        <Grid container justify="space-between">
+                        <Grid wrap="nowrap" container justify="space-between">
                             <SidebarRow
                                 item={plan}
                                 handleDelete={deletePlanRow}
