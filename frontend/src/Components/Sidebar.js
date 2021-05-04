@@ -45,7 +45,7 @@ function SideNav() {
     const [planShown, setPlanShown] = useState(null);
     const classes = useStyles();
 
-    const {setPlan, plans, setPlans} = useContext(AppContext);
+    const {plans, setPlans} = useContext(AppContext);
 
     const token = useToken().token;
     const header = {
@@ -93,7 +93,6 @@ function SideNav() {
 
     // handles the situation when a plan is clicked
     function navigateToPlan(plan) {
-        setPlan(plan);
         setPlanShown(plan);
     }
 

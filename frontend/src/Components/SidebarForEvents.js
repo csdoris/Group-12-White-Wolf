@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
     Button,
     List,
@@ -13,6 +13,7 @@ import EventPopup from './EventPopup';
 import axios from 'axios';
 import useToken from '../hooks/useToken';
 import SidebarRow from './SidebarRow';
+import { AppContext } from '../AppContextProvider.js';
 
 const useStyles = makeStyles(() => ({
     drawer: {
@@ -39,7 +40,7 @@ export default function SidebarForEvents({ plan, handleGoBackToPlans }) {
         }
     };
 
-    const [events, setEvents] = useState([]);
+    const { events, setEvents } = useContext(AppContext);
 
     useEffect(() => {
         console.log(plan);
@@ -129,7 +130,7 @@ export default function SidebarForEvents({ plan, handleGoBackToPlans }) {
             </List>
 
             {
-                addEvent && <EventPopup eventId={null} open={addEvent} handleClose={handleClose} handleSave={handleSave} />
+                addEvent && <EventPopup event={null} open={addEvent} handleClose={handleClose} handleSave={handleSave} />
             }
         </div>
     );

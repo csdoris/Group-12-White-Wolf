@@ -4,16 +4,16 @@ import useToken from './hooks/useToken';
 const AppContext = React.createContext({
     plans: [],
     setPlans: () => {},
-    plan: undefined,
-    setPlan: () => {}
+    events: [],
+    setEvents: () => {}
 });
 
 function AppContextProvider({ children }) {
 
     const [plans, setPlans] = useState([]);
-    const [plan, setPlan] = useState([]);
+    const [events, setEvents] = useState([]);
     // The context value that will be supplied to any descendants of this component.
-    const value = { plans, setPlans, plan, setPlan };
+    const value = { plans, setPlans, events, setEvents };
 
 
     // Wraps the given child components in a Provider for the above context.

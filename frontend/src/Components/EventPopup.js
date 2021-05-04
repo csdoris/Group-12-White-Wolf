@@ -36,7 +36,7 @@ const style = {
 const autocompleteService = { current: null };
 const placeService = { current: null };
 
-export default function EventPopup({eventId, open, handleClose, handleSave}) {
+export default function EventPopup({event, open, handleClose, handleSave}) {
 
     // data needed for creating event 
     const [name, setName] = useState("");
@@ -105,7 +105,7 @@ export default function EventPopup({eventId, open, handleClose, handleSave}) {
     }
 
     // state for if readonly or editable
-    const [viewOnly, setViewOnly] = useState(eventId!==null);
+    const [viewOnly, setViewOnly] = useState(event!==null);
 
     function getName() {
         if(viewOnly) {
