@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 
 import Input from '@material-ui/core/Input';
 import Backdrop from '@material-ui/core/Backdrop';
@@ -39,7 +39,7 @@ const placeService = { current: null };
 export default function EventPopup({ open, handleClose, handleSave }) {
 
     // data needed for creating event 
-    const [title, setTitle] = useState("");
+    const [name, setName] = useState("");
     const [dateFrom, setDateFrom] = useState(new Date());
     const [dateTo, setDateTo] = useState(new Date());
     const [timeFrom, setTimeFrom] = useState(convert24HourTo12Hour(dateFrom));
@@ -78,8 +78,8 @@ export default function EventPopup({ open, handleClose, handleSave }) {
                     lng: position.lng
                 }
 
-                if (title) {
-                    newEvent.title = title;
+                if (name) {
+                    newEvent.name = name;
                 }
 
                 handleSave(newEvent);
@@ -198,7 +198,7 @@ export default function EventPopup({ open, handleClose, handleSave }) {
         }
     }
 
-    const fetch = React.useMemo(
+    const fetch = useMemo(
         () =>
             throttle((request, callback) => {
                 autocompleteService.current.getPlacePredictions(request, callback);
@@ -206,7 +206,7 @@ export default function EventPopup({ open, handleClose, handleSave }) {
         [],
     );
 
-    React.useEffect(() => {
+    useEffect(() => {
         let active = true;
 
         if (!autocompleteService.current && window.google) {
@@ -269,8 +269,8 @@ export default function EventPopup({ open, handleClose, handleSave }) {
                                 fullWidth={true}
                                 placeholder="< Insert title here >"
                                 inputProps={{ 'aria-label': 'description' }}
-                                onInput={e => { setTitle(e.target.value) }}
-                                value={title}
+                                onInput={e => { setName(e.target.value) }}
+                                value={name}
                             />
                         </div>
                         <div className={styles.timeDiv}>
