@@ -47,9 +47,8 @@ const useStyles = makeStyles(() => ({
 
 function SideNav({ view, deleteFunc }) {
     
-    const { isOpen, setIsOpen, planId, setPlanId, events, setEvents } = useContext(SidebarContext);
+    const { isOpen, setIsOpen, planId, setPlanId, events, setEvents, setPlanName } = useContext(SidebarContext);
     const [planShown, setPlanShown] = useState(null);
-    // const [planName, setPlanName] = useState(null);
     const classes = useStyles();
 
     const {plans, setPlans } = useContext(AppContext);
@@ -127,6 +126,7 @@ function SideNav({ view, deleteFunc }) {
             console.log(resp.data.events);
         });
         setPlanId(plan.id);
+        setPlanName(plan.name)
     }
 
     function handleGoBackToPlans() {

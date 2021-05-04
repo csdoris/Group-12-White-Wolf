@@ -9,10 +9,12 @@ import styles from '../Styles/ScheduleView.module.css';
 import { AppContext } from '../AppContextProvider';
 import { SidebarContext } from '../helpers/SidebarContextProvider';
 
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+
 export default function ScheduleView() {
     
     const { plans, APIkey } = useContext(AppContext);
-    const { isOpen, setIsOpen, events, setEvents } = useContext(SidebarContext);
+    const { isOpen, setIsOpen, events, setEvents, planName } = useContext(SidebarContext);
     const [mapOpen, setMapOpen] = useState(false);
     const [mapLat, setMapLat] = useState();
     const [mapLong, setMapLong] = useState();
@@ -39,11 +41,25 @@ export default function ScheduleView() {
         return url;
     }
 
+    function parseDate(dateString) {
+        let date = new Date(dateString)
+        let string = `${date.getDate()} ${MONTHS[date.getMonth()]} ${date.getFullYear()}`
+        // console.log(string);
+        return string
+    }
+
+    function parseTime(dateString) {
+        let date = new Date(dateString)
+        let string = `${date.getHours()}:${date.getMinutes().toString().padStart(2, "0")}`
+        console.log();
+        return string
+    }
+
     if (events && events.length != 0) {
         return (
             <div>
                 <div className={styles.heading}>
-                    <h1>{plans.name}</h1>
+                    <h1>{planName}</h1>
                 </div>
                 <div
                     className={
@@ -91,23 +107,23 @@ export default function ScheduleView() {
                                             {event.name}
                                         </TableCell>
                                         <TableCell align="center">
-                                            {event.date}
+                                            {parseDate(event.startTime)} - {parseDate(event.endTime)}
                                         </TableCell>
                                         <TableCell align="center">
-                                            {event.DateFrom}-{event.DateTo}
+                                            {parseTime(event.startTime)} - {parseTime(event.endTime)}
                                         </TableCell>
                                         <TableCell align="center">
                                             {event.weather}
                                         </TableCell>
                                         <TableCell align="center">
-                                            {event.location}
+                                            {event.address}
                                         </TableCell>
                                         <TableCell
                                             align="center"
                                             className={styles.map}
                                             onClick={handleOpen}
                                             lat={event.lat}
-                                            long={event.long}
+                                            long={event.lng}
                                         >
                                             Click to open a map for this event
                                         </TableCell>
@@ -126,15 +142,25 @@ export default function ScheduleView() {
     } else {
         if (events && events.length == 0) {
             return (
+                <div>
+                <div className={styles.heading}>
+                    <h1>{planName}</h1>
+                </div>
                 <p className={styles.heading}>
                     You have no events for this plan, consider make one first
                 </p>
+                </div>
             );
         } else {
         return (
+            <div>
+            <div className={styles.heading}>
+                    <h1>{planName}</h1>
+                </div>
             <p className={styles.heading}>
                 Please click on the plan which you want to view the events for
             </p>
+            </div>
         );
     }
     }

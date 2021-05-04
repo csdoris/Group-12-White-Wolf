@@ -13,6 +13,7 @@ function SidebarContextProvider({ children }) {
     const [isOpen, setIsOpen] = useState();
     const [events, setEvents] = useState(null);
     const [planId, setPlanId] = useState();
+    const [planName, setPlanName] = useState();
 
     // The context value that will be supplied to any descendants of this component.
     const context = {
@@ -21,7 +22,9 @@ function SidebarContextProvider({ children }) {
         planId,
         setPlanId,
         events,
-        setEvents
+        setEvents,
+        planName,
+        setPlanName,
     };
 
     // Wraps the given child components in a Provider for the above context.
