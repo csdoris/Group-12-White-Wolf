@@ -47,7 +47,6 @@ function GoogleMaps() {
                 center={center}
                 options={options}
             >
-                {console.log(events)}
                 {events.map((event) => (
                     <Marker
                         key={event._id}
