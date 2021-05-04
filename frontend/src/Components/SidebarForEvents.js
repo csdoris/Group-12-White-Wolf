@@ -76,6 +76,23 @@ export default function SidebarForEvents({ plan, handleGoBackToPlans }) {
         });
     }
 
+    function handleUpdate(updatedEvent) {
+        console.log("update called");
+        console.log(updatedEvent);
+
+        // call the endpoint to update the event in the database
+        axios.put(`/api/plans/${plan._id}/${viewEvent._id}`, updatedEvent, header).then(async (response) => {
+            if (response.status === 204) {
+                setAddEvent(false);
+                setViewEvent(null);
+                const plansResponse = await axios.get(`/api/plans/${plan._id}`, header);
+                setEvents(plansResponse.data.events);
+            }
+        }).catch((error) => {
+            console.log(error);
+        });
+    }
+
     function handleOpenEvent(event) {
         //Display info about event in the pop up @jacinta
         setViewEvent(event);
@@ -134,7 +151,7 @@ export default function SidebarForEvents({ plan, handleGoBackToPlans }) {
             </List>
 
             {
-                addEvent && <EventPopup event={viewEvent} open={addEvent} handleClose={handleClose} handleSave={handleSave} />
+                addEvent && <EventPopup event={viewEvent} open={addEvent} handleClose={handleClose} handleSave={handleSave} handleUpdate={handleUpdate} />
             }
         </div>
     );

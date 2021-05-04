@@ -38,6 +38,11 @@ function GoogleMaps() {
         setOpen(false);
     }
 
+    function handleUpdate(updatedEvent) {
+        console.log("Update event");
+        setOpen(false);
+    }
+
     return (
         <div>
             <GoogleMap
@@ -75,7 +80,7 @@ function GoogleMaps() {
                 ))}
             </GoogleMap>
             {
-                open && <EventPopup event={viewEvent} open={open} handleClose={handleClose} handleSave={handleSave} />
+                open && <EventPopup event={viewEvent} open={open} handleClose={handleClose} handleSave={handleSave} handleUpdate={handleUpdate} />
             }
         </div>
     );

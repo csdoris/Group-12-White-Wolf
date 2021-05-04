@@ -36,7 +36,7 @@ const style = {
 const autocompleteService = { current: null };
 const placeService = { current: null };
 
-export default function EventPopup({event, open, handleClose, handleSave}) {
+export default function EventPopup({event, open, handleClose, handleSave, handleUpdate}) {
 
     // data needed for creating event 
     const [name, setName] = useState("");
@@ -65,29 +65,46 @@ export default function EventPopup({event, open, handleClose, handleSave}) {
             placeId: location.place_id
         };
 
-        placeService.current.getDetails(request, (result, status) => {
-            if (status === window.google.maps.places.PlacesServiceStatus.OK) {
-                const position = result.geometry.location.toJSON();
+        if(typeof placeId!=="undefined") {
+            placeService.current.getDetails(request, (result, status) => {
+                if (status === window.google.maps.places.PlacesServiceStatus.OK) {
+                    const position = result.geometry.location.toJSON();
                 
-                const newEvent = {
-                    startTime: dateFrom.toJSON(),
-                    endTime: dateTo.toJSON(),
-                    address: location.description,
-                    description: description,
-                    lat: position.lat,
-                    lng: position.lng
-                }
+                    const newEvent = {
+                        startTime: dateFrom.toJSON(),
+                        endTime: dateTo.toJSON(),
+                        address: location.description,
+                        description: description,
+                        lat: position.lat,
+                        lng: position.lng
+                    }
 
-                if (name) {
-                    newEvent.name = name;
-                }
+                    if (name) {
+                        newEvent.name = name;
+                    }
 
-                handleSave(newEvent);
+                    event ? handleUpdate(newEvent) : handleSave(newEvent);
+                }
+                else {
+                    console.log("Cannot get exact location of the place")
+                }
+            });
+        } else {
+            const newEvent = {
+                startTime: dateFrom.toJSON(),
+                endTime: dateTo.toJSON(),
+                address: event.address,
+                description: description,
+                lat: event.lat,
+                lng: event.lng
             }
-            else {
-                console.log("Cannot get exact location of the place")
+
+            if (name) {
+                newEvent.name = name;
             }
-        });
+
+            event ? handleUpdate(newEvent) : handleSave(newEvent);
+        }
     }
 
     function handleSaveButonClicked() {
@@ -173,9 +190,10 @@ export default function EventPopup({event, open, handleClose, handleSave}) {
         setViewOnly(false)
     }
 
-    function handleUpdate() {
-        console.log("update");
-    }
+    // function handleUpdate() {
+    //     // TODO: handle updating event
+    //     console.log("update");
+    // }
 
     function getButton() {
         if(viewOnly) {
@@ -186,7 +204,7 @@ export default function EventPopup({event, open, handleClose, handleSave}) {
             )
         } else {
             return(
-                <Button variant="contained" color="primary" onClick={() => event ? handleUpdate() : handleSave()}>
+                <Button variant="contained" color="primary" onClick={() => handleSaveButonClicked()}>
                     Save
                 </Button>
             )
