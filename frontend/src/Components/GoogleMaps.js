@@ -59,7 +59,7 @@ function GoogleMaps() {
                         <div
                             className="eventInfo"
                             onClick={(eventSelected) => {
-                                setViewEvent(eventSelected);
+                                setViewEvent(event);
                                 setOpen(true);
                             }}
                             >

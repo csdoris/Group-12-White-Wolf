@@ -109,7 +109,7 @@ export default function EventPopup({event, open, handleClose, handleSave}) {
 
     function getName() {
         if(viewOnly) {
-            return("Trip");
+            return(event.name);
         } else {
             return(name);
         }
@@ -117,7 +117,7 @@ export default function EventPopup({event, open, handleClose, handleSave}) {
 
     function getDescription() {
         if(viewOnly) {
-            return("Gonna go camping?");
+            return(event.description);
         } else {
             return(description);
         }
@@ -125,7 +125,7 @@ export default function EventPopup({event, open, handleClose, handleSave}) {
 
     function getLocation() {
         if(viewOnly) {
-            return("3 Symonds Street, Auckland");
+            return(event.address);
         } else {
             return(location);
         }
@@ -133,7 +133,7 @@ export default function EventPopup({event, open, handleClose, handleSave}) {
 
     function getTimeTo() {
         if(viewOnly) {
-            return("3:35 PM");
+            return(convert24HourTo12Hour(new Date(event.endTime)));
         } else {
             return(timeTo);
         }
@@ -141,7 +141,7 @@ export default function EventPopup({event, open, handleClose, handleSave}) {
 
     function getTimeFrom() {
         if(viewOnly) {
-            return("2:30 PM");
+            return(convert24HourTo12Hour(new Date(event.startTime)));
         } else {
             return(timeFrom);
         }
@@ -149,7 +149,7 @@ export default function EventPopup({event, open, handleClose, handleSave}) {
 
     function getDateTo() {
         if(viewOnly) {
-            return(new Date());
+            return(new Date(event.endTime));
         } else {
             return(dateTo);
         }
@@ -157,20 +157,18 @@ export default function EventPopup({event, open, handleClose, handleSave}) {
 
     function getDateFrom() {
         if(viewOnly) {
-            return(new Date());
+            return(new Date(event.startTime));
         } else {
             return(dateFrom);
         }
     }
 
     function handleEdit() {
-        setName("Trip");
-        setDescription("Gonna go camping?");
-        setLocation("3 Symonds Street, Auckland");
-        setTimeFrom("2:30 PM");
-        setTimeTo("3:35 PM");
-        setDateFrom(new Date());
-        setDateTo(new Date());
+        setName(event.name);
+        setDescription(event.description);
+        setLocation(event.address);
+        setDateFrom(new Date(event.startTime));
+        setDateTo(new Date(event.endTime));
 
         setViewOnly(false)
     }
