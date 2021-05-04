@@ -1,15 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import GoogleMaps from '../Components/GoogleMaps';
 import SideNav from '../Components/Sidebar';
 import { Loader } from '@googlemaps/js-api-loader';
 import axios from 'axios';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Logout from '../Components/Logout';
+import { AppContext } from '../AppContextProvider';
+import useToken from '../hooks/useToken';
 
-export const PlanContext = React.createContext(undefined);
-
-function Home({ username, email, token }) {
+function Home() {
     const [keyObtained, setKeyObtained] = useState(false);
-    const [plan, setPlan] = useState(undefined);
+    const [plansObtained, setPlansObtained] = useState(false);
+    const { plans, setPlans, plan, setPlan } = useContext(AppContext);
+    const token = useToken().token;
 
     useEffect(() => {
         axios
@@ -26,23 +29,26 @@ function Home({ username, email, token }) {
             .catch(function (error) {
                 console.log(error);
             });
+        
+        axios.get(`/api/plans`, { headers: { "Authorization": `Bearer ${token}` }}).then( function (resp) {
+            console.log("RESP FROM HOME",resp.data);
+            setPlans(resp.data);
+            console.log(plans);
+            setPlansObtained(true);
+        });
     }, []);
 
-    if (keyObtained) {
+    if (keyObtained && plansObtained) {
         return (
             <div>
-                <PlanContext.Provider value={[plan, setPlan]}>
-                    <SideNav />
-                    <GoogleMaps />
-                </PlanContext.Provider>
+                <SideNav />
+                <Logout />
+                <GoogleMaps />
             </div>
         );
     } else {
         return (
             <div>
-                <PlanContext.Provider value={[plan, setPlan]}>
-                    <SideNav />
-                </PlanContext.Provider>
                 <CircularProgress />
             </div>
         );

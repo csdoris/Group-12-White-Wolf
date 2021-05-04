@@ -1,16 +1,14 @@
 import React, { useState, useContext } from 'react';
 import {
     GoogleMap,
-    useLoadScript,
-    Marker,
     InfoWindow,
+    Marker,
 } from '@react-google-maps/api';
 import '../Styles/MapPinStyles.css'
-import { PlanContext } from '../Pages/Home';
+import { AppContext } from '../AppContextProvider.js';
 
-import EventPopup from './Eventpopup';
+import EventPopup from './EventPopup';
 
-const libraries = ['places'];
 const mapContainerStyle = {
     height: '100vh',
     width: '100vw',
@@ -26,7 +24,7 @@ const options = {
 
 function GoogleMaps() {
     const [markers, setMarkers] = useState([]);
-    const [plan, setPlan] = useContext(PlanContext);
+    const { plan } = useContext(AppContext);
     const [viewEvent, setViewEvent] = useState(null);
     const [open, setOpen] = useState(false);
 
