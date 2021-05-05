@@ -46,6 +46,9 @@ export default function EventPopup({event, open, handleClose, handleSave, handle
     const [timeTo, setTimeTo] = useState(convert24HourTo12Hour(dateTo));
     const [description, setDescription] = useState("");
 
+    // state for if readonly or editable
+    const [viewOnly, setViewOnly] = useState(event!==null);
+
     // state for location autocomplete
     const [location, setLocation] = useState(null);
     const [locationInputValue, setLocationInputValue] = useState('');
@@ -65,46 +68,29 @@ export default function EventPopup({event, open, handleClose, handleSave, handle
             placeId: location.place_id
         };
 
-        if(typeof placeId!=="undefined") {
-            placeService.current.getDetails(request, (result, status) => {
-                if (status === window.google.maps.places.PlacesServiceStatus.OK) {
-                    const position = result.geometry.location.toJSON();
+        placeService.current.getDetails(request, (result, status) => {
+            if (status === window.google.maps.places.PlacesServiceStatus.OK) {
+                const position = result.geometry.location.toJSON();
                 
-                    const newEvent = {
-                        startTime: dateFrom.toJSON(),
-                        endTime: dateTo.toJSON(),
-                        address: location.description,
-                        description: description,
-                        lat: position.lat,
-                        lng: position.lng
-                    }
-
-                    if (name) {
-                        newEvent.name = name;
-                    }
-
-                    event ? handleUpdate(newEvent) : handleSave(newEvent);
+                const newEvent = {
+                    startTime: dateFrom.toJSON(),
+                    endTime: dateTo.toJSON(),
+                    address: location.description,
+                    description: description,
+                    lat: position.lat,
+                    lng: position.lng
                 }
-                else {
-                    console.log("Cannot get exact location of the place")
+
+                if (name) {
+                    newEvent.name = name;
                 }
-            });
-        } else {
-            const newEvent = {
-                startTime: dateFrom.toJSON(),
-                endTime: dateTo.toJSON(),
-                address: event.address,
-                description: description,
-                lat: event.lat,
-                lng: event.lng
-            }
 
-            if (name) {
-                newEvent.name = name;
+                event ? handleUpdate(newEvent) : handleSave(newEvent);
             }
-
-            event ? handleUpdate(newEvent) : handleSave(newEvent);
-        }
+            else {
+                console.log("Cannot get exact location of the place")
+            }
+        });
     }
 
     function handleSaveButtonClicked() {
@@ -120,9 +106,6 @@ export default function EventPopup({event, open, handleClose, handleSave, handle
         // get the latitude and longitude of the location
         getLatAndLongForLocation();
     }
-
-    // state for if readonly or editable
-    const [viewOnly, setViewOnly] = useState(event!==null);
 
     function getName() {
         if(viewOnly) {
@@ -142,9 +125,22 @@ export default function EventPopup({event, open, handleClose, handleSave, handle
 
     function getLocation() {
         if(viewOnly) {
-            return(event.address);
-        } else {
-            return(location);
+            if(location == null) {
+                if (!autocompleteService.current && window.google) {
+                    autocompleteService.current = new window.google.maps.places.AutocompleteService();
+                }
+                if (!autocompleteService.current) {
+                    return undefined;
+                }
+
+                const request = {
+                    input: event.address
+                };
+
+                autocompleteService.current.getPlacePredictions(request, (result, status) => {
+                    setLocation(result[0]);
+                });
+            }
         }
     }
 
@@ -183,17 +179,11 @@ export default function EventPopup({event, open, handleClose, handleSave, handle
     function handleEdit() {
         setName(event.name);
         setDescription(event.description);
-        setLocation(event.address);
         setDateFrom(new Date(event.startTime));
         setDateTo(new Date(event.endTime));
 
         setViewOnly(false)
     }
-
-    // function handleUpdate() {
-    //     // TODO: handle updating event
-    //     console.log("update");
-    // }
 
     function getButton() {
         if(viewOnly) {
@@ -364,6 +354,7 @@ export default function EventPopup({event, open, handleClose, handleSave, handle
 
     return (
         <div>
+            {getLocation()}
             <Modal
                 aria-labelledby="transition-modal-title"
                 aria-describedby="transition-modal-description"
@@ -405,7 +396,7 @@ export default function EventPopup({event, open, handleClose, handleSave, handle
                         </div>
                         <div>
                             <LocationAutoComplete
-                                value={getLocation()}
+                                value={viewOnly ? event.address : location}
                                 options={options}
                                 handleChange={handleLocationChange}
                                 handleInputChange={handleLocationInputValueChange}

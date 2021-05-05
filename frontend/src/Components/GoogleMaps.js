@@ -10,6 +10,7 @@ import axios from 'axios';
 import useToken from '../hooks/useToken';
 import { AppContext } from '../AppContextProvider.js';
 import EventPopup from './EventPopup';
+import FetchWeatherInfo from '../ExternalAPI/OpenWeatherMapAPI';
 
 const mapContainerStyle = {
     height: '100vh',
@@ -28,6 +29,7 @@ function GoogleMaps() {
     const {events, setEvents, plan} = useContext(AppContext);
     const [viewEvent, setViewEvent] = useState(null);
     const [open, setOpen] = useState(false);
+    const [weather, setWeather] = useState(null);
 
     const { token } = useToken();
     const header = {
@@ -61,6 +63,10 @@ function GoogleMaps() {
         }).catch((error) => {
             console.log(error);
         });
+    }
+
+    function getWeather() {
+        
     }
 
     return (

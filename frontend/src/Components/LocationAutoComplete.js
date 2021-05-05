@@ -48,7 +48,9 @@ export default function LocationAutoComplete({
                 includeInputInList
                 filterSelectedOptions
                 value={value}
-                onChange={(event, newValue) => handleChange(event, newValue)}
+                onChange={(event, newValue) => 
+                    handleChange(event, newValue)
+                }
                 onInputChange={(event, newInputValue) =>
                     handleInputChange(event, newInputValue)
                 }
