@@ -40,7 +40,7 @@ export default function SidebarForEvents(handleGoBackToPlans) {
         }
     };
 
-    const { events, setEvents, plan } = useContext(AppContext);
+    const { events, setEvents, plan, setPlan } = useContext(AppContext);
 
     useEffect(() => {
         console.log(plan);
@@ -122,7 +122,7 @@ export default function SidebarForEvents(handleGoBackToPlans) {
                     <Button
                         aria-controls="simple-menu"
                         aria-haspopup="true"
-                        onClick={() => handleGoBackToPlans()}
+                        onClick={() => setPlan(null)}
                     >
                         <ArrowBackIcon />
                     </Button>

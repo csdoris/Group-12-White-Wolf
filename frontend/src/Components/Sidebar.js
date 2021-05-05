@@ -96,10 +96,6 @@ function SideNav() {
         setPlan(plan);
     }
 
-    function handleGoBackToPlans() {
-        setPlan(null);
-    }
-
     const listPlans = () => (
         <div>
             <List>
@@ -159,9 +155,7 @@ function SideNav() {
                     {plan == null ? (
                         listPlans()
                     ) : (
-                        <SidebarForEvents
-                            handleGoBackToPlans={handleGoBackToPlans}
-                        />
+                        <SidebarForEvents />
                     )}
                 </Drawer>
                 {isOpen && (
