@@ -45,13 +45,12 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-function SideNav({ view, deleteFunc }) {
+function SideNav() {
     
-    const { isOpen, setIsOpen, planId, setPlanId, events, setEvents, setPlanName } = useContext(SidebarContext);
-    const [planShown, setPlanShown] = useState(null);
+    const { isOpen, setIsOpen} = useContext(SidebarContext);
     const classes = useStyles();
 
-    const {plans, setPlans } = useContext(AppContext);
+    const {plans, setPlans, plan, setPlan } = useContext(AppContext);
 
     const token = useToken().token;
     const header = {
@@ -65,7 +64,7 @@ function SideNav({ view, deleteFunc }) {
 
 
     function toggleDrawer() {
-        return (event) => {
+        return () => {
             setIsOpen(!isOpen);
             handleCancel();
         };
@@ -79,11 +78,6 @@ function SideNav({ view, deleteFunc }) {
         setAddingPlan(false);
     }
 
-    function setPlanNameFunc(e) {
-        console.log(e.target.value);
-        setNewPlanName(e.target.value);
-    }
-
     function submitPlanName(e) {
         if (e.key === 'Enter') {
             setAddingPlan(false);
@@ -94,44 +88,32 @@ function SideNav({ view, deleteFunc }) {
             });
         }
     }
-
+    
     function deletePlanRow(planId) {
         axios.delete(`/api/plans/${planId}`, header).then( async function () {
             const plansResponse = await axios.get('/api/plans', header);
             setPlans(plansResponse.data);
         });
-
-        if (planId === planId) {
-            deleteFunc();
-            setEvents(null)
-            setPlanId(null);
-        }
+        
+        //Switch back to default schedule view when in schedule view and the current open plan is deleted
+        //No longer used?
+        // if (planId === planId) {
+        //     setPlan(null);
+        // }
     }
-
-    useEffect(() => {
-        if (view) {
-            handleGoBackToPlans();
-        }
-    }, [view]);
 
     // handles the situation when a plan is clicked
     function navigateToPlan(plan) {
         handleCancel();
-        if (view == 0) {
-            setPlanShown(plan);
-        }
 
         axios.get(`/api/plans/${plan._id}`, header).then(function (resp) {
-            setEvents(resp.data.events)
+            setPlan(resp.data)
             console.log(resp.data.events);
         });
-        setPlanId(plan.id);
-        setPlanName(plan.name)
     }
 
     function handleGoBackToPlans() {
-        setPlanShown(null);
-        setEvents(null);
+        setPlan(null);
     }
 
     const handleClickAway = () => {
@@ -173,7 +155,7 @@ function SideNav({ view, deleteFunc }) {
                                     variant="filled"
                                     className={classes.drawer}
                                     autoFocus
-                                    onChange={setPlanNameFunc}
+                                    onChange={ (e) => {setNewPlanName(e.target.value)}}
                                     onKeyDown={submitPlanName}
                                 />
                             </Grid>
@@ -207,11 +189,11 @@ function SideNav({ view, deleteFunc }) {
                     onClose={toggleDrawer()}
                     variant="persistent"
                 >
-                    {planShown == null ? (
+                    {plan == null ? (
                         listPlans()
                     ) : (
                         <SidebarForEvents
-                            plan={planShown}
+                            plan={plan}
                             handleGoBackToPlans={handleGoBackToPlans}
                         />
                     )}

@@ -13,7 +13,7 @@ import EventPopup from './EventPopup';
 import axios from 'axios';
 import useToken from '../hooks/useToken';
 import SidebarRow from './SidebarRow';
-import { SidebarContext } from '../helpers/SidebarContextProvider';
+import { AppContext } from '../AppContextProvider';
 
 const useStyles = makeStyles(() => ({
     drawer: {
@@ -30,9 +30,10 @@ const useStyles = makeStyles(() => ({
 }));
 
 
-export default function SidebarForEvents({ plan, handleGoBackToPlans }) {
+export default function SidebarForEvents({ handleGoBackToPlans }) {
     const classes = useStyles();
 
+    const {plan, setPlan} = useContext(AppContext)
     const { token } = useToken();
     const header = {
         headers: {
@@ -40,19 +41,9 @@ export default function SidebarForEvents({ plan, handleGoBackToPlans }) {
         }
     };
     
-    const {events, setEvents} = useContext(SidebarContext);
-
-    useEffect(() => {
-        console.log(plan);
-        axios.get(`/api/plans/${plan._id}`, header).then(function (resp) {
-            setEvents(resp.data.events)
-            console.log(resp.data.events);
-        });
-    }, []);
-
+    const events = plan.events;
 
     const [addEvent, setAddEvent] = useState(false);
-    const [newEventSaved, setNewEventSaved] = useState(false);
 
     function handleClose() {
         setAddEvent(false);
@@ -67,7 +58,7 @@ export default function SidebarForEvents({ plan, handleGoBackToPlans }) {
             if (response.status === 201) {
                 setAddEvent(false);
                 const plansResponse = await axios.get(`/api/plans/${plan._id}`, header);
-                setEvents(plansResponse.data.events);
+                setPlan(plansResponse.data);
             }
         }).catch((error) => {
             console.log(error);
@@ -87,7 +78,7 @@ export default function SidebarForEvents({ plan, handleGoBackToPlans }) {
         console.log(eventId);
         axios.delete(`/api/plans/${plan._id}/${eventId}`, header).then(async function () {
             const plansResponse = await axios.get(`/api/plans/${plan._id}`, header);
-            setEvents(plansResponse.data.events);
+            setPlan(plansResponse.data);
             
         });
     }

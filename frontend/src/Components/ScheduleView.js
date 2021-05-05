@@ -12,13 +12,13 @@ import { SidebarContext } from '../helpers/SidebarContextProvider';
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
 export default function ScheduleView() {
-    
-    const { plans, APIkey } = useContext(AppContext);
-    const { isOpen, setIsOpen, events, setEvents, planName } = useContext(SidebarContext);
+
+    const { APIkey, plan } = useContext(AppContext);
+    const { isOpen } = useContext(SidebarContext);
     const [mapOpen, setMapOpen] = useState(false);
     const [mapLat, setMapLat] = useState();
     const [mapLong, setMapLong] = useState();
-    
+
 
     function handleClose() {
         setMapOpen(false);
@@ -55,17 +55,13 @@ export default function ScheduleView() {
         return string
     }
 
-    if (events && events.length != 0) {
+    if (plan && plan.events.length != 0) {
         return (
-            <div>
+            <div className={isOpen ? styles.shiftTextRight : styles.shiftTextLeft}>
                 <div className={styles.heading}>
-                    <h1>{planName}</h1>
+                    <h1>{plan.name}</h1>
                 </div>
-                <div
-                    className={
-                        isOpen ? styles.shiftTextRight : styles.shiftTextLeft
-                    }
-                >
+                <div>
                     <Table aria-label="simple table">
                         <TableHead>
                             <TableRow>
@@ -91,15 +87,15 @@ export default function ScheduleView() {
                         </TableHead>
                         <TableBody>
                             {/*Sorts the events first on date then by time of day*/}
-                            {events
+                            {plan.events
                                 .sort((a, b) =>
                                     a.date > b.date
                                         ? 1
                                         : a.date === b.date
-                                        ? a.DateFrom > b.DateFrom
-                                            ? 1
+                                            ? a.DateFrom > b.DateFrom
+                                                ? 1
+                                                : -1
                                             : -1
-                                        : -1
                                 )
                                 .map((event) => (
                                     <TableRow key={event.id}>
@@ -140,28 +136,25 @@ export default function ScheduleView() {
             </div>
         );
     } else {
-        if (events && events.length == 0) {
+        if (plan && plan.events.length == 0) {
             return (
-                <div>
-                <div className={styles.heading}>
-                    <h1>{planName}</h1>
-                </div>
-                <p className={styles.heading}>
-                    You have no events for this plan, consider make one first
+                <div className={isOpen ? styles.shiftTextRight : styles.shiftTextLeft}>
+                    <div className={styles.heading}>
+                        <h1>{plan.name}</h1>
+                    </div>
+                    <p className={styles.heading}>
+                        You have no events for this plan, consider make one first
                 </p>
                 </div>
             );
         } else {
-        return (
-            <div>
-            <div className={styles.heading}>
-                    <h1>{planName}</h1>
+            return (
+                <div className={isOpen ? styles.shiftTextRight : styles.shiftTextLeft}>
+                    <p className={styles.heading}>
+                        Please click on the plan which you want to view the events for
+                    </p>
                 </div>
-            <p className={styles.heading}>
-                Please click on the plan which you want to view the events for
-            </p>
-            </div>
-        );
-    }
+            );
+        }
     }
 }

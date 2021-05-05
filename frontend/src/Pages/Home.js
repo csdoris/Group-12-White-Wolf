@@ -12,15 +12,17 @@ import Logout from '../Components/Logout';
 import { AppContext } from '../AppContextProvider';
 import useToken from '../hooks/useToken';
 
+const MAP_VIEW = 0;
+
 function Home() {
     const [keyObtained, setKeyObtained] = useState(false);
     const [plansObtained, setPlansObtained] = useState(false);
-    const { plans, setPlans, APIkey, setAPIkey } = useContext(AppContext);
-    const [value, setValue] = useState(false);
+    const { plans, setPlans, setAPIkey } = useContext(AppContext);
+    const [view, setView] = useState(false);
     const token = useToken().token;
 
     useEffect(() => {
-        setValue(0);
+        setView(MAP_VIEW);
         axios
             .get('/api/apikeys/googlekey')
             .then(function (response) {
@@ -36,31 +38,26 @@ function Home() {
             .catch(function (error) {
                 console.log(error);
             });
-        
-        axios.get(`/api/plans`, { headers: { "Authorization": `Bearer ${token}` }}).then( function (resp) {
-            console.log("RESP FROM HOME",resp.data);
+
+        axios.get(`/api/plans`, { headers: { "Authorization": `Bearer ${token}` } }).then(function (resp) {
+            console.log("RESP FROM HOME", resp.data);
             setPlans(resp.data);
             console.log(plans);
             setPlansObtained(true);
         });
     }, []);
 
-    const handleChange = (event, newValue) => {
-        setValue(newValue);
-    };
-
-    //This function is to switch back to map view when in schedule view and the plan is delted
-    const deleteCalled = () => {
-        setValue(0);
+    const handleChange = (event, newView) => {
+        setView(newView);
     };
 
     if (keyObtained && plansObtained) {
         return (
             <SidebarContextProvider>
                 <div>
-                    <SideNav view={value} deleteFunc={deleteCalled} />
+                    <SideNav/>
                     <Tabs
-                        value={value}
+                        value={view}
                         onChange={handleChange}
                         indicatorColor="primary"
                         textColor="primary"
@@ -70,7 +67,7 @@ function Home() {
                         <Tab label="Schedule View" />
                     </Tabs>
                     <Logout />
-                    {value ? <ScheduleView /> : <GoogleMaps />}
+                    {view ? <ScheduleView /> : <GoogleMaps />}
                 </div>
             </SidebarContextProvider>
         );
