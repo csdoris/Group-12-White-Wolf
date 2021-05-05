@@ -107,7 +107,7 @@ export default function EventPopup({event, open, handleClose, handleSave, handle
         }
     }
 
-    function handleSaveButonClicked() {
+    function handleSaveButtonClicked() {
         // check location is entered 
         if (!location) {
             setValidLocation(false);
@@ -204,7 +204,7 @@ export default function EventPopup({event, open, handleClose, handleSave, handle
             )
         } else {
             return(
-                <Button variant="contained" color="primary" onClick={() => handleSaveButonClicked()}>
+                <Button variant="contained" color="primary" onClick={() => handleSaveButtonClicked()}>
                     Save
                 </Button>
             )

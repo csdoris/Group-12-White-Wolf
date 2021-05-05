@@ -94,7 +94,7 @@ export default function SidebarForEvents(handleGoBackToPlans) {
     }
 
     function handleOpenEvent(event) {
-        //Display info about event in the pop up @jacinta
+        //Display info about event in the pop up
         setViewEvent(event);
         setAddEvent(true);
     }
