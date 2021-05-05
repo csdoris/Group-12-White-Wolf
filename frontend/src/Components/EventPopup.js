@@ -187,8 +187,6 @@ export default function EventPopup({event, open, handleClose, handleSave, handle
         setTimeTo(convert24HourTo12Hour(new Date(event.endTime)));
 
         setViewOnly(false);
-        document.getElementById("weatherInfo").innerHTML = "";
-        console.log("clear html" + viewOnly);
     }
 
     function getButton() {
@@ -208,26 +206,29 @@ export default function EventPopup({event, open, handleClose, handleSave, handle
     }
 
     useEffect(() => {
-        getWeather()
-    });
+        if(viewOnly) {
+            getWeather();
+        } else {
+            if(document.getElementById("weatherInfo") !== null) {
+                document.getElementById("weatherInfo").innerHTML = "";
+            }
+        }
+    }, [viewOnly]);
 
     function getWeather() {
-        if(viewOnly) {
-            FetchWeatherInfo(null, event.lat, event.lng).then(result => {
-                const weather = getWeatherForTime(result, event);
-                const weatherHtml = `<div style="width:100%">
-                        <span>Temperature: ${weather.temperature}&#176;C</span>
-                        <img style="height:50px; float:right;" src="http://openweathermap.org/img/w/${weather.weatherIcon}.png"/>
-                        <p>Feels Like Temperature: ${weather.feelsLikeTemperature}&#176;C</p>
-                        <p>Weather: ${weather.weather}</p>
-                        <p>Wind Speed: ${weather.windSpeed}m/s</p>
-                    </div>`;
-                if(document.getElementById("weatherInfo") !== null) {
-                    document.getElementById("weatherInfo").innerHTML = weatherHtml;
-                    console.log("add html" + viewOnly);
-                }
-            });
-        }
+        FetchWeatherInfo(null, event.lat, event.lng).then(result => {
+            const weather = getWeatherForTime(result, event);
+            const weatherHtml = `<div style="width:100%">
+                    <span>Temperature: ${weather.temperature}&#176;C</span>
+                    <img style="height:50px; float:right;" src="http://openweathermap.org/img/w/${weather.weatherIcon}.png"/>
+                    <p>Feels Like Temperature: ${weather.feelsLikeTemperature}&#176;C</p>
+                    <p>Weather: ${weather.weather}</p>
+                    <p>Wind Speed: ${weather.windSpeed}m/s</p>
+                </div>`;
+            if(document.getElementById("weatherInfo") !== null) {
+                document.getElementById("weatherInfo").innerHTML = weatherHtml;
+            }
+        });
     }
 
     function handleLocationChange(event, newValue) {
