@@ -30,6 +30,11 @@ export default function ScheduleView() {
         setMapLong(e.target.getAttribute('long'));
     }
 
+    function handleOpenEvent(event) {
+        //Display info about event in the pop up @jacinta
+        console.log(event);
+    }
+
     function urlBuilder() {
         let url = '';
         let API_KEY = APIkey;
@@ -56,6 +61,11 @@ export default function ScheduleView() {
         
         return eventTime
     }
+
+    function parseDateTime(dateString) {
+        let date = new Date(dateString);
+
+        return `${parseDate(date)} \n ${parseTime(date)}`;
     }
 
     function parseDate(dateObj) {
@@ -78,10 +88,10 @@ export default function ScheduleView() {
                                     <p className={styles.header}>Event Name</p>
                                 </TableCell>
                                 <TableCell align="center">
-                                    <p className={styles.header}>Date</p>
+                                    <p className={styles.header}>Start Time</p>
                                 </TableCell>
                                 <TableCell align="center">
-                                    <p className={styles.header}>Time</p>
+                                    <p className={styles.header}>End Time</p>
                                 </TableCell>
                                 <TableCell align="center">
                                     <p className={styles.header}>Weather</p>
@@ -107,15 +117,15 @@ export default function ScheduleView() {
                                             : -1
                                 )
                                 .map((event) => (
-                                    <TableRow key={event._id}>
+                                    <TableRow key={event._id} hover>
                                         <TableCell align="center">
                                             {event.name}
                                         </TableCell>
                                         <TableCell align="center">
-                                            {parseDate(event.startTime)} - {parseDate(event.endTime)}
+                                            {parseDateTime(event.startTime)}
                                         </TableCell>
                                         <TableCell align="center">
-                                            {parseTime(event.startTime)} - {parseTime(event.endTime)}
+                                            {parseDateTime(event.endTime)}
                                         </TableCell>
                                         <TableCell align="center">
                                             {event.weather}
