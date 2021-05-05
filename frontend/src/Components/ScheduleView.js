@@ -58,9 +58,7 @@ export default function ScheduleView() {
     if (plan && plan.events.length != 0) {
         return (
             <div className={isOpen ? styles.shiftTextRight : styles.shiftTextLeft}>
-                <div className={styles.heading}>
-                    <h1>{plan.name}</h1>
-                </div>
+                <h1 className={styles.heading}>{plan.name}</h1>
                 <div>
                     <Table aria-label="simple table">
                         <TableHead>
@@ -139,9 +137,7 @@ export default function ScheduleView() {
         if (plan && plan.events.length == 0) {
             return (
                 <div className={isOpen ? styles.shiftTextRight : styles.shiftTextLeft}>
-                    <div className={styles.heading}>
-                        <h1>{plan.name}</h1>
-                    </div>
+                    <h1 className={styles.heading}>{plan.name}</h1>
                     <p className={styles.heading}>
                         You have no events for this plan, consider make one first
                 </p>
