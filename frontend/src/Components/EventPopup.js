@@ -18,6 +18,8 @@ import "../Styles/DatePicker.css"
 import "../Styles/TimePicker.css"
 import "react-datepicker/dist/react-datepicker.css";
 import "@patternfly/react-core/dist/styles/base.css";
+import FetchWeatherInfo from '../ExternalAPI/OpenWeatherMapAPI';
+import getWeatherForTime from '../helpers/getWeatherForTime';
 
 // style for the modal box
 const style = {
@@ -46,7 +48,8 @@ export default function EventPopup({event, open, handleClose, handleSave, handle
     const [description, setDescription] = useState("");
 
     // state for if readonly or editable
-    const [viewOnly, setViewOnly] = useState(event!==null);
+    const eventNull = event===null;
+    const [viewOnly, setViewOnly] = useState(!eventNull);
 
     // state for location autocomplete
     const [location, setLocation] = useState(null);
@@ -183,7 +186,9 @@ export default function EventPopup({event, open, handleClose, handleSave, handle
         setTimeFrom(convert24HourTo12Hour(new Date(event.startTime)));
         setTimeTo(convert24HourTo12Hour(new Date(event.endTime)));
 
-        setViewOnly(false)
+        setViewOnly(false);
+        document.getElementById("weatherInfo").innerHTML = "";
+        console.log("clear html" + viewOnly);
     }
 
     function getButton() {
@@ -202,16 +207,26 @@ export default function EventPopup({event, open, handleClose, handleSave, handle
         }
     }
 
-    function getWeatherInfo() {
+    useEffect(() => {
+        getWeather()
+    });
+
+    function getWeather() {
         if(viewOnly) {
-            return(
-                <div>
-                    <p>
-                        Temperature: 20C
-                        Wind Speed: blah
-                    </p>
-                </div>
-            )
+            FetchWeatherInfo(null, event.lat, event.lng).then(result => {
+                const weather = getWeatherForTime(result, event);
+                const weatherHtml = `<div style="width:100%">
+                        <span>Temperature: ${weather.temperature}&#176;C</span>
+                        <img style="height:50px; float:right;" src="http://openweathermap.org/img/w/${weather.weatherIcon}.png"/>
+                        <p>Feels Like Temperature: ${weather.feelsLikeTemperature}&#176;C</p>
+                        <p>Weather: ${weather.weather}</p>
+                        <p>Wind Speed: ${weather.windSpeed}m/s</p>
+                    </div>`;
+                if(document.getElementById("weatherInfo") !== null) {
+                    document.getElementById("weatherInfo").innerHTML = weatherHtml;
+                    console.log("add html" + viewOnly);
+                }
+            });
         }
     }
 
@@ -420,7 +435,7 @@ export default function EventPopup({event, open, handleClose, handleSave, handle
                                 }}
                             />
                         </div>
-                        {getWeatherInfo()}
+                        <div id="weatherInfo"></div>
                         <div className={styles.buttonDiv}>
                             {getButton()}
                         </div>
