@@ -25,7 +25,6 @@ export default function GoogleLoginButton({ setGoogleToken }) {
             <GoogleLogin
                 className={styles.loginButton}
                 clientId="641864577175-63nlpegl4tdh39gabri4n3nk0o40sl54.apps.googleusercontent.com"
-                buttonText="Login"
                 onSuccess={handleSuccess}
                 onFailure={responseGoogle}
                 cookiePolicy={'single_host_origin'}

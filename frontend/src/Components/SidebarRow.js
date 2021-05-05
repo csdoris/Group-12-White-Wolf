@@ -13,7 +13,7 @@ function SidebarRow({ item, handleDelete, handleOnClick, hasExport = true }) {
                 aria-controls="simple-menu"
                 aria-haspopup="true"
                 onClick={() => { handleOnClick(item) }}
-                fullWidth="true"
+                fullWidth={true}
             >
                 <h3>{item.name}</h3>
             </Button>

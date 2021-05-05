@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import {
     Button,
     List,
@@ -109,7 +109,7 @@ export default function SidebarForEvents({ handleGoBackToPlans }) {
                         <AddIcon className="plusSign" />
                     </Button>
                 </Grid>
-                {events ? events.length !=0 ? events.map((event) => (
+                {events ? events.length !==0 ? events.map((event) => (
                     <div key={event._id}>
                         <Grid wrap="nowrap" container justify="space-between">
                             <SidebarRow

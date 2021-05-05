@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -55,7 +55,7 @@ export default function ScheduleView() {
         return string
     }
 
-    if (plan && plan.events.length != 0) {
+    if (plan && plan.events.length !== 0) {
         return (
             <div className={isOpen ? styles.shiftTextRight : styles.shiftTextLeft}>
                 <h1 className={styles.heading}>{plan.name}</h1>
@@ -96,7 +96,7 @@ export default function ScheduleView() {
                                             : -1
                                 )
                                 .map((event) => (
-                                    <TableRow key={event.id}>
+                                    <TableRow key={event._id}>
                                         <TableCell align="center">
                                             {event.name}
                                         </TableCell>
@@ -134,12 +134,12 @@ export default function ScheduleView() {
             </div>
         );
     } else {
-        if (plan && plan.events.length == 0) {
+        if (plan && plan.events.length === 0) {
             return (
                 <div className={isOpen ? styles.shiftTextRight : styles.shiftTextLeft}>
                     <h1 className={styles.heading}>{plan.name}</h1>
                     <p className={styles.heading}>
-                        You have no events for this plan, consider make one first
+                        You have no events for this plan, please add an event
                 </p>
                 </div>
             );

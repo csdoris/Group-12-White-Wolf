@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import {
     Drawer,
     List,
@@ -94,12 +94,6 @@ function SideNav() {
             const plansResponse = await axios.get('/api/plans', header);
             setPlans(plansResponse.data);
         });
-        
-        //Switch back to default schedule view when in schedule view and the current open plan is deleted
-        //No longer used?
-        // if (planId === planId) {
-        //     setPlan(null);
-        // }
     }
 
     // handles the situation when a plan is clicked
