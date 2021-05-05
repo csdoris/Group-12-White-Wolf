@@ -41,18 +41,29 @@ export default function ScheduleView() {
         return url;
     }
 
-    function parseDate(dateString) {
-        let date = new Date(dateString)
-        let string = `${date.getDate()} ${MONTHS[date.getMonth()]} ${date.getFullYear()}`
-        // console.log(string);
-        return string
+    function parseEventDuration(dateStartString, dateEndString) {
+        let startDate = new Date(dateStartString);
+        let endDate = new Date(dateEndString);
+
+        let eventTime = "";
+        // Format for same day event "D Month Year, HH:MM - HH:MM "
+        if (startDate.toDateString() === endDate.toDateString()) {
+            eventTime = `${parseDate(startDate)}, ${parseTime(startDate)} - ${parseTime(endDate)}`;
+        } else {
+            // Format for same day event "D Month Year, HH:MM - D Month Year, HH:MM "
+            eventTime = `${parseDate(startDate)}, ${parseTime(startDate)} - ${parseDate(endDate)}, ${parseTime(endDate)}`;
+        }
+        
+        return eventTime
+    }
     }
 
-    function parseTime(dateString) {
-        let date = new Date(dateString)
-        let string = `${date.getHours()}:${date.getMinutes().toString().padStart(2, "0")}`
-        console.log();
-        return string
+    function parseDate(dateObj) {
+        return`${dateObj.getDate()} ${MONTHS[dateObj.getMonth()]} ${dateObj.getFullYear()}`
+    }
+
+    function parseTime(dateObj) {
+        return `${dateObj.getHours()}:${dateObj.getMinutes().toString().padStart(2, "0")}`
     }
 
     if (plan && plan.events.length !== 0) {
