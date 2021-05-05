@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import {
     GoogleMap,
     InfoWindow,
@@ -29,7 +29,7 @@ function GoogleMaps() {
     const {events, setEvents, plan} = useContext(AppContext);
     const [viewEvent, setViewEvent] = useState(null);
     const [open, setOpen] = useState(false);
-    const [weather, setWeather] = useState(null);
+    const [weathers, setWeathers] = useState([]);
 
     const { token } = useToken();
     const header = {
@@ -65,8 +65,71 @@ function GoogleMaps() {
         });
     }
 
+    useEffect(() => {
+        getWeather()
+    });
+
     function getWeather() {
-        
+        events.map((event, index) => {
+            FetchWeatherInfo(null, event.lat, event.lng).then(result => {
+                const weather = getWeatherForTime(result, index);
+                const weatherHtml = `<div>
+                        <img style="height:50px;" src="http://openweathermap.org/img/w/${weather.weatherIcon}.png"/>
+                        <span>${weather.temperature}&#176;C</span>
+                    </div>`;
+                
+                let newWeathers = weathers;
+                newWeathers[index] = weather;
+                setWeathers(newWeathers);
+                document.getElementById(index).innerHTML = weatherHtml;
+                console.log(weathers)
+            });
+        });
+    }
+
+    function getWeatherForTime(weatherList, index) {
+        const time = getTimeOfDay(index);
+        for(const weather in weatherList) {
+            if(weatherList[weather].timeOfDay == time.timeOfDay) {
+                if(weatherList[weather].date == time.day) {
+                    if(weatherList[weather].month == time.month) {
+                        if(weatherList[weather].year == time.year) {
+                            return(weatherList[weather]);
+                        }
+                    }
+                }
+            }
+        }
+        return(null);
+    }
+
+    function getTimeOfDay(index) {
+        const date = new Date(events[index].startTime)
+        const timeOfDay = date.getHours();
+        var time;
+        if(timeOfDay < 3) {
+            time = 0;
+        } else if(timeOfDay >= 3 && timeOfDay < 6) {
+            time = 3;
+        } else if(timeOfDay >= 6 && timeOfDay < 9) {
+            time = 6;
+        } else if(timeOfDay >= 9 && timeOfDay < 12) {
+            time = 9;
+        } else if(timeOfDay >= 12 && timeOfDay < 15) {
+            time = 12;
+        } else if(timeOfDay >= 15 && timeOfDay < 18) {
+            time = 15;
+        } else if(timeOfDay >= 18 && timeOfDay < 21) {
+            time = 18;
+        } else if(timeOfDay >= 21 && timeOfDay < 24) {
+            time = 21;
+        }
+        return({
+            month: date.getMonth(),
+            year: date.getFullYear(),
+            day: date.getDate(),
+            timeOfDay: time
+        })
     }
 
     return (
@@ -84,7 +147,7 @@ function GoogleMaps() {
                         position={{ lat: parseFloat(event.lat), lng: parseFloat(event.lng) }}
                     />
                 ))}
-                {events.map((event) => (
+                {events.map((event, index) => (
                     <InfoWindow position = {{ lat: parseFloat(event.lat), lng: parseFloat(event.lng) }}>
                         <div
                             className="eventInfo"
@@ -96,11 +159,7 @@ function GoogleMaps() {
                             {/* TODO: heading corresponding with event name, img, date and temp */}
                             <h2>{event.name}</h2>
                             <p>{new Date(event.startTime).toLocaleDateString("en-US", dateOptions) }</p>
-                            <div>
-                                {/* TODO: https://stackoverflow.com/questions/44177417/how-to-display-openweathermap-weather-icon */}
-                                <img src={"http://openweathermap.org/img/w/" + "10d" + ".png" }/>
-                                <span>21&#176;C</span>
-                            </div>
+                            <div id={index}></div>
                         </div>
                     </InfoWindow>
                 ))}

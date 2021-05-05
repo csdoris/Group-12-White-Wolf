@@ -4,7 +4,6 @@ import { useState, useEffect, useMemo } from "react";
 import Input from '@material-ui/core/Input';
 import Backdrop from '@material-ui/core/Backdrop';
 import Button from '@material-ui/core/Button';
-import Box from '@material-ui/core/Box';
 import Modal from '@material-ui/core/Modal';
 import Fade from '@material-ui/core/Fade';
 import TextField from '@material-ui/core/TextField';
@@ -181,6 +180,8 @@ export default function EventPopup({event, open, handleClose, handleSave, handle
         setDescription(event.description);
         setDateFrom(new Date(event.startTime));
         setDateTo(new Date(event.endTime));
+        setTimeFrom(convert24HourTo12Hour(new Date(event.startTime)));
+        setTimeTo(convert24HourTo12Hour(new Date(event.endTime)));
 
         setViewOnly(false)
     }
@@ -389,10 +390,10 @@ export default function EventPopup({event, open, handleClose, handleSave, handle
                         </div>
                         <div className={styles.timeDiv}>
                             <DatePicker selected={getDateFrom()} onChange={date => handleDateChange(true, date)} disabled={viewOnly} />
-                            <TimePicker value={getTimeFrom()} defaultTime={timeFrom} onChange={time => handleTimeChange(true, time)} isDisabled={viewOnly} />
+                            <TimePicker value={getTimeFrom()} defaultTime={getTimeFrom()} onChange={time => handleTimeChange(true, time)} isDisabled={viewOnly} />
                             <div className={styles.to}>to</div>
                             <DatePicker selected={getDateTo()} onChange={date => handleDateChange(false, date)} disabled={viewOnly} />
-                            <TimePicker value={getTimeTo()} defaultTime={timeTo} onChange={time => handleTimeChange(false, time)} isDisabled={viewOnly} />
+                            <TimePicker value={getTimeTo()} defaultTime={getTimeTo()} onChange={time => handleTimeChange(false, time)} isDisabled={viewOnly} />
                         </div>
                         <div>
                             <LocationAutoComplete
