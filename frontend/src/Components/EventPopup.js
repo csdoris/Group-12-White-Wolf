@@ -222,6 +222,7 @@ export default function EventPopup({event, open, handleClose, handleSave, handle
                 document.getElementById("weatherInfo").innerHTML = "";
                 return;
             }
+            console.log(weather.weatherIcon);
             const weatherHtml = `<div style="width:100%">
                     <span>Temperature: ${weather.temperature}&#176;C</span>
                     <img style="height:50px; float:right;" src="http://openweathermap.org/img/w/${weather.weatherIcon}.png"/>

@@ -68,10 +68,11 @@ function GoogleMaps() {
 
     useEffect(() => {
         getWeather()
-    });
+    }, [events]);
 
     function getWeather() {
         events.map((event, index) => {
+            console.log(event);
             FetchWeatherInfo(null, event.lat, event.lng).then(result => {
                 const weather = getWeatherForTime(result, events[index]);
                 if(weather===null) {
