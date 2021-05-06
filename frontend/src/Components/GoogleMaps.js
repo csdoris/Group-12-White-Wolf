@@ -74,6 +74,10 @@ function GoogleMaps() {
         events.map((event, index) => {
             FetchWeatherInfo(null, event.lat, event.lng).then(result => {
                 const weather = getWeatherForTime(result, events[index]);
+                if(weather===null) {
+                    document.getElementById(index).innerHTML = "";
+                    return;
+                }
                 const weatherHtml = `<div>
                         <img style="height:50px; float:right;" src="http://openweathermap.org/img/w/${weather.weatherIcon}.png"/>
                         <span>${weather.temperature}&#176;C</span>

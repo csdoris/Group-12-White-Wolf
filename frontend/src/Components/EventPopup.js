@@ -218,6 +218,10 @@ export default function EventPopup({event, open, handleClose, handleSave, handle
     function getWeather() {
         FetchWeatherInfo(null, event.lat, event.lng).then(result => {
             const weather = getWeatherForTime(result, event);
+            if(weather===null) {
+                document.getElementById("weatherInfo").innerHTML = "";
+                return;
+            }
             const weatherHtml = `<div style="width:100%">
                     <span>Temperature: ${weather.temperature}&#176;C</span>
                     <img style="height:50px; float:right;" src="http://openweathermap.org/img/w/${weather.weatherIcon}.png"/>
