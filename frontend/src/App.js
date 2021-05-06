@@ -22,7 +22,6 @@ function App() {
     return (
         <>
             <AppContextProvider>
-                <BrowserRouter>
                     <Switch>
                         <Route exact path="/login">
                             <button onClick={gettee}>click me to get</button>
@@ -40,7 +39,6 @@ function App() {
                             <Redirect to="/home" />
                         </Route>
                     </Switch>
-                </BrowserRouter>
             </AppContextProvider>
         </>
     );
