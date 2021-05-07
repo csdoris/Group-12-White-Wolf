@@ -72,11 +72,22 @@ function GoogleMaps() {
         console.log("called", plan)
         if (plan && plan.events) {
             setEvents(plan.events);
+            console.log("set events", events);
+        } else {
+            setEvents(null);
+        }
+    
+    }, [plan]);
+ 
+    useEffect(() => {
+        console.log("called events", events)
+        if (events) {
             getWeather()
         }
-    }, [plan]);
+    }, [events]);
 
     function getWeather() {
+        console.log("getWeather",events)
         events.map((event, index) => {
             FetchWeatherInfo(null, event.lat, event.lng).then(result => {
                 const weather = getWeatherForTime(result, events[index]);
