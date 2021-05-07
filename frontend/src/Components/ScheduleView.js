@@ -14,7 +14,7 @@ const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', '
 export default function ScheduleView() {
 
     const { APIkey, plan } = useContext(AppContext);
-    const { isOpen } = useContext(SidebarContext);
+    const { isOpen, weatherInfo } = useContext(SidebarContext);
     const [mapOpen, setMapOpen] = useState(false);
     const [mapLat, setMapLat] = useState();
     const [mapLong, setMapLong] = useState();
@@ -30,8 +30,8 @@ export default function ScheduleView() {
         setMapLong(e.target.getAttribute('long'));
     }
 
+    // TODO: handle view event or edit event in schedule view
     function handleOpenEvent(event) {
-        //Display info about event in the pop up @jacinta
         console.log(event);
     }
 
@@ -58,7 +58,7 @@ export default function ScheduleView() {
             // Format for same day event "D Month Year, HH:MM - D Month Year, HH:MM "
             eventTime = `${parseDate(startDate)}, ${parseTime(startDate)} - ${parseDate(endDate)}, ${parseTime(endDate)}`;
         }
-        
+
         return eventTime
     }
 
@@ -69,7 +69,7 @@ export default function ScheduleView() {
     }
 
     function parseDate(dateObj) {
-        return`${dateObj.getDate()} ${MONTHS[dateObj.getMonth()]} ${dateObj.getFullYear()}`
+        return `${dateObj.getDate()} ${MONTHS[dateObj.getMonth()]} ${dateObj.getFullYear()}`
     }
 
     function parseTime(dateObj) {
@@ -128,7 +128,14 @@ export default function ScheduleView() {
                                             {parseDateTime(event.endTime)}
                                         </TableCell>
                                         <TableCell align="center">
-                                            {event.weather}
+                                            {/* TODO: Improve css*/}
+                                            {
+                                                weatherInfo[event._id] &&
+                                                <div>
+                                                    <img style={{ height: 50, float: 'right' }} src={`http://openweathermap.org/img/w/${weatherInfo[event._id].weatherIcon}.png`} />
+                                                    <p>{weatherInfo[event._id].temperature}&#176;C</p>
+                                                </div>
+                                            }
                                         </TableCell>
                                         <TableCell align="center">
                                             {event.address}
