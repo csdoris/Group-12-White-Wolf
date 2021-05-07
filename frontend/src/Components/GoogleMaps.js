@@ -99,7 +99,12 @@ function GoogleMaps() {
                         <img style="height:50px; float:right;" src="http://openweathermap.org/img/w/${weather.weatherIcon}.png"/>
                         <span>${weather.temperature}&#176;C</span>
                     </div>`;
+                
                 let newWeathers = weathers;
+                const marker = document.getElementById(index)
+                if (marker) {
+                    marker.innerHTML = weatherHtml;
+                }
                 newWeathers[index] = weather;
                 setWeathers(newWeathers);
                 document.getElementById(index).innerHTML = weatherHtml;
