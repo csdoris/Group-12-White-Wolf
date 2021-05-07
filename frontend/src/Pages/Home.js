@@ -11,7 +11,7 @@ import useToken from '../hooks/useToken';
 function Home() {
     const [keyObtained, setKeyObtained] = useState(false);
     const [plansObtained, setPlansObtained] = useState(false);
-    const { plans, setPlans } = useContext(AppContext);
+    const { plans, setPlans, events, setEvents } = useContext(AppContext);
     const token = useToken().token;
 
     useEffect(() => {

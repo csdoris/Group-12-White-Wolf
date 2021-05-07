@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
     Button,
     List,
@@ -13,6 +13,7 @@ import EventPopup from './EventPopup';
 import axios from 'axios';
 import useToken from '../hooks/useToken';
 import SidebarRow from './SidebarRow';
+import { AppContext } from '../AppContextProvider.js';
 
 const useStyles = makeStyles(() => ({
     drawer: {
@@ -29,7 +30,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 
-export default function SidebarForEvents({ plan, handleGoBackToPlans }) {
+export default function SidebarForEvents(handleGoBackToPlans) {
     const classes = useStyles();
 
     const { token } = useToken();
@@ -39,7 +40,7 @@ export default function SidebarForEvents({ plan, handleGoBackToPlans }) {
         }
     };
 
-    const [events, setEvents] = useState([]);
+    const { events, setEvents, plan, setPlan } = useContext(AppContext);
 
     useEffect(() => {
         console.log(plan);
@@ -52,8 +53,11 @@ export default function SidebarForEvents({ plan, handleGoBackToPlans }) {
     const [addEvent, setAddEvent] = useState(false);
     const [newEventSaved, setNewEventSaved] = useState(false);
 
+    const [viewEvent, setViewEvent] = useState(null);
+
     function handleClose() {
         setAddEvent(false);
+        setViewEvent(null);
     }
 
     function handleSave(newEvent) {
@@ -72,9 +76,27 @@ export default function SidebarForEvents({ plan, handleGoBackToPlans }) {
         });
     }
 
+    function handleUpdate(updatedEvent) {
+        console.log("update called");
+        console.log(updatedEvent);
+
+        // call the endpoint to update the event in the database
+        axios.put(`/api/plans/${plan._id}/${viewEvent._id}`, updatedEvent, header).then(async (response) => {
+            if (response.status === 204) {
+                setAddEvent(false);
+                setViewEvent(null);
+                const plansResponse = await axios.get(`/api/plans/${plan._id}`, header);
+                setEvents(plansResponse.data.events);
+            }
+        }).catch((error) => {
+            console.log(error);
+        });
+    }
+
     function handleOpenEvent(event) {
-        //Display info about event in the pop up @jacinta
-        console.log(event);
+        //Display info about event in the pop up
+        setViewEvent(event);
+        setAddEvent(true);
     }
 
     function handleAddEvent() {
@@ -100,7 +122,7 @@ export default function SidebarForEvents({ plan, handleGoBackToPlans }) {
                     <Button
                         aria-controls="simple-menu"
                         aria-haspopup="true"
-                        onClick={() => handleGoBackToPlans()}
+                        onClick={() => setPlan(null)}
                     >
                         <ArrowBackIcon />
                     </Button>
@@ -129,7 +151,7 @@ export default function SidebarForEvents({ plan, handleGoBackToPlans }) {
             </List>
 
             {
-                addEvent && <EventPopup open={addEvent} handleClose={handleClose} handleSave={handleSave} />
+                addEvent && <EventPopup event={viewEvent} open={addEvent} handleClose={handleClose} handleSave={handleSave} handleUpdate={handleUpdate} />
             }
         </div>
     );
