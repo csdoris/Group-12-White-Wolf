@@ -35,8 +35,15 @@ async function updatePlan(plan) {
     }
 }
 
-async function deletePlan(id) {
+async function deletePlan(user_id, id) {
     await Plan.deleteOne({ _id: id });
+    User.findByIdAndUpdate(user_id,{ $pull: {plans: id}}, function (error, success) {
+        if (error) {
+            console.log(error);
+        } else {
+            console.log(success);
+        }
+    });
 }
 
 

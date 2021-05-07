@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 const AppContext = React.createContext({
     plans: [],
     setPlans: () => {},
+    plan: null,
+    setPlan: () => {}
 });
 
 function AppContextProvider({ children }) {

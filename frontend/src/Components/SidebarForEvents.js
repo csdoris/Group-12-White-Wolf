@@ -30,7 +30,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 
-export default function SidebarForEvents({ handleGoBackToPlans }) {
+export default function SidebarForEvents() {
     const classes = useStyles();
 
     const {plan, setPlan} = useContext(AppContext)
@@ -41,12 +41,13 @@ export default function SidebarForEvents({ handleGoBackToPlans }) {
         }
     };
     
-    const events = plan.events;
-
     const [addEvent, setAddEvent] = useState(false);
+
+    const [viewEvent, setViewEvent] = useState(null);
 
     function handleClose() {
         setAddEvent(false);
+        setViewEvent(null);
     }
 
     function handleSave(newEvent) {
@@ -65,9 +66,27 @@ export default function SidebarForEvents({ handleGoBackToPlans }) {
         });
     }
 
+    function handleUpdate(updatedEvent) {
+        console.log("update called");
+        console.log(updatedEvent);
+
+        // call the endpoint to update the event in the database
+        axios.put(`/api/plans/${plan._id}/${viewEvent._id}`, updatedEvent, header).then(async (response) => {
+            if (response.status === 204) {
+                setAddEvent(false);
+                setViewEvent(null);
+                const plansResponse = await axios.get(`/api/plans/${plan._id}`, header);
+                setPlan(plansResponse.data);
+            }
+        }).catch((error) => {
+            console.log(error);
+        });
+    }
+
     function handleOpenEvent(event) {
-        //Display info about event in the pop up @jacinta
-        console.log(event);
+        //Display info about event in the pop up
+        setViewEvent(event);
+        setAddEvent(true);
     }
 
     function handleAddEvent() {
@@ -96,7 +115,7 @@ export default function SidebarForEvents({ handleGoBackToPlans }) {
                     <Button
                         aria-controls="simple-menu"
                         aria-haspopup="true"
-                        onClick={() => handleGoBackToPlans()}
+                        onClick={() => setPlan(null)}
                     >
                         <ArrowBackIcon />
                     </Button>
@@ -109,7 +128,7 @@ export default function SidebarForEvents({ handleGoBackToPlans }) {
                         <AddIcon className="plusSign" />
                     </Button>
                 </Grid>
-                {events ? events.length !==0 ? events.map((event) => (
+                {plan ? plan.events.length !==0 ? plan.events.map((event) => (
                     <div key={event._id}>
                         <Grid wrap="nowrap" container justify="space-between">
                             <SidebarRow
@@ -125,7 +144,7 @@ export default function SidebarForEvents({ handleGoBackToPlans }) {
             </List>
 
             {
-                addEvent && <EventPopup open={addEvent} handleClose={handleClose} handleSave={handleSave} />
+                addEvent && <EventPopup event={viewEvent} open={addEvent} handleClose={handleClose} handleSave={handleSave} handleUpdate={handleUpdate} />
             }
         </div>
     );
