@@ -1,10 +1,10 @@
 export default function getWeatherForTime(weatherList, event) {
     const time = getTimeOfDay(event);
     for(const weather in weatherList) {
-        if(weatherList[weather].timeOfDay == time.timeOfDay) {
-            if(weatherList[weather].date == time.day) {
-                if(weatherList[weather].month == time.month) {
-                    if(weatherList[weather].year == time.year) {
+        if(weatherList[weather].timeOfDay === time.timeOfDay) {
+            if(weatherList[weather].date === time.day) {
+                if(weatherList[weather].month === time.month) {
+                    if(weatherList[weather].year === time.year) {
                         return(weatherList[weather]);
                     }
                 }
