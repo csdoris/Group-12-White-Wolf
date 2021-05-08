@@ -89,6 +89,7 @@ function SideNav() {
         }
     }
 
+    //Function to import plan and calls backend endpoint to store the imported plans and refresh the known plans in the frontend
     function importPlan(planName, importedEvents) {
         //Send put req to backend and fetch data again
         axios.post('/api/plans', { name: planName, events: importedEvents }, header).then( async function () {

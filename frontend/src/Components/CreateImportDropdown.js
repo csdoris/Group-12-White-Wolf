@@ -26,6 +26,7 @@ function CreateImportDropdown({ addPlan, addImportedPlan }) {
         addPlan();
     };
 
+    //Button click handler to call import ICS function and show name popup when ICS file has been read in
     const importPlan = async () => {
         closeDropdown();
         console.log('clicked import');
@@ -42,6 +43,7 @@ function CreateImportDropdown({ addPlan, addImportedPlan }) {
         setImporting(false);
     }
 
+    //Save the imported events and call a passed down function
     function handleSave(name) {
         console.log('save called');
         addImportedPlan(name, importedEvents);

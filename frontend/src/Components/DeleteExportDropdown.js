@@ -25,12 +25,13 @@ function DeleteExportDropdown({id, deleteFunc, showExport = true }) {
         setIsOpen(null);
     }
 
+    //Button click handler to retrieve events of the plan user wants to export
     const exportPlan = () => {
         closeDropdown();
         console.log('clicked export');
         console.log('modal opens');
         axios.get(`/api/plans/${id}`, header).then(function (resp) {
-            ExportICS(resp.data.events);
+            ExportICS(resp.data.events); //Calls export function passing in list of events
         });
     };
 
