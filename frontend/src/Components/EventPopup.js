@@ -18,11 +18,19 @@ import "../Styles/DatePicker.css"
 import "../Styles/TimePicker.css"
 import "react-datepicker/dist/react-datepicker.css";
 import "@patternfly/react-core/dist/styles/base.css";
+import { withStyles } from "@material-ui/styles";
 import FetchWeatherInfo from '../ExternalAPI/OpenWeatherMapAPI';
 import getWeatherForTime from '../helpers/getWeatherForTime';
 
 const autocompleteService = { current: null };
 const placeService = { current: null };
+const DarkDisabledTextField = withStyles({
+    root: {
+      "& .MuiInputBase-root.Mui-disabled": {
+        color: "black"
+      }
+    }
+}) (TextField);
 
 export default function EventPopup({ event, open, handleClose, handleSave, handleUpdate }) {
 
@@ -174,6 +182,45 @@ export default function EventPopup({ event, open, handleClose, handleSave, handl
         setTimeTo(convert24HourTo12Hour(new Date(event.endTime)));
 
         setViewOnly(false);
+    }
+
+    function getTitle() {
+        if(viewOnly) {
+            return (
+                <h1>
+                    {getName()}
+                </h1>
+            )
+        } else {
+            return (
+                <Input
+                    fullWidth={true}
+                    placeholder="< Insert title here >"
+                    inputProps={{ 'aria-label': 'description'}}
+                    onInput={e => { setName(e.target.value) }}
+                    value={getName()}
+                />
+            )
+        }
+    }
+
+    function getLocationDisplay() {
+        if(viewOnly) {
+            return(
+                <h2>
+                    {event.address}
+                </h2>
+            )
+        } else {
+            return(
+                <LocationAutoComplete
+                    value={location}
+                    options={options}
+                    handleChange={handleLocationChange}
+                    handleInputChange={handleLocationInputValueChange}
+                />
+            )
+        }
     }
 
     function getButton() {
@@ -386,13 +433,7 @@ export default function EventPopup({ event, open, handleClose, handleSave, handl
                             />
                         </div>
                         <div>
-                            <Input
-                                fullWidth={true}
-                                placeholder="< Insert title here >"
-                                inputProps={{ 'aria-label': 'description', readOnly: viewOnly }}
-                                onInput={e => { setName(e.target.value) }}
-                                value={getName()}
-                            />
+                            {getTitle()}
                         </div>
                         <div className={styles.timeDiv}>
                             <DatePicker selected={getDateFrom()} onChange={date => handleDateChange(true, date)} disabled={viewOnly} />
@@ -402,17 +443,11 @@ export default function EventPopup({ event, open, handleClose, handleSave, handl
                             <TimePicker value={getTimeTo()} defaultTime={getTimeTo()} onChange={time => handleTimeChange(false, time)} isDisabled={viewOnly} />
                         </div>
                         <div>
-                            <LocationAutoComplete
-                                value={viewOnly ? event.address : location}
-                                options={options}
-                                handleChange={handleLocationChange}
-                                handleInputChange={handleLocationInputValueChange}
-                                viewOnly={viewOnly}
-                            />
+                            {getLocationDisplay()}
                         </div>
                         {validLocation ? null : <div className={styles.textDanger}>Please enter a valid location</div>}
                         <div>
-                            <TextField
+                            <DarkDisabledTextField
                                 id="outlined-multiline-static"
                                 label="Description"
                                 multiline
@@ -421,9 +456,7 @@ export default function EventPopup({ event, open, handleClose, handleSave, handl
                                 onChange={e => setDescription(e.target.value)}
                                 value={getDescription()}
                                 fullWidth={true}
-                                InputProps={{
-                                    readOnly: viewOnly,
-                                }}
+                                disabled={viewOnly}
                             />
                         </div>
                         <div id="weatherInfo"></div>
