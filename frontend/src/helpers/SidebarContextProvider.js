@@ -33,7 +33,6 @@ function SidebarContextProvider({ children }) {
             const result = await FetchWeatherInfo(null, event.lat, event.lng);
 
             const weather = getWeatherForTime(result, events[index]);
-            weather.event = event._id
             newWeathers[event._id] = weather;
             console.log("map", newWeathers);
         })).then(() => {
