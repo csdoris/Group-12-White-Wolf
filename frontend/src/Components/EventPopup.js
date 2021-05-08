@@ -1,10 +1,9 @@
 import * as React from 'react';
-import { useState, useStyles } from "react";
+import { useState, useEffect, useMemo } from "react";
 
 import Input from '@material-ui/core/Input';
 import Backdrop from '@material-ui/core/Backdrop';
 import Button from '@material-ui/core/Button';
-import Box from '@material-ui/core/Box';
 import Modal from '@material-ui/core/Modal';
 import Fade from '@material-ui/core/Fade';
 import TextField from '@material-ui/core/TextField';
@@ -19,6 +18,8 @@ import "../Styles/DatePicker.css"
 import "../Styles/TimePicker.css"
 import "react-datepicker/dist/react-datepicker.css";
 import "@patternfly/react-core/dist/styles/base.css";
+import FetchWeatherInfo from '../ExternalAPI/OpenWeatherMapAPI';
+import getWeatherForTime from '../helpers/getWeatherForTime';
 
 // style for the modal box
 const style = {
@@ -34,21 +35,206 @@ const style = {
 };
 
 const autocompleteService = { current: null };
+const placeService = { current: null };
 
-export default function EventPopup({open, handleClose, handleSave}) {
+export default function EventPopup({event, open, handleClose, handleSave, handleUpdate}) {
 
     // data needed for creating event 
-    const [title, setTitle] = useState("");
+    const [name, setName] = useState("");
     const [dateFrom, setDateFrom] = useState(new Date());
     const [dateTo, setDateTo] = useState(new Date());
     const [timeFrom, setTimeFrom] = useState(convert24HourTo12Hour(dateFrom));
     const [timeTo, setTimeTo] = useState(convert24HourTo12Hour(dateTo));
     const [description, setDescription] = useState("");
 
+    // state for if readonly or editable
+    const eventNull = event===null;
+    const [viewOnly, setViewOnly] = useState(!eventNull);
+
     // state for location autocomplete
     const [location, setLocation] = useState(null);
-    const [locationInputValue, setLocationInputValue] = React.useState('');
-    const [options, setOptions] = React.useState([]);
+    const [locationInputValue, setLocationInputValue] = useState('');
+    const [options, setOptions] = useState([]);
+    const [validLocation, setValidLocation] = useState(true);
+
+    function getLatAndLongForLocation() {
+        if (!placeService.current && window.google) {
+            placeService.current = new window.google.maps.places.PlacesService(document.createElement('div'));
+        }
+
+        if (!placeService.current) {
+            console.log("Cannot initialise the placeService")
+        }
+
+        const request = {
+            placeId: location.place_id
+        };
+
+        placeService.current.getDetails(request, (result, status) => {
+            if (status === window.google.maps.places.PlacesServiceStatus.OK) {
+                const position = result.geometry.location.toJSON();
+                
+                const newEvent = {
+                    startTime: dateFrom.toJSON(),
+                    endTime: dateTo.toJSON(),
+                    address: location.description,
+                    description: description,
+                    lat: position.lat,
+                    lng: position.lng
+                }
+
+                if (name) {
+                    newEvent.name = name;
+                }
+
+                event ? handleUpdate(newEvent) : handleSave(newEvent);
+            }
+            else {
+                console.log("Cannot get exact location of the place")
+            }
+        });
+    }
+
+    function handleSaveButtonClicked() {
+        // check location is entered 
+        if (!location) {
+            setValidLocation(false);
+            return;
+        }
+        else {
+            setValidLocation(true);
+        }
+
+        // get the latitude and longitude of the location
+        getLatAndLongForLocation();
+    }
+
+    function getName() {
+        if(viewOnly) {
+            return(event.name);
+        } else {
+            return(name);
+        }
+    }
+
+    function getDescription() {
+        if(viewOnly) {
+            return(event.description);
+        } else {
+            return(description);
+        }
+    }
+
+    function getLocation() {
+        if(viewOnly) {
+            if(location == null) {
+                if (!autocompleteService.current && window.google) {
+                    autocompleteService.current = new window.google.maps.places.AutocompleteService();
+                }
+                if (!autocompleteService.current) {
+                    return undefined;
+                }
+
+                const request = {
+                    input: event.address
+                };
+
+                autocompleteService.current.getPlacePredictions(request, (result, status) => {
+                    setLocation(result[0]);
+                });
+            }
+        }
+    }
+
+    function getTimeTo() {
+        if(viewOnly) {
+            return(convert24HourTo12Hour(new Date(event.endTime)));
+        } else {
+            return(timeTo);
+        }
+    }
+
+    function getTimeFrom() {
+        if(viewOnly) {
+            return(convert24HourTo12Hour(new Date(event.startTime)));
+        } else {
+            return(timeFrom);
+        }
+    }
+
+    function getDateTo() {
+        if(viewOnly) {
+            return(new Date(event.endTime));
+        } else {
+            return(dateTo);
+        }
+    }
+
+    function getDateFrom() {
+        if(viewOnly) {
+            return(new Date(event.startTime));
+        } else {
+            return(dateFrom);
+        }
+    }
+
+    function handleEdit() {
+        setName(event.name);
+        setDescription(event.description);
+        setDateFrom(new Date(event.startTime));
+        setDateTo(new Date(event.endTime));
+        setTimeFrom(convert24HourTo12Hour(new Date(event.startTime)));
+        setTimeTo(convert24HourTo12Hour(new Date(event.endTime)));
+
+        setViewOnly(false);
+    }
+
+    function getButton() {
+        if(viewOnly) {
+            return(
+                <Button variant="contained" color="primary" onClick={() => handleEdit()}>
+                    Edit
+                </Button>
+            )
+        } else {
+            return(
+                <Button variant="contained" color="primary" onClick={() => handleSaveButtonClicked()}>
+                    Save
+                </Button>
+            )
+        }
+    }
+
+    useEffect(() => {
+        if(viewOnly) {
+            getWeather();
+        } else {
+            if(document.getElementById("weatherInfo") !== null) {
+                document.getElementById("weatherInfo").innerHTML = "";
+            }
+        }
+    }, [viewOnly]);
+
+    function getWeather() {
+        FetchWeatherInfo(null, event.lat, event.lng).then(result => {
+            const weather = getWeatherForTime(result, event);
+            if(weather===null) {
+                document.getElementById("weatherInfo").innerHTML = "";
+                return;
+            }
+            console.log(weather.weatherIcon);
+            const weatherHtml = `<div style="width:100%">
+                    <span>Temperature: ${weather.temperature}&#176;C</span>
+                    <img style="height:50px; float:right;" src="http://openweathermap.org/img/w/${weather.weatherIcon}.png"/>
+                    <p>Feels Like Temperature: ${weather.feelsLikeTemperature}&#176;C</p>
+                    <p>Weather: ${weather.weather}</p>
+                    <p>Wind Speed: ${weather.windSpeed}m/s</p>
+                </div>`;
+            if(document.getElementById("weatherInfo") !== null) {
+                document.getElementById("weatherInfo").innerHTML = weatherHtml;
+            }
+        });
+    }
 
     function handleLocationChange(event, newValue) {
         setOptions(newValue ? [newValue, ...options] : options);
@@ -144,7 +330,7 @@ export default function EventPopup({open, handleClose, handleSave}) {
         }
     }
 
-    const fetch = React.useMemo(
+    const fetch = useMemo(
         () =>
             throttle((request, callback) => {
                 autocompleteService.current.getPlacePredictions(request, callback);
@@ -152,7 +338,7 @@ export default function EventPopup({open, handleClose, handleSave}) {
         [],
     );
 
-    React.useEffect(() => {
+    useEffect(() => {
         let active = true;
 
         if (!autocompleteService.current && window.google) {
@@ -190,6 +376,7 @@ export default function EventPopup({open, handleClose, handleSave}) {
 
     return (
         <div>
+            {getLocation()}
             <Modal
                 aria-labelledby="transition-modal-title"
                 aria-describedby="transition-modal-description"
@@ -215,25 +402,30 @@ export default function EventPopup({open, handleClose, handleSave}) {
                                 fullWidth={true}
                                 placeholder="< Insert title here >"
                                 inputProps={{ 'aria-label': 'description' }}
-                                onInput={e => { setTitle(e.target.value) }}
-                                value={title}
+                                onInput={e => { setName(e.target.value) }}
+                                value={getName()}
+                                InputProps={{
+                                    readOnly: viewOnly,
+                                }}
                             />
                         </div>
                         <div className={styles.timeDiv}>
-                            <DatePicker selected={dateFrom} onChange={date => handleDateChange(true, date)}/>
-                            <TimePicker value={timeFrom} defaultTime={timeFrom} onChange={time => handleTimeChange(true, time)} />
+                            <DatePicker selected={getDateFrom()} onChange={date => handleDateChange(true, date)} disabled={viewOnly} />
+                            <TimePicker value={getTimeFrom()} defaultTime={getTimeFrom()} onChange={time => handleTimeChange(true, time)} isDisabled={viewOnly} />
                             <div className={styles.to}>to</div>
-                            <DatePicker selected={dateTo} onChange={date => handleDateChange(false, date)} />
-                            <TimePicker value={timeTo} defaultTime={timeTo} onChange={time => handleTimeChange(false, time)} />
+                            <DatePicker selected={getDateTo()} onChange={date => handleDateChange(false, date)} disabled={viewOnly} />
+                            <TimePicker value={getTimeTo()} defaultTime={getTimeTo()} onChange={time => handleTimeChange(false, time)} isDisabled={viewOnly} />
                         </div>
                         <div>
                             <LocationAutoComplete
-                                value={location}
+                                value={viewOnly ? event.address : location}
                                 options={options}
                                 handleChange={handleLocationChange}
                                 handleInputChange={handleLocationInputValueChange}
+                                viewOnly={viewOnly}
                             />
                         </div>
+                        {validLocation ? null : <div className={styles.textDanger}>Please enter a valid location</div>}
                         <div>
                             <TextField
                                 id="outlined-multiline-static"
@@ -242,14 +434,16 @@ export default function EventPopup({open, handleClose, handleSave}) {
                                 rows={4}
                                 variant="outlined"
                                 onChange={e => setDescription(e.target.value)}
-                                value={description}
+                                value={getDescription()}
                                 fullWidth={true}
+                                InputProps={{
+                                    readOnly: viewOnly,
+                                }}
                             />
                         </div>
+                        <div id="weatherInfo"></div>
                         <div className={styles.buttonDiv}>
-                            <Button variant="contained" color="primary" onClick={() => handleSave()}>
-                                Save
-                            </Button>
+                            {getButton()}
                         </div>
                     </div>
                 </Fade>

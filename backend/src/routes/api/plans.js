@@ -63,7 +63,7 @@
  // Delete plan
  router.delete('/:id', async (req, res) => {
      const { id } = req.params;
-     await deletePlan(id);
+     await deletePlan(req.body.user_id,id);
      res.sendStatus(HTTP_NO_CONTENT);
  });
  

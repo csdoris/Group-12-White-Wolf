@@ -1,6 +1,6 @@
 import { Route, Redirect } from 'react-router-dom';
 
-export default function PrivateRoute({ component: Component, authenticated: authenticated, ...rest }) {
+export default function PrivateRoute({ component: Component, authenticated, ...rest }) {
     return (
         <Route
             {...rest}
