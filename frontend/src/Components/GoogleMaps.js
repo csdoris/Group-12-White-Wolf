@@ -75,39 +75,7 @@ function GoogleMaps() {
         } else {
             setEvents(null);
         }
-
     }, [plan]);
-
-    useEffect(() => {
-        console.log("called events", weatherInfo)
-        if (weatherInfo) {
-            addWeatherIconTemp()
-        }
-    }, [weatherInfo]);
-
-    function addWeatherIconTemp() {
-        console.log("addWeatherIconTemp", weatherInfo)
-        
-        if(events){
-            events.map((event, index) => {
-                console.log("element:",weatherInfo[event._id])
-                const weather = weatherInfo[event._id];
-                if (weather === null) {
-                    document.getElementById(index).innerHTML = "";
-                    return;
-                }
-                const weatherHtml = `<div>
-                            <img style="height:50px; float:right;" src="http://openweathermap.org/img/w/${weather.weatherIcon}.png"/>
-                            <span>${weather.temperature}&#176;C</span>
-                        </div>`;
-    
-                const infoWindow = document.getElementById(index)
-                if (infoWindow) {
-                    infoWindow.innerHTML = weatherHtml;
-                }
-            });
-        }
-    }
 
     return (
         <div>
@@ -136,7 +104,12 @@ function GoogleMaps() {
                             {/* TODO: heading corresponding with event name, img, date and temp */}
                             <h2>{event.name}</h2>
                             <p>{new Date(event.startTime).toLocaleDateString("en-US", dateOptions)}</p>
-                            <div id={index}></div>
+                            {weatherInfo[event._id] &&
+                                <div id={index}>
+                                    <img style={{ height: 50, float: 'right' }} src={`http://openweathermap.org/img/w/${weatherInfo[event._id].weatherIcon}.png`} />
+                                    <span>{weatherInfo[event._id].temperature}&#176;C</span>
+                                </div>
+                            }
                         </div>
                     </InfoWindow>
                 ))}
