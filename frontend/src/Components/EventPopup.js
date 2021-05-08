@@ -24,7 +24,7 @@ import getWeatherForTime from '../helpers/getWeatherForTime';
 const autocompleteService = { current: null };
 const placeService = { current: null };
 
-export default function EventPopup({event, open, handleClose, handleSave, handleUpdate}) {
+export default function EventPopup({ event, open, handleClose, handleSave, handleUpdate }) {
 
     // data needed for creating event 
     const [name, setName] = useState("");
@@ -35,7 +35,7 @@ export default function EventPopup({event, open, handleClose, handleSave, handle
     const [description, setDescription] = useState("");
 
     // state for if readonly or editable
-    const eventNull = event===null;
+    const eventNull = event === null;
     const [viewOnly, setViewOnly] = useState(!eventNull);
 
     // state for location autocomplete
@@ -60,7 +60,7 @@ export default function EventPopup({event, open, handleClose, handleSave, handle
         placeService.current.getDetails(request, (result, status) => {
             if (status === window.google.maps.places.PlacesServiceStatus.OK) {
                 const position = result.geometry.location.toJSON();
-                
+
                 const newEvent = {
                     startTime: dateFrom.toJSON(),
                     endTime: dateTo.toJSON(),
@@ -97,24 +97,24 @@ export default function EventPopup({event, open, handleClose, handleSave, handle
     }
 
     function getName() {
-        if(viewOnly) {
-            return(event.name);
+        if (viewOnly) {
+            return (event.name);
         } else {
-            return(name);
+            return (name);
         }
     }
 
     function getDescription() {
-        if(viewOnly) {
-            return(event.description);
+        if (viewOnly) {
+            return (event.description);
         } else {
-            return(description);
+            return (description);
         }
     }
 
     function getLocation() {
-        if(viewOnly) {
-            if(location == null) {
+        if (viewOnly) {
+            if (location == null) {
                 if (!autocompleteService.current && window.google) {
                     autocompleteService.current = new window.google.maps.places.AutocompleteService();
                 }
@@ -134,34 +134,34 @@ export default function EventPopup({event, open, handleClose, handleSave, handle
     }
 
     function getTimeTo() {
-        if(viewOnly) {
-            return(convert24HourTo12Hour(new Date(event.endTime)));
+        if (viewOnly) {
+            return (convert24HourTo12Hour(new Date(event.endTime)));
         } else {
-            return(timeTo);
+            return (timeTo);
         }
     }
 
     function getTimeFrom() {
-        if(viewOnly) {
-            return(convert24HourTo12Hour(new Date(event.startTime)));
+        if (viewOnly) {
+            return (convert24HourTo12Hour(new Date(event.startTime)));
         } else {
-            return(timeFrom);
+            return (timeFrom);
         }
     }
 
     function getDateTo() {
-        if(viewOnly) {
-            return(new Date(event.endTime));
+        if (viewOnly) {
+            return (new Date(event.endTime));
         } else {
-            return(dateTo);
+            return (dateTo);
         }
     }
 
     function getDateFrom() {
-        if(viewOnly) {
-            return(new Date(event.startTime));
+        if (viewOnly) {
+            return (new Date(event.startTime));
         } else {
-            return(dateFrom);
+            return (dateFrom);
         }
     }
 
@@ -177,14 +177,14 @@ export default function EventPopup({event, open, handleClose, handleSave, handle
     }
 
     function getButton() {
-        if(viewOnly) {
-            return(
+        if (viewOnly) {
+            return (
                 <Button variant="contained" color="primary" onClick={() => handleEdit()}>
                     Edit
                 </Button>
             )
         } else {
-            return(
+            return (
                 <Button variant="contained" color="primary" onClick={() => handleSaveButtonClicked()}>
                     Save
                 </Button>
@@ -193,10 +193,10 @@ export default function EventPopup({event, open, handleClose, handleSave, handle
     }
 
     useEffect(() => {
-        if(viewOnly) {
+        if (viewOnly) {
             getWeather();
         } else {
-            if(document.getElementById("weatherInfo") !== null) {
+            if (document.getElementById("weatherInfo") !== null) {
                 document.getElementById("weatherInfo").innerHTML = "";
             }
         }
@@ -205,7 +205,7 @@ export default function EventPopup({event, open, handleClose, handleSave, handle
     function getWeather() {
         FetchWeatherInfo(null, event.lat, event.lng).then(result => {
             const weather = getWeatherForTime(result, event);
-            if(weather===null) {
+            if (weather === null) {
                 document.getElementById("weatherInfo").innerHTML = "";
                 return;
             }
@@ -217,7 +217,7 @@ export default function EventPopup({event, open, handleClose, handleSave, handle
                     <p>Weather: ${weather.weather}</p>
                     <p>Wind Speed: ${weather.windSpeed}m/s</p>
                 </div>`;
-            if(document.getElementById("weatherInfo") !== null) {
+            if (document.getElementById("weatherInfo") !== null) {
                 document.getElementById("weatherInfo").innerHTML = weatherHtml;
             }
         });
@@ -236,6 +236,7 @@ export default function EventPopup({event, open, handleClose, handleSave, handle
     function convert24HourTo12Hour(date) {
         var hour = date.getHours();
         var minute = date.getMinutes();
+        // console.log(minute);
         var modifier = "AM";
 
         if (hour === 0) {
@@ -246,7 +247,7 @@ export default function EventPopup({event, open, handleClose, handleSave, handle
             modifier = "PM";
         }
 
-        const time = hour + ":" + minute + " " + modifier;
+        const time = hour + ":" + minute.toString().padStart(2, "0") + " " + modifier;
         return time;
     }
 
@@ -256,9 +257,9 @@ export default function EventPopup({event, open, handleClose, handleSave, handle
         // modifier: PM/AM
         var [time, modifier] = timeInput.split(" ");
         var [hour, minute] = time.split(":");
-       
+
         // convert to 24 hours 
-        if ((modifier === "AM") && (hour === "12"))  {
+        if ((modifier === "AM") && (hour === "12")) {
             hour = 0;
         }
         else if ((modifier === "PM") && (hour >= 1) && (hour < 12)) {
@@ -304,7 +305,7 @@ export default function EventPopup({event, open, handleClose, handleSave, handle
         var newDate = new Date(dateFrom.getTime());
         newDate.setHours(hour);
         newDate.setMinutes(minute);
-        
+
         if (isTimeFrom) {
             // update the dateFrom object
             setTimeFrom(newTime);
@@ -377,8 +378,8 @@ export default function EventPopup({event, open, handleClose, handleSave, handle
             >
                 <Fade in={open}>
                     <div className={styles.modal}>
-                        <div className={styles.buttonDiv}> 
-                            <CloseIcon 
+                        <div className={styles.buttonDiv}>
+                            <CloseIcon
                                 className={styles.closeIcon}
                                 color="primary"
                                 onClick={() => handleClose()}
