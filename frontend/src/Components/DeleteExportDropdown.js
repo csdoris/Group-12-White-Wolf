@@ -4,9 +4,18 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import { ThreeDotsVertical } from 'react-bootstrap-icons';
 import ExportICS from '../helpers/ExportICS';
+import useToken from '../hooks/useToken';
+import axios from 'axios';
 
 function DeleteExportDropdown({id, deleteFunc, showExport = true }) {
     const [isOpen, setIsOpen] = useState(false);
+
+    const { token } = useToken();
+    const header = {
+        headers: {
+            "Authorization": `Bearer ${token}`
+        }
+    };
 
     const openDropdown = (event) => {
         setIsOpen(event.currentTarget);
@@ -14,13 +23,15 @@ function DeleteExportDropdown({id, deleteFunc, showExport = true }) {
 
     const closeDropdown = () => {
         setIsOpen(null);
-    };
+    }
 
     const exportPlan = () => {
         closeDropdown();
         console.log('clicked export');
         console.log('modal opens');
-        // ExportICS(events); //Undo when plan context has been merged in
+        axios.get(`/api/plans/${id}`, header).then(function (resp) {
+            ExportICS(resp.data.events);
+        });
     };
 
     const deletePlan = () => {

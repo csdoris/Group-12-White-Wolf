@@ -84,11 +84,12 @@ function SideNav() {
         }
     }
 
-    function importPlan(planName, contents) {
+    function importPlan(planName, importedEvents) {
         //Send put req to backend and fetch data again
-        // setAllPlans([...allPlans, { id: 3, name: planName }]);
-        console.log(contents);
-        console.log("import called")
+        axios.post('/api/plans', { name: planName, events: importedEvents }, header).then( async function () {
+            const plansResponse = await axios.get('/api/plans', header);
+            setPlans(plansResponse.data);
+        });
     }
 
     function deletePlanRow(planId) {

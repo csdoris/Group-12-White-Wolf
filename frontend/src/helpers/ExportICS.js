@@ -8,7 +8,7 @@ export default function ExportICS(events) {
         let end = new Date(element.endTime);
 
         let newEvent = {
-            title: element.title,
+            title: element.name,
             start: [
                 start.getFullYear(),
                 start.getMonth() + 1,
@@ -34,8 +34,9 @@ export default function ExportICS(events) {
     const { error, value } = ics.createEvents(eventsToExport);
 
     console.log(value);
-    if (error) {
-        return error;
+    if (error || !value) {
+        alert('No Events to export');
+        return;
     }
     var blob = new Blob([value], { type: 'text/plain;charset=utf-8' });
     FileSaver.saveAs(blob, 'Plan.ics');

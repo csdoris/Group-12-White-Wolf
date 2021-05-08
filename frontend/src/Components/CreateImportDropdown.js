@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import AddIcon from '@material-ui/icons/Add';
-import ImportICS from '../helpers/ImportICS';
 import ImportNameRequestPopup from './ImportNameRequestPopup';
+import ImportICS from '../helpers/ImportICS';
 
 function CreateImportDropdown({ addPlan, addImportedPlan }) {
     const [isOpen, setIsOpen] = useState(false);
     const [importing, setImporting] = useState(false);
-    const [contents, setContents] = useState(null);
+    const [importedEvents, setImportedEvents] = useState(null);
 
     const openDropdown = (event) => {
         setIsOpen(event.currentTarget);
@@ -30,10 +30,11 @@ function CreateImportDropdown({ addPlan, addImportedPlan }) {
         closeDropdown();
         console.log('clicked import');
         console.log('modal opens');
-        let contents = await ImportICS();
-        if (contents) {
+        let importedEvents = await ImportICS();
+        if (importedEvents) {
+            console.log(importedEvents);
             setImporting(true);
-            setContents(contents);
+            setImportedEvents(importedEvents);
         }
     };
 
@@ -43,8 +44,8 @@ function CreateImportDropdown({ addPlan, addImportedPlan }) {
 
     function handleSave(name) {
         console.log('save called');
+        addImportedPlan(name, importedEvents);
         setImporting(false);
-        addImportedPlan(name, contents);
     }
 
     return (
