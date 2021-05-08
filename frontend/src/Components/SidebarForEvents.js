@@ -144,7 +144,7 @@ export default function SidebarForEvents() {
             </List>
 
             {
-                addEvent && <EventPopup event={viewEvent} open={addEvent} handleClose={handleClose} handleSave={handleSave} handleUpdate={handleUpdate} />
+                addEvent && <EventPopup event={viewEvent} weather={null} open={addEvent} handleClose={handleClose} handleSave={handleSave} handleUpdate={handleUpdate} />
             }
         </div>
     );

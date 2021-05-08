@@ -34,10 +34,9 @@ function SidebarContextProvider({ children }) {
 
             const weather = getWeatherForTime(result, events[index]);
             newWeathers[event._id] = weather;
-            console.log("map", newWeathers);
         })).then(() => {
-            setWeatherInfo(newWeathers);
             console.log("weatherInfoUpdate", newWeathers);
+            setWeatherInfo(newWeathers);
         });
     }
 

@@ -132,7 +132,7 @@ export default function ScheduleView() {
                                             {
                                                 weatherInfo[event._id] &&
                                                 <div>
-                                                    <img style={{ height: 50, float: 'right' }} src={`http://openweathermap.org/img/w/${weatherInfo[event._id].weatherIcon}.png`} />
+                                                    <img style={{ height: 50, float: 'right' }} src={`http://openweathermap.org/img/w/${weatherInfo[event._id].weatherIcon}.png`} alt={weatherInfo[event._id].weatherDescription}/>
                                                     <p>{weatherInfo[event._id].temperature}&#176;C</p>
                                                 </div>
                                             }

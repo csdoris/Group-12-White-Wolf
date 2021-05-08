@@ -18,13 +18,11 @@ import "../Styles/DatePicker.css"
 import "../Styles/TimePicker.css"
 import "react-datepicker/dist/react-datepicker.css";
 import "@patternfly/react-core/dist/styles/base.css";
-import FetchWeatherInfo from '../ExternalAPI/OpenWeatherMapAPI';
-import getWeatherForTime from '../helpers/getWeatherForTime';
 
 const autocompleteService = { current: null };
 const placeService = { current: null };
 
-export default function EventPopup({ event, open, handleClose, handleSave, handleUpdate }) {
+export default function EventPopup({ event, weather, open, handleClose, handleSave, handleUpdate }) {
 
     // data needed for creating event 
     const [name, setName] = useState("");
@@ -192,35 +190,22 @@ export default function EventPopup({ event, open, handleClose, handleSave, handl
         }
     }
 
-    useEffect(() => {
-        if (viewOnly) {
-            getWeather();
-        } else {
-            if (document.getElementById("weatherInfo") !== null) {
-                document.getElementById("weatherInfo").innerHTML = "";
-            }
+    // Render the weather info box with the weather information
+    const weatherInfoComponent = () => {
+        if (weather === null) {
+            return;
         }
-    }, [viewOnly]);
 
-    function getWeather() {
-        FetchWeatherInfo(null, event.lat, event.lng).then(result => {
-            const weather = getWeatherForTime(result, event);
-            if (weather === null) {
-                document.getElementById("weatherInfo").innerHTML = "";
-                return;
-            }
-            console.log(weather.weatherIcon);
-            const weatherHtml = `<div style="width:100%">
-                    <span>Temperature: ${weather.temperature}&#176;C</span>
-                    <img style="height:50px; float:right;" src="http://openweathermap.org/img/w/${weather.weatherIcon}.png"/>
-                    <p>Feels Like Temperature: ${weather.feelsLikeTemperature}&#176;C</p>
-                    <p>Weather: ${weather.weather}</p>
-                    <p>Wind Speed: ${weather.windSpeed}m/s</p>
-                </div>`;
-            if (document.getElementById("weatherInfo") !== null) {
-                document.getElementById("weatherInfo").innerHTML = weatherHtml;
-            }
-        });
+        return (
+            <div style={{ width: '100%' }}>
+                <span>Temperature: {weather.temperature}&#176;C</span>
+                <img style={{ height: 50, float: 'right' }} src={`http://openweathermap.org/img/w/${weather.weatherIcon}.png`} alt={weather.weatherDescription}/>
+                <p>Feels Like Temperature: {weather.feelsLikeTemperature}&#176;C</p>
+                <p>Weather: {weather.weather}</p>
+                <p>Wind Speed: {weather.windSpeed}m/s</p>
+            </div>
+        )
+
     }
 
     function handleLocationChange(event, newValue) {
@@ -426,7 +411,9 @@ export default function EventPopup({ event, open, handleClose, handleSave, handl
                                 }}
                             />
                         </div>
-                        <div id="weatherInfo"></div>
+                        <div id="weatherInfo">
+                            {viewOnly && weatherInfoComponent()}
+                        </div>
                         <div className={styles.buttonDiv}>
                             {getButton()}
                         </div>
