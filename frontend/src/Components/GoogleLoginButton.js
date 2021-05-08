@@ -1,5 +1,4 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { GoogleLogin } from 'react-google-login';
 import styles from '../Styles/GoogleLoginButton.module.css'
 

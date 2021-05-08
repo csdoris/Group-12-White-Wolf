@@ -1,13 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import GoogleMaps from '../Components/GoogleMaps';
 import SideNav from '../Components/Sidebar';
 import { Loader } from '@googlemaps/js-api-loader';
 import axios from 'axios';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Logout from '../Components/Logout';
+import { AppContext } from '../AppContextProvider';
+import useToken from '../hooks/useToken';
 
 function Home() {
     const [keyObtained, setKeyObtained] = useState(false);
+    const [plansObtained, setPlansObtained] = useState(false);
+    const { plans, setPlans, events, setEvents } = useContext(AppContext);
+    const token = useToken().token;
 
     useEffect(() => {
         axios
@@ -24,9 +29,16 @@ function Home() {
             .catch(function (error) {
                 console.log(error);
             });
+        
+        axios.get(`/api/plans`, { headers: { "Authorization": `Bearer ${token}` }}).then( function (resp) {
+            console.log("RESP FROM HOME",resp.data);
+            setPlans(resp.data);
+            console.log(plans);
+            setPlansObtained(true);
+        });
     }, []);
 
-    if (keyObtained) {
+    if (keyObtained && plansObtained) {
         return (
             <div>
                 <SideNav />
@@ -37,7 +49,6 @@ function Home() {
     } else {
         return (
             <div>
-                <SideNav />
                 <CircularProgress />
             </div>
         );
