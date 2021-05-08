@@ -10,11 +10,10 @@ import axios from 'axios';
 import useToken from '../hooks/useToken';
 import { AppContext } from '../AppContextProvider.js';
 import EventPopup from './EventPopup';
-import FetchWeatherInfo from '../ExternalAPI/OpenWeatherMapAPI';
-import getWeatherForTime from '../helpers/getWeatherForTime';
+import { SidebarContext } from '../helpers/SidebarContextProvider';
 
 const mapContainerStyle = {
-    height: '100vh',
+    height: '95vh',
     width: '100vw',
 };
 const center = {
@@ -27,10 +26,10 @@ const options = {
 };
 
 function GoogleMaps() {
-    const {events, setEvents, plan} = useContext(AppContext);
+    const { plan, setPlan } = useContext(AppContext);
     const [viewEvent, setViewEvent] = useState(null);
     const [open, setOpen] = useState(false);
-    const [weathers, setWeathers] = useState([]);
+    const { weatherInfo } = useContext(SidebarContext);
 
     const { token } = useToken();
     const header = {
@@ -38,6 +37,8 @@ function GoogleMaps() {
             "Authorization": `Bearer ${token}`
         }
     };
+
+    const [events, setEvents] = useState([]);
 
     var dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 
@@ -59,7 +60,7 @@ function GoogleMaps() {
             if (response.status === 204) {
                 setOpen(false);
                 const plansResponse = await axios.get(`/api/plans/${plan._id}`, header);
-                setEvents(plansResponse.data.events);
+                setPlan(plansResponse.data);
             }
         }).catch((error) => {
             console.log(error);
@@ -67,30 +68,45 @@ function GoogleMaps() {
     }
 
     useEffect(() => {
-        getWeather()
-    }, [events]);
+        console.log("called", plan)
+        if (plan && plan.events) {
+            setEvents(plan.events);
+            console.log("set events", events);
+        } else {
+            setEvents(null);
+        }
 
-    function getWeather() {
-        events.map((event, index) => {
-            console.log(event);
-            FetchWeatherInfo(null, event.lat, event.lng).then(result => {
-                const weather = getWeatherForTime(result, events[index]);
-                if(weather===null) {
+    }, [plan]);
+
+    useEffect(() => {
+        console.log("called events", weatherInfo)
+        if (weatherInfo) {
+            addWeatherIconTemp()
+        }
+    }, [weatherInfo]);
+
+    function addWeatherIconTemp() {
+        console.log("addWeatherIconTemp", weatherInfo)
+        
+        if(events){
+            events.map((event, index) => {
+                console.log("element:",weatherInfo[event._id])
+                const weather = weatherInfo[event._id];
+                if (weather === null) {
                     document.getElementById(index).innerHTML = "";
                     return;
                 }
                 const weatherHtml = `<div>
-                        <img style="height:50px; float:right;" src="http://openweathermap.org/img/w/${weather.weatherIcon}.png"/>
-                        <span>${weather.temperature}&#176;C</span>
-                    </div>`;
-                
-                let newWeathers = weathers;
-                newWeathers[index] = weather;
-                setWeathers(newWeathers);
-                document.getElementById(index).innerHTML = weatherHtml;
-                console.log(weathers)
+                            <img style="height:50px; float:right;" src="http://openweathermap.org/img/w/${weather.weatherIcon}.png"/>
+                            <span>${weather.temperature}&#176;C</span>
+                        </div>`;
+    
+                const infoWindow = document.getElementById(index)
+                if (infoWindow) {
+                    infoWindow.innerHTML = weatherHtml;
+                }
             });
-        });
+        }
     }
 
     return (
@@ -102,24 +118,24 @@ function GoogleMaps() {
                 center={center}
                 options={options}
             >
-                {events.map((event) => (
+                {events && events.map((event) => (
                     <Marker
                         key={event._id}
                         position={{ lat: parseFloat(event.lat), lng: parseFloat(event.lng) }}
                     />
                 ))}
-                {events.map((event, index) => (
-                    <InfoWindow position = {{ lat: parseFloat(event.lat), lng: parseFloat(event.lng) }}>
+                {events && events.map((event, index) => (
+                    <InfoWindow key={event._id} position={{ lat: parseFloat(event.lat), lng: parseFloat(event.lng) }}>
                         <div
                             className="eventInfo"
                             onClick={(eventSelected) => {
                                 setViewEvent(event);
                                 setOpen(true);
                             }}
-                            >
+                        >
                             {/* TODO: heading corresponding with event name, img, date and temp */}
                             <h2>{event.name}</h2>
-                            <p>{new Date(event.startTime).toLocaleDateString("en-US", dateOptions) }</p>
+                            <p>{new Date(event.startTime).toLocaleDateString("en-US", dateOptions)}</p>
                             <div id={index}></div>
                         </div>
                     </InfoWindow>

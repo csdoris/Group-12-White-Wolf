@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import {
     Button,
     List,
@@ -13,7 +13,7 @@ import EventPopup from './EventPopup';
 import axios from 'axios';
 import useToken from '../hooks/useToken';
 import SidebarRow from './SidebarRow';
-import { AppContext } from '../AppContextProvider.js';
+import { AppContext } from '../AppContextProvider';
 
 const useStyles = makeStyles(() => ({
     drawer: {
@@ -30,28 +30,18 @@ const useStyles = makeStyles(() => ({
 }));
 
 
-export default function SidebarForEvents(handleGoBackToPlans) {
+export default function SidebarForEvents() {
     const classes = useStyles();
 
+    const {plan, setPlan} = useContext(AppContext)
     const { token } = useToken();
     const header = {
         headers: {
             "Authorization": `Bearer ${token}`
         }
     };
-
-    const { events, setEvents, plan, setPlan } = useContext(AppContext);
-
-    useEffect(() => {
-        console.log(plan);
-        axios.get(`/api/plans/${plan._id}`, header).then(function (resp) {
-            setEvents(resp.data.events)
-        });
-    }, []);
-
-
+    
     const [addEvent, setAddEvent] = useState(false);
-    const [newEventSaved, setNewEventSaved] = useState(false);
 
     const [viewEvent, setViewEvent] = useState(null);
 
@@ -69,7 +59,7 @@ export default function SidebarForEvents(handleGoBackToPlans) {
             if (response.status === 201) {
                 setAddEvent(false);
                 const plansResponse = await axios.get(`/api/plans/${plan._id}`, header);
-                setEvents(plansResponse.data.events);
+                setPlan(plansResponse.data);
             }
         }).catch((error) => {
             console.log(error);
@@ -86,7 +76,7 @@ export default function SidebarForEvents(handleGoBackToPlans) {
                 setAddEvent(false);
                 setViewEvent(null);
                 const plansResponse = await axios.get(`/api/plans/${plan._id}`, header);
-                setEvents(plansResponse.data.events);
+                setPlan(plansResponse.data);
             }
         }).catch((error) => {
             console.log(error);
@@ -104,11 +94,14 @@ export default function SidebarForEvents(handleGoBackToPlans) {
     }
     
     function handleDeleteEvent(eventId) {
+        console.log(eventId);
         axios.delete(`/api/plans/${plan._id}/${eventId}`, header).then(async function () {
             const plansResponse = await axios.get(`/api/plans/${plan._id}`, header);
-            setEvents(plansResponse.data.events);
+            setPlan(plansResponse.data);
+            
         });
     }
+
 
     return (
         <div>
@@ -135,7 +128,7 @@ export default function SidebarForEvents(handleGoBackToPlans) {
                         <AddIcon className="plusSign" />
                     </Button>
                 </Grid>
-                {events.map((event) => (
+                {plan ? plan.events.length !==0 ? plan.events.map((event) => (
                     <div key={event._id}>
                         <Grid wrap="nowrap" container justify="space-between">
                             <SidebarRow
@@ -147,7 +140,7 @@ export default function SidebarForEvents(handleGoBackToPlans) {
                         </Grid>
                         <Divider />
                     </div>
-                ))}
+                )) : <p>No events to display</p> : null}
             </List>
 
             {
@@ -155,4 +148,5 @@ export default function SidebarForEvents(handleGoBackToPlans) {
             }
         </div>
     );
+        
 }

@@ -4,17 +4,25 @@ import SideNav from '../Components/Sidebar';
 import { Loader } from '@googlemaps/js-api-loader';
 import axios from 'axios';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import ScheduleView from '../Components/ScheduleView';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import { SidebarContextProvider } from '../helpers/SidebarContextProvider';
 import Logout from '../Components/Logout';
 import { AppContext } from '../AppContextProvider';
 import useToken from '../hooks/useToken';
 
+const MAP_VIEW = 0;
+
 function Home() {
     const [keyObtained, setKeyObtained] = useState(false);
     const [plansObtained, setPlansObtained] = useState(false);
-    const { plans, setPlans, events, setEvents } = useContext(AppContext);
+    const { plans, setPlans, setAPIkey } = useContext(AppContext);
+    const [view, setView] = useState(false);
     const token = useToken().token;
 
     useEffect(() => {
+        setView(MAP_VIEW);
         axios
             .get('/api/apikeys/googlekey')
             .then(function (response) {
@@ -24,27 +32,44 @@ function Home() {
                 });
                 loader.load().then(() => {
                     setKeyObtained(true);
+                    setAPIkey(response.data.googleAPIKey);
                 });
             })
             .catch(function (error) {
                 console.log(error);
             });
-        
-        axios.get(`/api/plans`, { headers: { "Authorization": `Bearer ${token}` }}).then( function (resp) {
-            console.log("RESP FROM HOME",resp.data);
+
+        axios.get(`/api/plans`, { headers: { "Authorization": `Bearer ${token}` } }).then(function (resp) {
+            console.log("RESP FROM HOME", resp.data);
             setPlans(resp.data);
             console.log(plans);
             setPlansObtained(true);
         });
     }, []);
 
+    const handleChange = (event, newView) => {
+        setView(newView);
+    };
+
     if (keyObtained && plansObtained) {
         return (
-            <div>
-                <SideNav />
-                <Logout />
-                <GoogleMaps />
-            </div>
+            <SidebarContextProvider>
+                <div>
+                    <SideNav/>
+                    <Tabs
+                        value={view}
+                        onChange={handleChange}
+                        indicatorColor="primary"
+                        textColor="primary"
+                        centered
+                    >
+                        <Tab label="Map View" />
+                        <Tab label="Schedule View" />
+                    </Tabs>
+                    <Logout />
+                    {view ? <ScheduleView /> : <GoogleMaps />}
+                </div>
+            </SidebarContextProvider>
         );
     } else {
         return (

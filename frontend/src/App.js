@@ -1,19 +1,18 @@
-import React, { useState } from 'react';
+import React from 'react';
 import FetchWeatherInfo from './ExternalAPI/OpenWeatherMapAPI';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import Home from './Pages/Home';
-import LoginPage from './Pages/LoginPage'
-import SignupPage from './Pages/SignupPage'
-import useToken from './hooks/useToken'
-import PrivateRoute from './Components/PrivateRoute'
+import LoginPage from './Pages/LoginPage';
+import SignupPage from './Pages/SignupPage';
+import useToken from './hooks/useToken';
+import PrivateRoute from './Components/PrivateRoute';
 
 import './App.css';
 import ExportICS from './helpers/ExportICS';
 import ImportICS from './helpers/ImportICS';
-import { AppContextProvider } from './AppContextProvider';
+import { AppContextProvider } from './AppContextProvider.js';
 
 function App() {
-
 
     const { token, setToken } = useToken();
 

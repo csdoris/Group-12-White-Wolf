@@ -36,9 +36,6 @@ function DeleteExportDropdown({id, deleteFunc, showExport = true }) {
 
     const deletePlan = () => {
         closeDropdown();
-        console.log('clicked delete');
-        console.log('check modal opens');
-        console.log(id)
         deleteFunc(id);
     };
 

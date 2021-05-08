@@ -1,0 +1,28 @@
+.map:hover {
+    cursor: pointer;
+}
+
+.header {
+    font-size: x-large;
+    font-weight: 900;
+}
+
+.heading {
+    display: flex;
+    justify-content: center;
+}
+
+h1 {
+    font-size: xx-large;
+    font-weight: 900;
+}
+
+.shiftTextRight {
+    padding-left: 350px;
+    transition-duration: 0.2s;
+}
+
+.shiftTextLeft {
+    padding-left: 0px;
+    transition-duration: 0.2s;
+}

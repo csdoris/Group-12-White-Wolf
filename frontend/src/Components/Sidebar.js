@@ -6,6 +6,7 @@ import {
     Grid,
     TextField,
     Slide,
+    Button
 } from '@material-ui/core';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import ArrowLeftIcon from '@material-ui/icons/ArrowLeft';
@@ -13,11 +14,12 @@ import CreateImportDropdown from './CreateImportDropdown.js';
 import { makeStyles } from '@material-ui/core/styles';
 import '../Styles/SidebarStyles.css';
 import SidebarForEvents from './SidebarForEvents.js';
+import { SidebarContext } from '../helpers/SidebarContextProvider.js';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import { AppContext } from '../AppContextProvider.js';
 import axios from 'axios';
 import useToken from '../hooks/useToken.js';
 import SidebarRow from './SidebarRow.js';
-
 
 const useStyles = makeStyles(() => ({
     drawer: {
@@ -38,14 +40,17 @@ const useStyles = makeStyles(() => ({
         opacity: '70%',
         '&:hover': { cursor: 'pointer', opacity: '100%' },
     },
+    cancelButton: {
+        float: 'right',
+    },
 }));
 
 function SideNav() {
-    const [isOpen, setIsOpen] = useState();
-    // const [planShown, setPlanShown] = useState(null);
+    
+    const { isOpen, setIsOpen} = useContext(SidebarContext);
     const classes = useStyles();
 
-    const {plans, setPlans, plan, setPlan} = useContext(AppContext);
+    const {plans, setPlans, plan, setPlan } = useContext(AppContext);
 
     const token = useToken().token;
     const header = {
@@ -59,8 +64,9 @@ function SideNav() {
 
 
     function toggleDrawer() {
-        return (event) => {
+        return () => {
             setIsOpen(!isOpen);
+            handleCancel();
         };
     }
 
@@ -68,9 +74,8 @@ function SideNav() {
         setAddingPlan(true);
     }
 
-    function setPlanName(e) {
-        console.log(e.target.value);
-        setNewPlanName(e.target.value);
+    function handleCancel() {
+        setAddingPlan(false);
     }
 
     function submitPlanName(e) {
@@ -101,8 +106,21 @@ function SideNav() {
 
     // handles the situation when a plan is clicked
     function navigateToPlan(plan) {
-        setPlan(plan);
+        handleCancel();
+
+        axios.get(`/api/plans/${plan._id}`, header).then(function (resp) {
+            setPlan(resp.data)
+            console.log(resp.data.events);
+        });
     }
+
+    function handleGoBackToPlans() {
+        setPlan(null);
+    }
+
+    const handleClickAway = () => {
+        setAddingPlan(false);
+    };
 
     const listPlans = () => (
         <div>
@@ -129,16 +147,30 @@ function SideNav() {
                     </div>
                 ))}
                 {addingPlan && (
-                    <TextField
-                        id="outlined-basic"
-                        label="Type plan name here..."
-                        placeholder="Type plan name here..."
-                        variant="filled"
-                        className={classes.drawer}
-                        autoFocus
-                        onChange={setPlanName}
-                        onKeyDown={submitPlanName}
-                    />
+                    <ClickAwayListener onClickAway={handleClickAway}>
+                        <Grid>
+                            <Grid item>
+                                <TextField
+                                    id="outlined-basic"
+                                    label="Type plan name here..."
+                                    placeholder="Type plan name here..."
+                                    variant="filled"
+                                    className={classes.drawer}
+                                    autoFocus
+                                    onChange={ (e) => {setNewPlanName(e.target.value)}}
+                                    onKeyDown={submitPlanName}
+                                />
+                            </Grid>
+                            <Grid item>
+                                <Button
+                                    onClick={handleCancel}
+                                    className={classes.cancelButton}
+                                >
+                                    Cancel
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </ClickAwayListener>
                 )}
             </List>
         </div>
@@ -150,9 +182,8 @@ function SideNav() {
                 <ArrowRightIcon
                     onClick={toggleDrawer()}
                     className={classes.openButton}
-                    style={{ fontSize: 40 }}
+                    style={{ fontSize: 48 }}
                 />
-
                 {/* content in the sideabr */}
                 <Drawer
                     anchor="left"
@@ -163,7 +194,10 @@ function SideNav() {
                     {plan == null ? (
                         listPlans()
                     ) : (
-                        <SidebarForEvents />
+                        <SidebarForEvents
+                            plan={plan}
+                            handleGoBackToPlans={handleGoBackToPlans}
+                        />
                     )}
                 </Drawer>
                 {isOpen && (
@@ -176,7 +210,7 @@ function SideNav() {
                         <ArrowLeftIcon
                             onClick={toggleDrawer()}
                             className={classes.closeButton}
-                            style={{ fontSize: 40 }}
+                            style={{ fontSize: 48 }}
                         />
                     </Slide>
                 )}
