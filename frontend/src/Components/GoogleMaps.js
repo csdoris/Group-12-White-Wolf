@@ -88,23 +88,25 @@ function GoogleMaps() {
     function addWeatherIconTemp() {
         console.log("addWeatherIconTemp", weatherInfo)
         
-        events.map((event, index) => {
-            console.log("element:",weatherInfo[event._id])
-            const weather = weatherInfo[event._id];
-            if (weather === null) {
-                document.getElementById(index).innerHTML = "";
-                return;
-            }
-            const weatherHtml = `<div>
-                        <img style="height:50px; float:right;" src="http://openweathermap.org/img/w/${weather.weatherIcon}.png"/>
-                        <span>${weather.temperature}&#176;C</span>
-                    </div>`;
-
-            const infoWindow = document.getElementById(index)
-            if (infoWindow) {
-                infoWindow.innerHTML = weatherHtml;
-            }
-        });
+        if(events){
+            events.map((event, index) => {
+                console.log("element:",weatherInfo[event._id])
+                const weather = weatherInfo[event._id];
+                if (weather === null) {
+                    document.getElementById(index).innerHTML = "";
+                    return;
+                }
+                const weatherHtml = `<div>
+                            <img style="height:50px; float:right;" src="http://openweathermap.org/img/w/${weather.weatherIcon}.png"/>
+                            <span>${weather.temperature}&#176;C</span>
+                        </div>`;
+    
+                const infoWindow = document.getElementById(index)
+                if (infoWindow) {
+                    infoWindow.innerHTML = weatherHtml;
+                }
+            });
+        }
     }
 
     return (
