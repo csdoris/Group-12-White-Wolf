@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -9,6 +9,14 @@ import axios from 'axios';
 
 function DeleteExportDropdown({id, deleteFunc, showExport = true }) {
     const [isOpen, setIsOpen] = useState(false);
+    const {events} = useContext(SidebarContext)
+
+    const token = useToken().token;
+    const header = {
+        headers: {
+            "Authorization": `Bearer ${token}`
+        }
+    };
 
     const { token } = useToken();
     const header = {
