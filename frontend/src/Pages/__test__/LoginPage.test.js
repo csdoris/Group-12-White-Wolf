@@ -70,9 +70,12 @@ describe('errorMessage', () => {
 
     it('error message shown when password and email do not match', async () => {
         mockAxios.post.mockRejectedValueOnce("email and password doesn't match");
-
+        
+        const history = createMemoryHistory();
         const { getByTestId } = render(
-            <LoginPage setData={() => {}}/>
+            <Router history={history}>
+                <LoginPage setData={() => {}}/>
+            </Router>
         );
 
         const emailInput = getByTestId('email-login');
@@ -99,39 +102,3 @@ describe('errorMessage', () => {
         await screen.findByText('Incorrect email or password');
     });
 });
-
-describe('checkSuccessfulLogin', () => {
-    it('correct request called to login', async () => {
-        mockAxios.post.mockResolvedValueOnce({
-            data: {
-                token: 'test-token'
-            }
-        });
-
-        const { getByTestId } = render(
-            <LoginPage setData={() => {}}/>
-        );
-
-        const emailInput = getByTestId('email-login');
-        const passwordInput = getByTestId('password-login');
-        const submit = getByTestId('submit-login');
-    
-        expect(emailInput).toBeEmptyDOMElement();
-        expect(passwordInput).toBeEmptyDOMElement();
-
-        // fill the form
-        fireEvent.change(emailInput, { target: { value: 'test@gmail.com' } });
-        fireEvent.change(passwordInput, { target: { value: 'password' } });
-
-        // submit the form 
-        fireEvent.click(submit);
-
-        const body = {
-            email: 'test@gmail.com',
-            password: 'password',
-        };
-        
-        expect(mockAxios.post).toHaveBeenCalledWith('/api/login', body);
-    });
-});
-
