@@ -6,7 +6,6 @@ import LoginPage from './Pages/LoginPage';
 import SignupPage from './Pages/SignupPage';
 import useToken from './hooks/useToken';
 import PrivateRoute from './Components/PrivateRoute';
-
 import './App.css';
 import { AppContextProvider } from './AppContextProvider.js';
 

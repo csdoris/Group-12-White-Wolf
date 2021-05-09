@@ -12,7 +12,6 @@ import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import ArrowLeftIcon from '@material-ui/icons/ArrowLeft';
 import CreateImportDropdown from './CreateImportDropdown.js';
 import { makeStyles } from '@material-ui/core/styles';
-import '../Styles/SidebarStyles.css';
 import SidebarForEvents from './SidebarForEvents.js';
 import { SidebarContext } from '../helpers/SidebarContextProvider.js';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
@@ -88,7 +87,16 @@ function SideNav() {
             });
         }
     }
-    
+
+    //Function to import plan and calls backend endpoint to store the imported plans and refresh the known plans in the frontend
+    function importPlan(planName, importedEvents) {
+        //Send put req to backend and fetch data again
+        axios.post('/api/plans', { name: planName, events: importedEvents }, header).then( async function () {
+            const plansResponse = await axios.get('/api/plans', header);
+            setPlans(plansResponse.data);
+        });
+    }
+
     function deletePlanRow(planId) {
         axios.delete(`/api/plans/${planId}`, header).then( async function () {
             const plansResponse = await axios.get('/api/plans', header);
@@ -120,7 +128,7 @@ function SideNav() {
                     className={classes.drawer}
                 >
                     <h1 style={{width: '250px', paddingLeft: '50px', textAlign: 'center'}}>My plans</h1>
-                    <CreateImportDropdown addPlan={addPlanRow} />
+                    <CreateImportDropdown addPlan={addPlanRow} addImportedPlan={importPlan}/>
                 </Grid>
                 {plans.map((plan) => (
                     <div key={plan._id}>

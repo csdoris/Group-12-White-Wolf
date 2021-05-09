@@ -3,9 +3,13 @@ import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import AddIcon from '@material-ui/icons/Add';
+import ImportNameRequestPopup from './ImportNameRequestPopup';
+import ImportICS from '../helpers/ImportICS';
 
-function CreateImportDropdown({ addPlan }) {
+function CreateImportDropdown({ addPlan, addImportedPlan }) {
     const [isOpen, setIsOpen] = useState(false);
+    const [importing, setImporting] = useState(false);
+    const [importedEvents, setImportedEvents] = useState(null);
 
     const openDropdown = (event) => {
         setIsOpen(event.currentTarget);
@@ -20,9 +24,25 @@ function CreateImportDropdown({ addPlan }) {
         addPlan();
     };
 
-    const importPlan = () => {
+    //Button click handler to call import ICS function and show name popup when ICS file has been read in
+    const importPlan = async () => {
         closeDropdown();
+        let importedEvents = await ImportICS();
+        if (importedEvents) {
+            setImporting(true);
+            setImportedEvents(importedEvents);
+        }
     };
+
+    function handleClose() {
+        setImporting(false);
+    }
+
+    //Save the imported events and call a passed down function
+    function handleSave(name) {
+        addImportedPlan(name, importedEvents);
+        setImporting(false);
+    }
 
     return (
         <>
@@ -41,8 +61,15 @@ function CreateImportDropdown({ addPlan }) {
                 onClose={closeDropdown}
             >
                 <MenuItem onClick={createPlan}>Create</MenuItem>
-                <MenuItem onClick={importPlan}>Import</MenuItem>
+                <MenuItem onClick={importPlan}>Import ICS file</MenuItem>
             </Menu>
+            {importing && (
+                <ImportNameRequestPopup
+                    open={importing}
+                    handleClose={handleClose}
+                    handleSave={handleSave}
+                ></ImportNameRequestPopup>
+            )}
         </>
     );
 }

@@ -1,6 +1,5 @@
 import axios from 'axios';
 import React, { useState } from 'react';
-import useToken from './hooks/useToken';
 
 const AppContext = React.createContext({
     plans: [],
