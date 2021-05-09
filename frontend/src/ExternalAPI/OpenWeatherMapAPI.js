@@ -7,8 +7,8 @@ export default async function FetchWeatherInfo(city, lat, lon) {
         .then(function (response) {
             let data = response.data;
             weatherInfo = data.map((element) => {
-                var date = new Date(element.dt_txt);
-                date.toISOString();
+                var [d, t] = element.dt_txt.split(" ");
+                var date = new Date(d + "T" + t + "Z");
                 let temperature = element.main.temp;
                 let feelsLikeTemperature = element.main.feels_like;
                 let weather = element.weather[0].main;

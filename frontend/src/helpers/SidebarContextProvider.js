@@ -25,7 +25,6 @@ function SidebarContextProvider({ children }) {
     }, [plan])
 
     function retrieveWeatherInformation(plan) {
-        console.log("retrieveWeatherInformation", plan)
         let newWeathers = {};
         const events = plan.events;
         Promise.all(events.map(async (event, index) => {
@@ -35,7 +34,6 @@ function SidebarContextProvider({ children }) {
             const weather = getWeatherForTime(result, events[index]);
             newWeathers[event._id] = weather;
         })).then(() => {
-            console.log("weatherInfoUpdate", newWeathers);
             setWeatherInfo(newWeathers);
         });
     }

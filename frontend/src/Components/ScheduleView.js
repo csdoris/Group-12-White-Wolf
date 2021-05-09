@@ -30,11 +30,6 @@ export default function ScheduleView() {
         setMapLong(e.target.getAttribute('long'));
     }
 
-    // TODO: handle view event or edit event in schedule view
-    function handleOpenEvent(event) {
-        console.log(event);
-    }
-
     function urlBuilder() {
         let url = '';
         let API_KEY = APIkey;
@@ -79,6 +74,7 @@ export default function ScheduleView() {
     if (plan && plan.events.length !== 0) {
         return (
             <div className={isOpen ? styles.shiftTextRight : styles.shiftTextLeft}>
+                <p>&nbsp;</p>
                 <h1 className={styles.heading}>{plan.name}</h1>
                 <div>
                     <Table aria-label="simple table">
@@ -117,11 +113,10 @@ export default function ScheduleView() {
                                         {parseDateTime(event.endTime)}
                                     </TableCell>
                                     <TableCell align="center">
-                                        {/* TODO: Improve css*/}
                                         {
                                             weatherInfo[event._id] &&
                                             <div>
-                                                <img style={{ height: 50, float: 'right' }} src={`http://openweathermap.org/img/w/${weatherInfo[event._id].weatherIcon}.png`} alt={weatherInfo[event._id].weatherDescription} />
+                                                <img style={{ height: 50 }} src={`http://openweathermap.org/img/w/${weatherInfo[event._id].weatherIcon}.png`} alt={weatherInfo[event._id].weatherDescription} />
                                                 <p>{weatherInfo[event._id].temperature}&#176;C</p>
                                             </div>
                                         }
@@ -154,6 +149,7 @@ export default function ScheduleView() {
         if (plan && plan.events.length === 0) {
             return (
                 <div className={isOpen ? styles.shiftTextRight : styles.shiftTextLeft}>
+                    <p>&nbsp;</p>
                     <h1 className={styles.heading}>{plan.name}</h1>
                     <p className={styles.heading}>
                         You have no events for this plan, please add an event
@@ -163,6 +159,7 @@ export default function ScheduleView() {
         } else {
             return (
                 <div className={isOpen ? styles.shiftTextRight : styles.shiftTextLeft}>
+                    <p>&nbsp;</p>
                     <p className={styles.heading}>
                         Please click on the plan which you want to view the events for
                     </p>

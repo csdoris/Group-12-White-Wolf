@@ -27,13 +27,13 @@ const useStyles = makeStyles(() => ({
     },
     openButton: {
         backgroundColor: 'grey',
-        position: 'absolute',
+        position: 'fixed',
         zIndex: '1200',
         opacity: '70%',
         '&:hover': { cursor: 'pointer', opacity: '100%' },
     },
     closeButton: {
-        position: 'absolute',
+        position: 'fixed',
         left: '350px',
         backgroundColor: 'grey',
         zIndex: '1200',
@@ -119,7 +119,7 @@ function SideNav() {
                     justify="space-between"
                     className={classes.drawer}
                 >
-                    <h1>My plans</h1>
+                    <h1 style={{width: '250px', paddingLeft: '50px', textAlign: 'center'}}>My plans</h1>
                     <CreateImportDropdown addPlan={addPlanRow} />
                 </Grid>
                 {plans.map((plan) => (
