@@ -27,13 +27,13 @@ const useStyles = makeStyles(() => ({
     },
     openButton: {
         backgroundColor: 'grey',
-        position: 'absolute',
+        position: 'fixed',
         zIndex: '1200',
         opacity: '70%',
         '&:hover': { cursor: 'pointer', opacity: '100%' },
     },
     closeButton: {
-        position: 'absolute',
+        position: 'fixed',
         left: '350px',
         backgroundColor: 'grey',
         zIndex: '1200',
