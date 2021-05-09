@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { useState, useStyles } from 'react';
+import { useState } from 'react';
 import Backdrop from '@material-ui/core/Backdrop';
 import Button from '@material-ui/core/Button';
 import Modal from '@material-ui/core/Modal';
 import Fade from '@material-ui/core/Fade';
-import Input from '@material-ui/core/Input';
+import CloseIcon from '@material-ui/icons/Close';
 import styles from '../Styles/ImportNamePopup.module.css';
 import { Grid, TextField } from '@material-ui/core';
 
@@ -36,13 +36,12 @@ export default function ImportNameRequestPopup({
                             alignItems="center"
                         >
                             <h1 className={styles.heading}>Name your plan</h1>
-                            <Button
-                                variant="contained"
+                            
+                            <CloseIcon
+                                className={styles.closeIcon}
                                 color="primary"
                                 onClick={() => handleClose()}
-                            >
-                                Close
-                            </Button>
+                            />
                         </Grid>
 
                         <TextField

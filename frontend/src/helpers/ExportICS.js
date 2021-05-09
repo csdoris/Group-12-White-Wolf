@@ -38,7 +38,6 @@ export default function ExportICS(events) {
 
     const { error, value } = ics.createEvents(eventsToExport); //Call external package function to turn list of objects to ICS text
 
-    console.log(value);
     if (error || !value) { //If value is null means no events to export and alert user
         alert('No Events to export');
         return;

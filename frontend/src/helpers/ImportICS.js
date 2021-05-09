@@ -47,7 +47,6 @@ export default async function ImportICS() {
             let end = new Date(element.end).toJSON();
             await geoCoding(element.location, (results) => {
                 //Uses the geoCoding function to fetch lat and lng
-                console.log(results.geometry.location);
                 let event = {
                     name: element.summary,
                     address: element.location,

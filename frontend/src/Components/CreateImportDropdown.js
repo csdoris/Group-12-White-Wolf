@@ -67,7 +67,7 @@ function CreateImportDropdown({ addPlan, addImportedPlan }) {
                 onClose={closeDropdown}
             >
                 <MenuItem onClick={createPlan}>Create</MenuItem>
-                <MenuItem onClick={importPlan}>Import</MenuItem>
+                <MenuItem onClick={importPlan}>Import ICS file</MenuItem>
             </Menu>
             {importing && (
                 <ImportNameRequestPopup
