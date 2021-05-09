@@ -90,6 +90,11 @@ export default function EventPopup({ event, weather, open, handleClose, handleSa
             setValidLocation(true);
         }
 
+        // check event time is valid
+        if (dateTo.getTime() < dateFrom.getTime()) {
+            return;
+        }
+
         // get the latitude and longitude of the location
         getLatAndLongForLocation();
     }
@@ -254,53 +259,73 @@ export default function EventPopup({ event, weather, open, handleClose, handleSa
         return [hour, minute];
     }
 
-    function handleDateChange(isDateFrom, newDate) {
+    function handleDateFromChange(newDate) {
         var [hour, minute] = ['', ''];
-
-        if (isDateFrom) {
-            [hour, minute] = convert12HourTo24Hour(timeFrom);
-        }
-        else {
-            [hour, minute] = convert12HourTo24Hour(timeTo);
-        }
+        [hour, minute] = convert12HourTo24Hour(timeFrom);
 
         newDate.setHours(hour);
         newDate.setMinutes(minute);
+        
+        // check if DateTo is smaller than date from, if it is, then we update the 
+        // day, month and year in DateTo to be the same as the new Date
+        if (dateTo.getTime() < newDate.getTime()) {
+            var newDateTo = new Date(dateTo.getTime());
+            newDateTo.setDate(newDate.getDate());
+            newDateTo.setMonth(newDate.getMonth());
+            newDateTo.setFullYear(newDate.getFullYear());
 
-        if (isDateFrom) {
-            // check if DateTo is smaller than date from, if it is, then we update the 
-            // day, month and year in DateTo to be the same as the new Date
-            if (dateTo.getTime() < newDate.getTime()) {
-                var newDateTo = new Date(dateTo.getTime());
-                newDateTo.setDate(newDate.getDate());
-                newDateTo.setMonth(newDate.getMonth());
-                newDateTo.setFullYear(newDate.getFullYear());
-                setDateTo(newDateTo);
+            // check if we need to update time as well
+            if (newDateTo.getTime() < newDate.getTime()) {
+                newDateTo.setHours(hour);
+                newDateTo.setMinutes(minute);
+                setTimeTo(timeFrom);
             }
-            setDateFrom(newDate);
+
+            setDateTo(newDateTo);
         }
-        else {
-            setDateTo(newDate);
-        }
+        setDateFrom(newDate);
     }
 
-    function handleTimeChange(isTimeFrom, newTime) {
+    function handleDateToChange(newDate) {
+        var [hour, minute] = ['', ''];
+        [hour, minute] = convert12HourTo24Hour(timeTo);
+        newDate.setHours(hour);
+        newDate.setMinutes(minute);
+        setDateTo(newDate);
+    }
+
+    function handleTimeFromChange(newTime) {
         const [hour, minute] = convert12HourTo24Hour(newTime);
 
         var newDate = new Date(dateFrom.getTime());
         newDate.setHours(hour);
         newDate.setMinutes(minute);
 
-        if (isTimeFrom) {
-            // update the dateFrom object
-            setTimeFrom(newTime);
-            setDateFrom(newDate);
-        }
-        else {
-            // update the dateTo object
+        // check if DateTo is smaller than date from, if it is, it means we now have a situation that
+        // the user pick the same date, but the timeTo is before timeFrom 
+        if (dateTo.getTime() < newDate.getTime()) {
+            var newDateTo = new Date(dateTo.getTime());
+            newDateTo.setHours(hour);
+            newDateTo.setMinutes(minute);
+            setDateTo(newDateTo);
             setTimeTo(newTime);
-            setDateTo(newDate);
         }
+
+        // update the dateFrom object
+        setTimeFrom(newTime);
+        setDateFrom(newDate);
+    }
+
+    function handleTimeToChange(newTime) {
+        const [hour, minute] = convert12HourTo24Hour(newTime);
+
+        var newDate = new Date(dateTo.getTime());
+        newDate.setHours(hour);
+        newDate.setMinutes(minute);
+
+        // update the dateTo object
+        setTimeTo(newTime);
+        setDateTo(newDate);
     }
 
     const fetch = useMemo(
@@ -380,12 +405,13 @@ export default function EventPopup({ event, weather, open, handleClose, handleSa
                             />
                         </div>
                         <div className={styles.timeDiv}>
-                            <DatePicker selected={getDateFrom()} onChange={date => handleDateChange(true, date)} disabled={viewOnly} />
-                            <TimePicker value={getTimeFrom()} defaultTime={getTimeFrom()} onChange={time => handleTimeChange(true, time)} isDisabled={viewOnly} />
+                            <DatePicker selected={getDateFrom()} onChange={date => handleDateFromChange(date)} disabled={viewOnly} />
+                            <TimePicker value={getTimeFrom()} defaultTime={getTimeFrom()} onChange={time => handleTimeFromChange(time)} isDisabled={viewOnly} />
                             <div className={styles.to}>to</div>
-                            <DatePicker selected={getDateTo()} onChange={date => handleDateChange(false, date)} disabled={viewOnly} />
-                            <TimePicker value={getTimeTo()} defaultTime={getTimeTo()} onChange={time => handleTimeChange(false, time)} isDisabled={viewOnly} />
+                            <DatePicker selected={getDateTo()} onChange={date => handleDateToChange(date)} disabled={viewOnly} />
+                            <TimePicker value={getTimeTo()} defaultTime={getTimeTo()} onChange={time => handleTimeToChange(time)} isDisabled={viewOnly} />
                         </div>
+                        {dateTo.getTime() < dateFrom.getTime() ? <div className={styles.textDanger}>The start time of the event must be before the end time</div> : null}
                         <div>
                             <LocationAutoComplete
                                 value={viewOnly ? event.address : location}
