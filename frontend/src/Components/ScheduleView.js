@@ -79,6 +79,7 @@ export default function ScheduleView() {
     if (plan && plan.events.length !== 0) {
         return (
             <div className={isOpen ? styles.shiftTextRight : styles.shiftTextLeft}>
+                <p>&nbsp;</p>
                 <h1 className={styles.heading}>{plan.name}</h1>
                 <div>
                     <Table aria-label="simple table">

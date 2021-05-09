@@ -5,12 +5,11 @@ import { Loader } from '@googlemaps/js-api-loader';
 import axios from 'axios';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import ScheduleView from '../Components/ScheduleView';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
 import { SidebarContextProvider } from '../helpers/SidebarContextProvider';
 import Logout from '../Components/Logout';
 import { AppContext } from '../AppContextProvider';
 import useToken from '../hooks/useToken';
+import TabBar from '../Components/TabBar';
 
 const MAP_VIEW = 0;
 
@@ -18,7 +17,7 @@ function Home() {
     const [keyObtained, setKeyObtained] = useState(false);
     const [plansObtained, setPlansObtained] = useState(false);
     const { plans, setPlans, setAPIkey } = useContext(AppContext);
-    const [view, setView] = useState(false);
+    const [view, setView] = useState(MAP_VIEW);
     const token = useToken().token;
 
     useEffect(() => {
@@ -47,7 +46,8 @@ function Home() {
         });
     }, []);
 
-    const handleChange = (event, newView) => {
+    function handleTabChange(event, newView) {
+        console.log(newView);
         setView(newView);
     };
 
@@ -56,16 +56,7 @@ function Home() {
             <SidebarContextProvider>
                 <div>
                     <SideNav/>
-                    <Tabs
-                        value={view}
-                        onChange={handleChange}
-                        indicatorColor="primary"
-                        textColor="primary"
-                        centered
-                    >
-                        <Tab label="Map View" />
-                        <Tab label="Schedule View" />
-                    </Tabs>
+                    <TabBar view={view} handleChange={handleTabChange}/>
                     <Logout />
                     {view ? <ScheduleView /> : <GoogleMaps />}
                 </div>

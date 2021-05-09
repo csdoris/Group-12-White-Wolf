@@ -22,24 +22,6 @@ export default function LocationAutoComplete({
 }) {
     const classes = useStyles();
 
-    // function getAutocomplete() {
-    //     if(viewOnly) {
-    //         return(
-    //             <TextField
-    //                 fullWidth={true}
-    //                 value={value}
-    //                 InputProps={{
-    //                     readOnly: true,
-    //                 }}
-    //             />
-    //         );
-    //     } else {
-    //         return(
-                
-    //         );
-    //     }
-    // }
-
     return (
         <Autocomplete
             id="google-map"
