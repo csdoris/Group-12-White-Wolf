@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -40,7 +40,6 @@ function CreateImportDropdown({ addPlan, addImportedPlan }) {
 
     //Save the imported events and call a passed down function
     function handleSave(name) {
-        console.log('save called');
         addImportedPlan(name, importedEvents);
         setImporting(false);
     }

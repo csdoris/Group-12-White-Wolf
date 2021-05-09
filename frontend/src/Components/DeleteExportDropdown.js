@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -27,8 +27,6 @@ function DeleteExportDropdown({id, deleteFunc, showExport = true }) {
     //Button click handler to retrieve events of the plan user wants to export
     const exportPlan = () => {
         closeDropdown();
-        console.log('clicked export');
-        console.log('modal opens');
         axios.get(`/api/plans/${id}`, header).then(function (resp) {
             ExportICS(resp.data.events); //Calls export function passing in list of events
         });
