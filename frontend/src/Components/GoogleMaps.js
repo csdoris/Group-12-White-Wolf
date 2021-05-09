@@ -13,7 +13,7 @@ import EventPopup from './EventPopup';
 import { SidebarContext } from '../helpers/SidebarContextProvider';
 
 const mapContainerStyle = {
-    height: '93.4vh',
+    height: 'calc(100vh - 48px)',
     width: '100vw',
 };
 const center = {
