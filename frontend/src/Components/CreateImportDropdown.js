@@ -10,6 +10,7 @@ function CreateImportDropdown({ addPlan, addImportedPlan }) {
     const [isOpen, setIsOpen] = useState(false);
     const [importing, setImporting] = useState(false);
     const [importedEvents, setImportedEvents] = useState(null);
+    const [fileName, setFileName] = useState();
 
     const openDropdown = (event) => {
         setIsOpen(event.currentTarget);
@@ -27,16 +28,11 @@ function CreateImportDropdown({ addPlan, addImportedPlan }) {
     };
 
     //Button click handler to call import ICS function and show name popup when ICS file has been read in
-    const importPlan = async () => {
+    const importPlan = () => {
         closeDropdown();
         console.log('clicked import');
         console.log('modal opens');
-        let importedEvents = await ImportICS();
-        if (importedEvents) {
-            console.log(importedEvents);
-            setImporting(true);
-            setImportedEvents(importedEvents);
-        }
+        setImporting(true);
     };
 
     function handleClose() {
@@ -46,8 +42,26 @@ function CreateImportDropdown({ addPlan, addImportedPlan }) {
     //Save the imported events and call a passed down function
     function handleSave(name) {
         console.log('save called');
-        addImportedPlan(name, importedEvents);
-        setImporting(false);
+        console.log(name);
+        //Check empty string, null string, undefined string, string containing only spaces
+        if (
+            name === '' ||
+            name == null ||
+            name == undefined ||
+            name.replace(/\s/g, '').length == 0
+        ) {
+        } else {
+            addImportedPlan(name, importedEvents);
+            setImporting(false);
+        }
+    }
+
+    async function handlePickFile() {
+        let {importedEvents,
+            fileName} = await ImportICS();
+        setFileName(fileName);
+        console.log(importedEvents + ' events')
+        setImportedEvents(importedEvents);
     }
 
     return (
@@ -73,6 +87,8 @@ function CreateImportDropdown({ addPlan, addImportedPlan }) {
                     open={importing}
                     handleClose={handleClose}
                     handleSave={handleSave}
+                    handlePickFile={handlePickFile}
+                    fileName={fileName}
                 ></ImportNameRequestPopup>
             )}
         </>

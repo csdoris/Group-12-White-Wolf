@@ -24,6 +24,8 @@ export default async function ImportICS() {
         }
     }
     const file = await fileHandle.getFile(); //Retrieve file from the user's system
+    let fileName = file.name;
+    console.log(fileName)
     const contents = await file.text(); //Read the file
     let directEvents = ical.sync.parseICS(contents); //Convert the ics formated contents into key value pairs
     if (Object.keys(directEvents).length == 0) {
@@ -61,7 +63,7 @@ export default async function ImportICS() {
             });
         }
     }
-    return eventsToImport;
+    return eventsToImport, fileName;
 }
 
 /**
