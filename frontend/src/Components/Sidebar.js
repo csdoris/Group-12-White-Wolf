@@ -12,7 +12,6 @@ import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import ArrowLeftIcon from '@material-ui/icons/ArrowLeft';
 import CreateImportDropdown from './CreateImportDropdown.js';
 import { makeStyles } from '@material-ui/core/styles';
-import '../Styles/SidebarStyles.css';
 import SidebarForEvents from './SidebarForEvents.js';
 import { SidebarContext } from '../helpers/SidebarContextProvider.js';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
