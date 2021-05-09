@@ -13,7 +13,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import Copyright from '../Components/Copyright';
 import GoogleLoginButton from '../Components/GoogleLoginButton';
-
+import axios from 'axios';
 import validateEmail from '../helpers/validateEmail';
 
 import styles from '../Styles/LoginPage.module.css'
@@ -60,7 +60,6 @@ export default function LoginPage({ setData }) {
   const [isEmailValid, setIsEmailValid] = useState(true);
   const [isPasswordEntered, setIsPasswordEntered] = useState(true);
   const [firstMount, setFirstMount] = useState(true); 
-  const axios = require('axios');
 
   const classes = useStyles();
 
@@ -175,8 +174,9 @@ export default function LoginPage({ setData }) {
               autoFocus
               value={email}
               onChange={e => setEmail(e.target.value)}
+              inputProps={{ "data-testid": "email-login" }}  
             />
-            {isEmailValid ? null : <div className={styles.textDanger}>Please enter a valid email address</div>}
+            {isEmailValid ? null : <div className={styles.textDanger}>Please enter valid email address</div>}
             <TextField
               variant="outlined"
               margin="normal"
@@ -189,6 +189,7 @@ export default function LoginPage({ setData }) {
               autoComplete="current-password"
               value={password}
               onChange={e => setPassword(e.target.value)}
+              inputProps={{ "data-testid": "password-login" }}  
             />
             {isPasswordEntered ? null : <div className={styles.textDanger}>Please enter your password</div>}
             {isError ? <div className={styles.textDanger}>Incorrect email or password</div> : null}
@@ -198,6 +199,7 @@ export default function LoginPage({ setData }) {
               variant="contained"
               color="primary"
               className={classes.submit}
+              data-testid="submit-login"
             >
               Sign In
             </Button>

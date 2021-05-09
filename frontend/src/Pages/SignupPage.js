@@ -12,7 +12,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { useHistory } from 'react-router';
 import Copyright from '../Components/Copyright';
-
+import axios from 'axios';
 import validateEmail from '../helpers/validateEmail';
 
 import styles from '../Styles/LoginPage.module.css'
@@ -39,7 +39,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignupPage() {
     const history = useHistory();
-    const axios = require('axios');
 
     const classes = useStyles();
 
@@ -109,6 +108,7 @@ export default function SignupPage() {
             console.log(result.data);
             setError(false);
             history.push("/");
+            history.push("/login");
           } catch (error) {
             setError(true);
           }
@@ -146,6 +146,7 @@ export default function SignupPage() {
                                 autoComplete="name"
                                 value={name}
                                 onChange={e => setName(e.target.value)}
+                                inputProps={{ "data-testid": "name-input" }}  
                             />
                             {valid.name ? null : <div className={styles.textDanger}>Please enter your name</div>}
                         </Grid>
@@ -160,6 +161,7 @@ export default function SignupPage() {
                                 autoComplete="email"
                                 value={email}
                                 onChange={e => setEmail(e.target.value)}
+                                inputProps={{ "data-testid": "email-input" }}  
                             />
                             {valid.email ? null : <div className={styles.textDanger}>Please enter valid email address</div>}
                         </Grid>
@@ -175,6 +177,7 @@ export default function SignupPage() {
                                 autoComplete="current-password"
                                 value={password}
                                 onChange={e => setPassword(e.target.value)}
+                                inputProps={{ "data-testid": "password-input" }}  
                             />
                             {valid.password ? null : <div className={styles.textDanger}>Please enter your password</div>}
                         </Grid>
@@ -190,6 +193,7 @@ export default function SignupPage() {
                                 autoComplete="password-confirm"
                                 value={passwordConfirm}
                                 onChange={e => setPasswordConfirm(e.target.value)}
+                                inputProps={{ "data-testid": "confirm-password-input" }}  
                             />
                             {valid.passwordConfirm ? null : <div className={styles.textDanger}>Password doesn't match</div>}
                         </Grid>
@@ -201,6 +205,7 @@ export default function SignupPage() {
                         variant="contained"
                         color="primary"
                         className={classes.submit}
+                        data-testid="submit"
                     >
                         Sign Up
                     </Button>

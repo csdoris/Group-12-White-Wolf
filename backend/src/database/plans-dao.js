@@ -1,22 +1,20 @@
 import { Plan, User } from './schema';
 
-async function createPlan(user_id, plan) {
+async function createPlan(userId, plan) {
 
     const dbPlan = new Plan(plan);
     await dbPlan.save();
-    User.findByIdAndUpdate(user_id,{ $push: {plans: dbPlan._id}}, function (error, success) {
-        if (error) {
-            console.log(error);
-        } else {
-            console.log(success);
-        }
-    });
+    try {
+        await User.findByIdAndUpdate(userId,{ $push: {plans: dbPlan._id}})
+    } catch (err) {
+        console.log(err);
+    }
     return dbPlan;
 }
 
 // Returns list of plans with their id and name only for a particular user
-async function retrievePlanList(user_id) {
-    const dbUser = await User.findById(user_id);
+async function retrievePlanList(userId) {
+    const dbUser = await User.findById(userId);
     return await Plan.find({'_id': { $in: dbUser.plans} },'name');
 }
 
@@ -35,15 +33,15 @@ async function updatePlan(plan) {
     }
 }
 
-async function deletePlan(user_id, id) {
-    await Plan.deleteOne({ _id: id });
-    User.findByIdAndUpdate(user_id,{ $pull: {plans: id}}, function (error, success) {
-        if (error) {
-            console.log(error);
-        } else {
-            console.log(success);
-        }
-    });
+async function deletePlan(userId, planId) {
+    await Plan.deleteOne({ _id: planId });
+    try {
+        await User.findByIdAndUpdate(userId,{ $pull: {plans: planId}})
+        return true;
+    } catch (err) {
+        console.log(err);
+        return false;
+    }
 }
 
 
@@ -71,6 +69,14 @@ async function deleteEvent(planId,eventId) {
     }
 }
 
+async function isValidPlanForUser(userId, planId) {
+    const user = await User.findById(userId);
+    if (user.plans.includes(planId)){
+        return true;
+    } 
+    return false;
+}
+
 export {
     createPlan,
     retrievePlan,
@@ -79,5 +85,6 @@ export {
     deletePlan,
     createEvent,
     updateEvent,
-    deleteEvent
+    deleteEvent,
+    isValidPlanForUser
 }
