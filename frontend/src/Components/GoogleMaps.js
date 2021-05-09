@@ -55,7 +55,7 @@ function GoogleMaps() {
         axios.put(`/api/plans/${plan._id}/${viewEvent._id}`, updatedEvent, header).then(async (response) => {
             if (response.status === 204) {
                 setOpen(false);
-                await updatePlanInfo(plan._id);
+                await updatePlanInfo(plan._id, token);
             }
         }).catch((error) => {
             console.log(error);

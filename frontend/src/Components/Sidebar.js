@@ -99,7 +99,7 @@ function SideNav() {
     // handles the situation when a plan is clicked
     async function navigateToPlan(plan) {
         handleCancel();
-        await updatePlanInfo(plan._id);
+        await updatePlanInfo(plan._id, token);
     }
 
     function handleGoBackToPlans() {

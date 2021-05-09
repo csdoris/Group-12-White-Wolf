@@ -55,7 +55,7 @@ export default function SidebarForEvents() {
         axios.post(`/api/plans/${plan._id}`, newEvent, header).then(async (response) => {
             if (response.status === 201) {
                 setAddEvent(false);
-                await updatePlanInfo(plan._id);
+                await updatePlanInfo(plan._id, token);
             }
         }).catch((error) => {
             console.log(error);
@@ -68,7 +68,7 @@ export default function SidebarForEvents() {
             if (response.status === 204) {
                 setAddEvent(false);
                 setViewEvent(null);
-                await updatePlanInfo(plan._id);
+                await updatePlanInfo(plan._id, token);
             }
         }).catch((error) => {
             console.log(error);
@@ -87,7 +87,7 @@ export default function SidebarForEvents() {
 
     function handleDeleteEvent(eventId) {
         axios.delete(`/api/plans/${plan._id}/${eventId}`, header).then(async function () {
-            await updatePlanInfo(plan._id);
+            await updatePlanInfo(plan._id, token);
         });
     }
 

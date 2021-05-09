@@ -15,9 +15,7 @@ function AppContextProvider({ children }) {
     const [APIkey, setAPIkey] = useState();
     const [plan, setPlan] = useState();
 
-    const { token } = useToken();
-
-    async function updatePlanInfo(id) {
+    async function updatePlanInfo(id, token) {
         const header = {
             headers: {
                 "Authorization": `Bearer ${token}`
