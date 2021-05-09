@@ -129,7 +129,6 @@ export default function ScheduleView() {
                                             {parseDateTime(event.endTime)}
                                         </TableCell>
                                         <TableCell align="center">
-                                            {/* TODO: Improve css*/}
                                             {
                                                 weatherInfo[event._id] &&
                                                 <div>

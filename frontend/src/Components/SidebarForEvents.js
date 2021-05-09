@@ -140,7 +140,7 @@ export default function SidebarForEvents() {
                         </Grid>
                         <Divider />
                     </div>
-                )) : <p>No events to display</p> : null}
+                )) : <p style={{textAlign:'center'}}>No events to display</p> : null}
             </List>
 
             {
