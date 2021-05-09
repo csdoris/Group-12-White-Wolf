@@ -166,6 +166,7 @@ export default function ScheduleView() {
         if (plan && plan.events.length === 0) {
             return (
                 <div className={isOpen ? styles.shiftTextRight : styles.shiftTextLeft}>
+                    <p>&nbsp;</p>
                     <h1 className={styles.heading}>{plan.name}</h1>
                     <p className={styles.heading}>
                         You have no events for this plan, please add an event
@@ -175,6 +176,7 @@ export default function ScheduleView() {
         } else {
             return (
                 <div className={isOpen ? styles.shiftTextRight : styles.shiftTextLeft}>
+                    <p>&nbsp;</p>
                     <p className={styles.heading}>
                         Please click on the plan which you want to view the events for
                     </p>
