@@ -47,14 +47,10 @@ function GoogleMaps() {
     }
 
     function handleSave() {
-        console.log("save called");
         setOpen(false);
     }
 
     function handleUpdate(updatedEvent) {
-        console.log("update called");
-        console.log(updatedEvent);
-
         // call the endpoint to update the event in the database
         axios.put(`/api/plans/${plan._id}/${viewEvent._id}`, updatedEvent, header).then(async (response) => {
             if (response.status === 204) {
@@ -67,10 +63,8 @@ function GoogleMaps() {
     }
 
     useEffect(() => {
-        console.log("planEffect", plan)
         if (plan && plan.events) {
             setEvents(plan.events);
-            console.log("set events", events);
         } else {
             setEvents(null);
         }

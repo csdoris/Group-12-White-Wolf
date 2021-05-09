@@ -30,11 +30,6 @@ export default function ScheduleView() {
         setMapLong(e.target.getAttribute('long'));
     }
 
-    // TODO: handle view event or edit event in schedule view
-    function handleOpenEvent(event) {
-        console.log(event);
-    }
-
     function urlBuilder() {
         let url = '';
         let API_KEY = APIkey;

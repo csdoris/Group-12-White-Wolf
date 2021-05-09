@@ -17,15 +17,11 @@ function CreateImportDropdown({ addPlan }) {
 
     const createPlan = () => {
         closeDropdown();
-        console.log('clicked create');
-        console.log('modal opens');
         addPlan();
     };
 
     const importPlan = () => {
         closeDropdown();
-        console.log('clicked import');
-        console.log('modal opens');
     };
 
     return (

@@ -273,7 +273,6 @@ export default function EventPopup({ event, weather, open, handleClose, handleSa
     function convert24HourTo12Hour(date) {
         var hour = date.getHours();
         var minute = date.getMinutes();
-        // console.log(minute);
         var modifier = "AM";
 
         if (hour === 0) {

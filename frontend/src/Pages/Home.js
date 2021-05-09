@@ -39,15 +39,12 @@ function Home() {
             });
 
         axios.get(`/api/plans`, { headers: { "Authorization": `Bearer ${token}` } }).then(function (resp) {
-            console.log("RESP FROM HOME", resp.data);
             setPlans(resp.data);
-            console.log(plans);
             setPlansObtained(true);
         });
     }, []);
 
     function handleTabChange(event, newView) {
-        console.log(newView);
         setView(newView);
     };
 

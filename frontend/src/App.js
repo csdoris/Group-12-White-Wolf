@@ -15,7 +15,6 @@ function App() {
     const { token, setToken } = useToken();
 
     function handleLoginData(data) {
-        console.log(data);
         setToken(data.token);
     }
 
@@ -42,12 +41,5 @@ function App() {
         </>
     );
 }
-
-// example post to backend
-const gettee = async () => {
-    console.log('clicked');
-    let weatherInfo = await FetchWeatherInfo('Auckland', 36.8509, 174.7645);
-    console.log(weatherInfo);
-};
 
 export default App;
