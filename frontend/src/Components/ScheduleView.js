@@ -8,6 +8,7 @@ import OfflineMapPopup from './OfflineMapPopup';
 import styles from '../Styles/ScheduleView.module.css';
 import { AppContext } from '../AppContextProvider';
 import { SidebarContext } from '../helpers/SidebarContextProvider';
+import Divider from '@material-ui/core/Divider';
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
@@ -76,6 +77,7 @@ export default function ScheduleView() {
             <div className={isOpen ? styles.shiftTextRight : styles.shiftTextLeft}>
                 <p>&nbsp;</p>
                 <h1 className={styles.heading}>{plan.name}</h1>
+                <Divider />
                 <div>
                     <Table aria-label="simple table">
                         <TableHead>
