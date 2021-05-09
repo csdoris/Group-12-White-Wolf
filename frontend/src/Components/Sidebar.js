@@ -50,7 +50,7 @@ function SideNav() {
     const { isOpen, setIsOpen} = useContext(SidebarContext);
     const classes = useStyles();
 
-    const {plans, setPlans, plan, setPlan } = useContext(AppContext);
+    const {plans, setPlans, plan, setPlan, updatePlanInfo } = useContext(AppContext);
 
     const token = useToken().token;
     const header = {
@@ -97,13 +97,9 @@ function SideNav() {
     }
 
     // handles the situation when a plan is clicked
-    function navigateToPlan(plan) {
+    async function navigateToPlan(plan) {
         handleCancel();
-
-        axios.get(`/api/plans/${plan._id}`, header).then(function (resp) {
-            setPlan(resp.data)
-            console.log(resp.data.events);
-        });
+        await updatePlanInfo(plan._id);
     }
 
     function handleGoBackToPlans() {

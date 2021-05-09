@@ -33,14 +33,14 @@ const useStyles = makeStyles(() => ({
 export default function SidebarForEvents() {
     const classes = useStyles();
 
-    const {plan, setPlan} = useContext(AppContext)
+    const { plan, setPlan, updatePlanInfo } = useContext(AppContext)
     const { token } = useToken();
     const header = {
         headers: {
             "Authorization": `Bearer ${token}`
         }
     };
-    
+
     const [addEvent, setAddEvent] = useState(false);
 
     const [viewEvent, setViewEvent] = useState(null);
@@ -58,8 +58,7 @@ export default function SidebarForEvents() {
         axios.post(`/api/plans/${plan._id}`, newEvent, header).then(async (response) => {
             if (response.status === 201) {
                 setAddEvent(false);
-                const plansResponse = await axios.get(`/api/plans/${plan._id}`, header);
-                setPlan(plansResponse.data);
+                await updatePlanInfo(plan._id);
             }
         }).catch((error) => {
             console.log(error);
@@ -75,8 +74,7 @@ export default function SidebarForEvents() {
             if (response.status === 204) {
                 setAddEvent(false);
                 setViewEvent(null);
-                const plansResponse = await axios.get(`/api/plans/${plan._id}`, header);
-                setPlan(plansResponse.data);
+                await updatePlanInfo(plan._id);
             }
         }).catch((error) => {
             console.log(error);
@@ -92,13 +90,11 @@ export default function SidebarForEvents() {
     function handleAddEvent() {
         setAddEvent(true);
     }
-    
+
     function handleDeleteEvent(eventId) {
         console.log(eventId);
         axios.delete(`/api/plans/${plan._id}/${eventId}`, header).then(async function () {
-            const plansResponse = await axios.get(`/api/plans/${plan._id}`, header);
-            setPlan(plansResponse.data);
-            
+            await updatePlanInfo(plan._id);
         });
     }
 
@@ -128,7 +124,7 @@ export default function SidebarForEvents() {
                         <AddIcon className="plusSign" />
                     </Button>
                 </Grid>
-                {plan ? plan.events.length !==0 ? plan.events.map((event) => (
+                {plan ? plan.events.length !== 0 ? plan.events.map((event) => (
                     <div key={event._id}>
                         <Grid wrap="nowrap" container justify="space-between">
                             <SidebarRow
@@ -148,5 +144,5 @@ export default function SidebarForEvents() {
             }
         </div>
     );
-        
+
 }

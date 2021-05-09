@@ -105,52 +105,41 @@ export default function ScheduleView() {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {/*Sorts the events first on date then by time of day*/}
-                            {plan.events
-                                .sort((a, b) =>
-                                    a.date > b.date
-                                        ? 1
-                                        : a.date === b.date
-                                            ? a.DateFrom > b.DateFrom
-                                                ? 1
-                                                : -1
-                                            : -1
-                                )
-                                .map((event) => (
-                                    <TableRow key={event._id} hover>
-                                        <TableCell align="center">
-                                            {event.name}
+                            {plan.events.map((event) => (
+                                <TableRow key={event._id} hover>
+                                    <TableCell align="center">
+                                        {event.name}
+                                    </TableCell>
+                                    <TableCell align="center">
+                                        {parseDateTime(event.startTime)}
+                                    </TableCell>
+                                    <TableCell align="center">
+                                        {parseDateTime(event.endTime)}
+                                    </TableCell>
+                                    <TableCell align="center">
+                                        {/* TODO: Improve css*/}
+                                        {
+                                            weatherInfo[event._id] &&
+                                            <div>
+                                                <img style={{ height: 50, float: 'right' }} src={`http://openweathermap.org/img/w/${weatherInfo[event._id].weatherIcon}.png`} alt={weatherInfo[event._id].weatherDescription} />
+                                                <p>{weatherInfo[event._id].temperature}&#176;C</p>
+                                            </div>
+                                        }
+                                    </TableCell>
+                                    <TableCell align="center">
+                                        {event.address}
+                                    </TableCell>
+                                    <TableCell
+                                        align="center"
+                                        className={styles.map}
+                                        onClick={handleOpen}
+                                        lat={event.lat}
+                                        long={event.lng}
+                                    >
+                                        Click to open a map for this event
                                         </TableCell>
-                                        <TableCell align="center">
-                                            {parseDateTime(event.startTime)}
-                                        </TableCell>
-                                        <TableCell align="center">
-                                            {parseDateTime(event.endTime)}
-                                        </TableCell>
-                                        <TableCell align="center">
-                                            {/* TODO: Improve css*/}
-                                            {
-                                                weatherInfo[event._id] &&
-                                                <div>
-                                                    <img style={{ height: 50, float: 'right' }} src={`http://openweathermap.org/img/w/${weatherInfo[event._id].weatherIcon}.png`} alt={weatherInfo[event._id].weatherDescription}/>
-                                                    <p>{weatherInfo[event._id].temperature}&#176;C</p>
-                                                </div>
-                                            }
-                                        </TableCell>
-                                        <TableCell align="center">
-                                            {event.address}
-                                        </TableCell>
-                                        <TableCell
-                                            align="center"
-                                            className={styles.map}
-                                            onClick={handleOpen}
-                                            lat={event.lat}
-                                            long={event.lng}
-                                        >
-                                            Click to open a map for this event
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
+                                </TableRow>
+                            ))}
                         </TableBody>
                     </Table>
                     <OfflineMapPopup

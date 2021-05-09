@@ -26,7 +26,7 @@ const options = {
 };
 
 function GoogleMaps() {
-    const { plan, setPlan } = useContext(AppContext);
+    const { plan, updatePlanInfo } = useContext(AppContext);
     const [viewEvent, setViewEvent] = useState(null);
     const [open, setOpen] = useState(false);
     const { weatherInfo } = useContext(SidebarContext);
@@ -59,8 +59,7 @@ function GoogleMaps() {
         axios.put(`/api/plans/${plan._id}/${viewEvent._id}`, updatedEvent, header).then(async (response) => {
             if (response.status === 204) {
                 setOpen(false);
-                const plansResponse = await axios.get(`/api/plans/${plan._id}`, header);
-                setPlan(plansResponse.data);
+                await updatePlanInfo(plan._id);
             }
         }).catch((error) => {
             console.log(error);
