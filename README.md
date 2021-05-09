@@ -41,4 +41,4 @@ npm start
 -   SECRET_KEY="_REPLACE_WITH_YOUR_API_KEY_"
 -   GOOGLE_CLIENT_ID="_REPLACE_WITH_YOUR_API_KEY_"
 
-To obtain your own API keys head over to our [wiki page](https://github.com/csdoris/Group-12-White-Wolf/wiki/Getting-your-own-API-keys) to find out how
+To obtain your own API keys head over to our [wiki page](https://github.com/csdoris/Group-12-White-Wolf/wiki/Getting-your-own-API-keys).
