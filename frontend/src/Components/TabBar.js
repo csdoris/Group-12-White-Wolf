@@ -11,11 +11,21 @@ function TabBar({
     const [width, setWidth] = useState(window.innerWidth);
 
     useEffect(() => {
-        if(isOpen) {
-            setWidth(window.innerWidth-350);
-        } else {
-            setWidth(window.innerWidth);
+        function handleResize() {
+            checkAndUpdateSize();
+        };
+
+        checkAndUpdateSize();
+
+        function checkAndUpdateSize() {
+            if(isOpen) {
+                setWidth(window.innerWidth-350);
+            } else {
+                setWidth(window.innerWidth);
+            }
         }
+
+        window.addEventListener("resize", handleResize);
     }, [isOpen]);
 
     return(
