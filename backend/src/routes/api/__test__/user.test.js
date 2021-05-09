@@ -9,7 +9,11 @@ jest.mock('..//../../middleware/auth');
 
 let mongod, app, server;
 
-const TOKEN = 'authToken';
+const header = {
+    headers: {
+        "Authorization": `Bearer authToken`
+    }
+}
 
 const user = {
     _id: new mongoose.mongo.ObjectId('000000000000000000000001'),
@@ -65,13 +69,7 @@ afterAll(done => {
     });
 });
 
-it('retrieves a user infomation without failing', async () => {
-    const header = {
-        headers: {
-            "Authorization": `Bearer ${TOKEN}`
-        }
-    };
-
+it('retrieves a user infomation successfully', async () => {
     auth.mockImplementation(async (req, res, next) => {
         req.body.user_id = user._id;
         next();
@@ -84,4 +82,14 @@ it('retrieves a user infomation without failing', async () => {
     expect(body.name).toBe("Bob");
     expect(body.email).toBe("bob@gmail.com");
 
+});
+
+// Test to check auth returns 401 
+it('fails to retrieve user infomation due to authentication', async () => {
+    try {
+        await axios.get('http://localhost:3000/api/user', header);
+    } catch (err) {
+        const { response } = err;
+        expect(response.status).toBe(401);
+    }
 });

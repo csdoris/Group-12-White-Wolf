@@ -279,7 +279,7 @@ describe('success operations', () => {
     });
 });
 
-fdescribe('fail operations', () => {
+describe('fail operations', () => {
 
     it('PUT /plans/{:id}: fails due to wrong user', async () => {
         try {
@@ -326,6 +326,4 @@ fdescribe('fail operations', () => {
             }
         }
     });
-
-
 });

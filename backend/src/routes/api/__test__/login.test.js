@@ -8,15 +8,10 @@ import { User } from '../../../database/schema';
 let mongod, app, server;
 let dbUser;
 
-const bob = {
+const user = {
     name: "Bob",
     password: "pass",
     email: "bob@gmail.com"
-};
-
-const alice = {
-    name: "Alice",
-    email: "alice@gmail.com"
 };
 
 /**
@@ -94,38 +89,5 @@ it('fails with incorrect user login details', async () => {
         expect(response.status).toBe(401);
         expect(response.data.token).toBeUndefined();
     }
-});
-
-// TODO: mock the client.verifyIdToken to always return true
-xit('adds new user to database and gets token from server after successfully logging in with google', async () => {
-    const header = {
-        headers: {
-            "Authorization": `Bearer ${googleToken}`
-        }
-    }
-
-    const response = await axios.post('http://localhost:3000/api/login/google',body);
-    
-    expect(response.status).toBe(200);
-    expect(response.data.token).toBeTruthy();
-    // Check new alice user in database
-    const dbAlice = await User.find({name:"Alice"});
-    expect(dbAlice.length).toBe(1);
-    expect(dbAlice[0].email).toBe("alice@gmail.com");
-});
-
-xit('gets token from server after successfully logging in with google wth existing user', async () => {
-    const header = {
-        headers: {
-            "Authorization": `Bearer ${googleToken}`
-        }
-    }
-
-    await User.create(alice);
-
-    const response = await axios.post('http://localhost:3000/api/login/google',body);
-    
-    expect(response.status).toBe(200);
-    expect(response.data.token).toBeTruthy();
 });
 
