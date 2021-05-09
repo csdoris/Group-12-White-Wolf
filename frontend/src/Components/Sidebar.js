@@ -123,7 +123,7 @@ function SideNav() {
                     justify="space-between"
                     className={classes.drawer}
                 >
-                    <h1>My plans</h1>
+                    <h1 style={{width: '250px', paddingLeft: '50px', textAlign: 'center'}}>My plans</h1>
                     <CreateImportDropdown addPlan={addPlanRow} />
                 </Grid>
                 {plans.map((plan) => (
