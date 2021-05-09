@@ -22,7 +22,6 @@ function App() {
     return (
         <>
             <AppContextProvider>
-                <BrowserRouter>
                     <Switch>
                         <Route exact path="/login">
                             <LoginPage setData={handleLoginData} />
@@ -39,7 +38,6 @@ function App() {
                             <Redirect to="/home" />
                         </Route>
                     </Switch>
-                </BrowserRouter>
             </AppContextProvider>
         </>
     );

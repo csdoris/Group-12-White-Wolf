@@ -19,8 +19,6 @@ import "../Styles/TimePicker.css"
 import "react-datepicker/dist/react-datepicker.css";
 import "@patternfly/react-core/dist/styles/base.css";
 import { withStyles } from "@material-ui/styles";
-import FetchWeatherInfo from '../ExternalAPI/OpenWeatherMapAPI';
-import getWeatherForTime from '../helpers/getWeatherForTime';
 
 const autocompleteService = { current: null };
 const placeService = { current: null };
@@ -32,7 +30,7 @@ const DarkDisabledTextField = withStyles({
     }
 }) (TextField);
 
-export default function EventPopup({ event, open, handleClose, handleSave, handleUpdate }) {
+export default function EventPopup({ event, weather, open, handleClose, handleSave, handleUpdate }) {
 
     // data needed for creating event 
     const [name, setName] = useState("");
@@ -98,6 +96,11 @@ export default function EventPopup({ event, open, handleClose, handleSave, handl
         }
         else {
             setValidLocation(true);
+        }
+
+        // check event time is valid
+        if (dateTo.getTime() < dateFrom.getTime()) {
+            return;
         }
 
         // get the latitude and longitude of the location
@@ -239,35 +242,22 @@ export default function EventPopup({ event, open, handleClose, handleSave, handl
         }
     }
 
-    useEffect(() => {
-        if (viewOnly) {
-            getWeather();
-        } else {
-            if (document.getElementById("weatherInfo") !== null) {
-                document.getElementById("weatherInfo").innerHTML = "";
-            }
+    // Render the weather info box with the weather information
+    const weatherInfoComponent = () => {
+        if (weather === null) {
+            return;
         }
-    }, [viewOnly]);
 
-    function getWeather() {
-        FetchWeatherInfo(null, event.lat, event.lng).then(result => {
-            const weather = getWeatherForTime(result, event);
-            if (weather === null) {
-                document.getElementById("weatherInfo").innerHTML = "";
-                return;
-            }
-            console.log(weather.weatherIcon);
-            const weatherHtml = `<div style="width:100%">
-                    <span>Temperature: ${weather.temperature}&#176;C</span>
-                    <img style="height:50px; float:right;" src="http://openweathermap.org/img/w/${weather.weatherIcon}.png"/>
-                    <p>Feels Like Temperature: ${weather.feelsLikeTemperature}&#176;C</p>
-                    <p>Weather: ${weather.weather}</p>
-                    <p>Wind Speed: ${weather.windSpeed}m/s</p>
-                </div>`;
-            if (document.getElementById("weatherInfo") !== null) {
-                document.getElementById("weatherInfo").innerHTML = weatherHtml;
-            }
-        });
+        return (
+            <div style={{ width: '100%' }}>
+                <span>Temperature: {weather.temperature}&#176;C</span>
+                <img style={{ height: 50, float: 'right' }} src={`http://openweathermap.org/img/w/${weather.weatherIcon}.png`} alt={weather.weatherDescription}/>
+                <p>Feels Like Temperature: {weather.feelsLikeTemperature}&#176;C</p>
+                <p>Weather: {weather.weather}</p>
+                <p>Wind Speed: {weather.windSpeed}m/s</p>
+            </div>
+        )
+
     }
 
     function handleLocationChange(event, newValue) {
@@ -316,53 +306,73 @@ export default function EventPopup({ event, open, handleClose, handleSave, handl
         return [hour, minute];
     }
 
-    function handleDateChange(isDateFrom, newDate) {
+    function handleDateFromChange(newDate) {
         var [hour, minute] = ['', ''];
-
-        if (isDateFrom) {
-            [hour, minute] = convert12HourTo24Hour(timeFrom);
-        }
-        else {
-            [hour, minute] = convert12HourTo24Hour(timeTo);
-        }
+        [hour, minute] = convert12HourTo24Hour(timeFrom);
 
         newDate.setHours(hour);
         newDate.setMinutes(minute);
+        
+        // check if DateTo is smaller than date from, if it is, then we update the 
+        // day, month and year in DateTo to be the same as the new Date
+        if (dateTo.getTime() < newDate.getTime()) {
+            var newDateTo = new Date(dateTo.getTime());
+            newDateTo.setDate(newDate.getDate());
+            newDateTo.setMonth(newDate.getMonth());
+            newDateTo.setFullYear(newDate.getFullYear());
 
-        if (isDateFrom) {
-            // check if DateTo is smaller than date from, if it is, then we update the 
-            // day, month and year in DateTo to be the same as the new Date
-            if (dateTo.getTime() < newDate.getTime()) {
-                var newDateTo = new Date(dateTo.getTime());
-                newDateTo.setDate(newDate.getDate());
-                newDateTo.setMonth(newDate.getMonth());
-                newDateTo.setFullYear(newDate.getFullYear());
-                setDateTo(newDateTo);
+            // check if we need to update time as well
+            if (newDateTo.getTime() < newDate.getTime()) {
+                newDateTo.setHours(hour);
+                newDateTo.setMinutes(minute);
+                setTimeTo(timeFrom);
             }
-            setDateFrom(newDate);
+
+            setDateTo(newDateTo);
         }
-        else {
-            setDateTo(newDate);
-        }
+        setDateFrom(newDate);
     }
 
-    function handleTimeChange(isTimeFrom, newTime) {
+    function handleDateToChange(newDate) {
+        var [hour, minute] = ['', ''];
+        [hour, minute] = convert12HourTo24Hour(timeTo);
+        newDate.setHours(hour);
+        newDate.setMinutes(minute);
+        setDateTo(newDate);
+    }
+
+    function handleTimeFromChange(newTime) {
         const [hour, minute] = convert12HourTo24Hour(newTime);
 
         var newDate = new Date(dateFrom.getTime());
         newDate.setHours(hour);
         newDate.setMinutes(minute);
 
-        if (isTimeFrom) {
-            // update the dateFrom object
-            setTimeFrom(newTime);
-            setDateFrom(newDate);
-        }
-        else {
-            // update the dateTo object
+        // check if DateTo is smaller than date from, if it is, it means we now have a situation that
+        // the user pick the same date, but the timeTo is before timeFrom 
+        if (dateTo.getTime() < newDate.getTime()) {
+            var newDateTo = new Date(dateTo.getTime());
+            newDateTo.setHours(hour);
+            newDateTo.setMinutes(minute);
+            setDateTo(newDateTo);
             setTimeTo(newTime);
-            setDateTo(newDate);
         }
+
+        // update the dateFrom object
+        setTimeFrom(newTime);
+        setDateFrom(newDate);
+    }
+
+    function handleTimeToChange(newTime) {
+        const [hour, minute] = convert12HourTo24Hour(newTime);
+
+        var newDate = new Date(dateTo.getTime());
+        newDate.setHours(hour);
+        newDate.setMinutes(minute);
+
+        // update the dateTo object
+        setTimeTo(newTime);
+        setDateTo(newDate);
     }
 
     const fetch = useMemo(
@@ -436,12 +446,13 @@ export default function EventPopup({ event, open, handleClose, handleSave, handl
                             {getTitle()}
                         </div>
                         <div className={styles.timeDiv}>
-                            <DatePicker selected={getDateFrom()} onChange={date => handleDateChange(true, date)} disabled={viewOnly} />
-                            <TimePicker value={getTimeFrom()} defaultTime={getTimeFrom()} onChange={time => handleTimeChange(true, time)} isDisabled={viewOnly} />
+                            <DatePicker selected={getDateFrom()} onChange={date => handleDateFromChange(date)} disabled={viewOnly} />
+                            <TimePicker value={getTimeFrom()} defaultTime={getTimeFrom()} onChange={time => handleTimeFromChange(time)} isDisabled={viewOnly} />
                             <div className={styles.to}>to</div>
-                            <DatePicker selected={getDateTo()} onChange={date => handleDateChange(false, date)} disabled={viewOnly} />
-                            <TimePicker value={getTimeTo()} defaultTime={getTimeTo()} onChange={time => handleTimeChange(false, time)} isDisabled={viewOnly} />
+                            <DatePicker selected={getDateTo()} onChange={date => handleDateToChange(date)} disabled={viewOnly} />
+                            <TimePicker value={getTimeTo()} defaultTime={getTimeTo()} onChange={time => handleTimeToChange(time)} isDisabled={viewOnly} />
                         </div>
+                        {dateTo.getTime() < dateFrom.getTime() ? <div className={styles.textDanger}>The start time of the event must be before the end time</div> : null}
                         <div>
                             {getLocationDisplay()}
                         </div>
@@ -459,7 +470,9 @@ export default function EventPopup({ event, open, handleClose, handleSave, handl
                                 disabled={viewOnly}
                             />
                         </div>
-                        <div id="weatherInfo"></div>
+                        <div id="weatherInfo">
+                            {viewOnly && weatherInfoComponent()}
+                        </div>
                         <div className={styles.buttonDiv}>
                             {getButton()}
                         </div>

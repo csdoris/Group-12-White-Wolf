@@ -15,7 +15,7 @@ function SidebarRow({ item, handleDelete, handleOnClick, hasExport = true }) {
                 onClick={() => { handleOnClick(item) }}
                 fullWidth={true}
             >
-                <h3>{item.name}</h3>
+                {item.name}
             </Button>
             <DeleteExportDropdown id={item._id} deleteFunc={handleDelete} showExport={hasExport} />
         </>

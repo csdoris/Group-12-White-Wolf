@@ -34,6 +34,7 @@ function CreateImportDropdown({ addPlan }) {
                 aria-controls="simple-menu"
                 aria-haspopup="true"
                 onClick={openDropdown}
+                data-testid="plus-button"
             >
                 <AddIcon className="plusSign" />
             </Button>

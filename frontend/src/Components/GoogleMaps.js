@@ -26,7 +26,7 @@ const options = {
 };
 
 function GoogleMaps() {
-    const { plan, setPlan } = useContext(AppContext);
+    const { plan, updatePlanInfo } = useContext(AppContext);
     const [viewEvent, setViewEvent] = useState(null);
     const [open, setOpen] = useState(false);
     const { weatherInfo } = useContext(SidebarContext);
@@ -59,8 +59,7 @@ function GoogleMaps() {
         axios.put(`/api/plans/${plan._id}/${viewEvent._id}`, updatedEvent, header).then(async (response) => {
             if (response.status === 204) {
                 setOpen(false);
-                const plansResponse = await axios.get(`/api/plans/${plan._id}`, header);
-                setPlan(plansResponse.data);
+                await updatePlanInfo(plan._id);
             }
         }).catch((error) => {
             console.log(error);
@@ -68,46 +67,14 @@ function GoogleMaps() {
     }
 
     useEffect(() => {
-        console.log("called", plan)
+        console.log("planEffect", plan)
         if (plan && plan.events) {
             setEvents(plan.events);
             console.log("set events", events);
         } else {
             setEvents(null);
         }
-
     }, [plan]);
-
-    useEffect(() => {
-        console.log("called events", weatherInfo)
-        if (weatherInfo) {
-            addWeatherIconTemp()
-        }
-    }, [weatherInfo]);
-
-    function addWeatherIconTemp() {
-        console.log("addWeatherIconTemp", weatherInfo)
-        
-        if(events){
-            events.map((event, index) => {
-                console.log("element:",weatherInfo[event._id])
-                const weather = weatherInfo[event._id];
-                if (weather === null) {
-                    document.getElementById(index).innerHTML = "";
-                    return;
-                }
-                const weatherHtml = `<div>
-                            <img style="height:50px; float:right;" src="http://openweathermap.org/img/w/${weather.weatherIcon}.png"/>
-                            <span>${weather.temperature}&#176;C</span>
-                        </div>`;
-    
-                const infoWindow = document.getElementById(index)
-                if (infoWindow) {
-                    infoWindow.innerHTML = weatherHtml;
-                }
-            });
-        }
-    }
 
     return (
         <div>
@@ -136,13 +103,18 @@ function GoogleMaps() {
                             {/* TODO: heading corresponding with event name, img, date and temp */}
                             <h2>{event.name}</h2>
                             <p>{new Date(event.startTime).toLocaleDateString("en-US", dateOptions)}</p>
-                            <div id={index}></div>
+                            {weatherInfo[event._id] &&
+                                <div id={index}>
+                                    <img style={{ height: 50, float: 'right' }} src={`http://openweathermap.org/img/w/${weatherInfo[event._id].weatherIcon}.png`} alt={weatherInfo[event._id].weatherDescription} />
+                                    <span>{weatherInfo[event._id].temperature}&#176;C</span>
+                                </div>
+                            }
                         </div>
                     </InfoWindow>
                 ))}
             </GoogleMap>
             {
-                open && <EventPopup event={viewEvent} open={open} handleClose={handleClose} handleSave={handleSave} handleUpdate={handleUpdate} />
+                open && <EventPopup event={viewEvent} weather={weatherInfo[viewEvent._id]} open={open} handleClose={handleClose} handleSave={handleSave} handleUpdate={handleUpdate} />
             }
         </div>
     );
