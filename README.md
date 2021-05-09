@@ -4,7 +4,7 @@ Weather you're ready is a web application that aids in the planning of trips. In
 
 ## Installation
 
-Before you install and get started with this project, please ensure that you have installed nodejs and npm on your computer.
+Before you install and get started with this project, please ensure that you have installed nodejs and npm on your computer. You can download nodejs [here](https://nodejs.org/en/download/)
 
 First, clone the repo onto your computer:
 
