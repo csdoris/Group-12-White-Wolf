@@ -151,6 +151,7 @@ function SideNav() {
                                     autoFocus
                                     onChange={ (e) => {setNewPlanName(e.target.value)}}
                                     onKeyDown={submitPlanName}
+                                    inputProps={{ "data-testid": "add-plan-input" }}  
                                 />
                             </Grid>
                             <Grid item>
