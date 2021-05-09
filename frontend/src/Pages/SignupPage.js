@@ -102,10 +102,8 @@ export default function SignupPage() {
     useEffect(() => {
         const fetchData = async() => {
           // return the whole data to App, app can clean it up and send it to other components 
-          console.log("try to fetch the data"); 
           try {
             const result = await axios.post("/api/signup", body);
-            console.log(result.data);
             setError(false);
             history.push("/");
             history.push("/login");

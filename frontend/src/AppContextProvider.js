@@ -1,6 +1,5 @@
 import axios from 'axios';
 import React, { useState } from 'react';
-import useToken from './hooks/useToken';
 
 const AppContext = React.createContext({
     plans: [],
@@ -15,9 +14,7 @@ function AppContextProvider({ children }) {
     const [APIkey, setAPIkey] = useState();
     const [plan, setPlan] = useState();
 
-    const { token } = useToken();
-
-    async function updatePlanInfo(id) {
+    async function updatePlanInfo(id, token) {
         const header = {
             headers: {
                 "Authorization": `Bearer ${token}`

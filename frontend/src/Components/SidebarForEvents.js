@@ -51,14 +51,11 @@ export default function SidebarForEvents() {
     }
 
     function handleSave(newEvent) {
-        console.log("save called");
-        console.log(newEvent);
-
         // call the endpoint to store the event in the database
         axios.post(`/api/plans/${plan._id}`, newEvent, header).then(async (response) => {
             if (response.status === 201) {
                 setAddEvent(false);
-                await updatePlanInfo(plan._id);
+                await updatePlanInfo(plan._id, token);
             }
         }).catch((error) => {
             console.log(error);
@@ -66,15 +63,12 @@ export default function SidebarForEvents() {
     }
 
     function handleUpdate(updatedEvent) {
-        console.log("update called");
-        console.log(updatedEvent);
-
         // call the endpoint to update the event in the database
         axios.put(`/api/plans/${plan._id}/${viewEvent._id}`, updatedEvent, header).then(async (response) => {
             if (response.status === 204) {
                 setAddEvent(false);
                 setViewEvent(null);
-                await updatePlanInfo(plan._id);
+                await updatePlanInfo(plan._id, token);
             }
         }).catch((error) => {
             console.log(error);
@@ -92,9 +86,8 @@ export default function SidebarForEvents() {
     }
 
     function handleDeleteEvent(eventId) {
-        console.log(eventId);
         axios.delete(`/api/plans/${plan._id}/${eventId}`, header).then(async function () {
-            await updatePlanInfo(plan._id);
+            await updatePlanInfo(plan._id, token);
         });
     }
 
@@ -136,7 +129,7 @@ export default function SidebarForEvents() {
                         </Grid>
                         <Divider />
                     </div>
-                )) : <p>No events to display</p> : null}
+                )) : <p style={{textAlign:'center'}}>No events to display</p> : null}
             </List>
 
             {

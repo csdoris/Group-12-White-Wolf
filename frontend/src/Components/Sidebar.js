@@ -26,13 +26,13 @@ const useStyles = makeStyles(() => ({
     },
     openButton: {
         backgroundColor: 'grey',
-        position: 'absolute',
+        position: 'fixed',
         zIndex: '1200',
         opacity: '70%',
         '&:hover': { cursor: 'pointer', opacity: '100%' },
     },
     closeButton: {
-        position: 'absolute',
+        position: 'fixed',
         left: '350px',
         backgroundColor: 'grey',
         zIndex: '1200',
@@ -107,7 +107,7 @@ function SideNav() {
     // handles the situation when a plan is clicked
     async function navigateToPlan(plan) {
         handleCancel();
-        await updatePlanInfo(plan._id);
+        await updatePlanInfo(plan._id, token);
     }
 
     function handleGoBackToPlans() {
@@ -127,7 +127,7 @@ function SideNav() {
                     justify="space-between"
                     className={classes.drawer}
                 >
-                    <h1>My plans</h1>
+                    <h1 style={{width: '250px', paddingLeft: '50px', textAlign: 'center'}}>My plans</h1>
                     <CreateImportDropdown addPlan={addPlanRow} addImportedPlan={importPlan}/>
                 </Grid>
                 {plans.map((plan) => (

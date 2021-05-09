@@ -34,14 +34,6 @@ if (process.env.NODE_ENV === 'production') {
     });
 }
 
-
-// //example listen to post request
-// app.post('/', (req, res) => {
-//     const myObj = { message: 'hello world' };
-//     res.status(200).send(myObj);
-//     console.log('here');
-// });
-
 // Connect to MongoDb and if successful start server
 Mongoose.connect(mongoURI, {
     useNewUrlParser: true,

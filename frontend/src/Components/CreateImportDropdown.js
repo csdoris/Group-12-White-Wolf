@@ -21,19 +21,14 @@ function CreateImportDropdown({ addPlan, addImportedPlan }) {
 
     const createPlan = () => {
         closeDropdown();
-        console.log('clicked create');
-        console.log('modal opens');
         addPlan();
     };
 
     //Button click handler to call import ICS function and show name popup when ICS file has been read in
     const importPlan = async () => {
         closeDropdown();
-        console.log('clicked import');
-        console.log('modal opens');
         let importedEvents = await ImportICS();
         if (importedEvents) {
-            console.log(importedEvents);
             setImporting(true);
             setImportedEvents(importedEvents);
         }
