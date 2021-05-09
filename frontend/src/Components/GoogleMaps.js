@@ -94,7 +94,6 @@ function GoogleMaps() {
                                 setOpen(true);
                             }}
                         >
-                            {/* TODO: heading corresponding with event name, img, date and temp */}
                             <h2>{event.name}</h2>
                             <p>{new Date(event.startTime).toLocaleDateString("en-US", dateOptions)}</p>
                             {weatherInfo[event._id] &&
