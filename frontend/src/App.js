@@ -25,7 +25,6 @@ function App() {
                 <BrowserRouter>
                     <Switch>
                         <Route exact path="/login">
-                            <button onClick={gettee}>click me to get</button>
                             <LoginPage setData={handleLoginData} />
                         </Route>
                         <Route exact path="/signup">
