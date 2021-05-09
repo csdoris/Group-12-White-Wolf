@@ -23,7 +23,7 @@
         });
         res.sendStatus(HTTP_CREATED);
     } catch (err) {
-        res.status(HTTP_BAD_REQUEST);
+        res.status(HTTP_BAD_REQUEST).json(err);
     }
  })
  
