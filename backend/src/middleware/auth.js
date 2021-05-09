@@ -11,15 +11,13 @@ export default async function auth(req, res, next) {
     const dbUser = await retrieveUserById(userId);    
 
     if (!dbUser) {
-      throw 'Invalid user ID';
+      res.sendStatus(401);
     } else {
       req.body.user_id = dbUser._id; 
       next();
     }
-  } catch {
-    res.status(401).json({
-      error: new Error('Invalid request!')
-    });
+  } catch (err) {
+    res.sendStatus(401);
   }
 };
  
